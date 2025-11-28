@@ -1,17 +1,13 @@
 "use client";
 
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import {
   Briefcase,
   GraduationCap,
   FileSearch,
-  Info,
-  Mail,
-  ShieldCheck,
-  FileText,
 } from "lucide-react";
 import HeaderHero from "./components/HeaderHero";
-import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
@@ -19,18 +15,24 @@ const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 export default function Home() {
   const router = useRouter();
 
+  // Load AdSense script (verification only)
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3736460456527304";
+    script.crossOrigin = "anonymous";
+    document.head.appendChild(script);
+  }, []);
+
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
-  // Search states
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  /* ------------------------------------------------
-        FETCH ALL JOBS (SAFE VERSION)
-  ---------------------------------------------------*/
   const loadJobs = useCallback(async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/jobs`, {
@@ -66,9 +68,6 @@ export default function Home() {
     loadJobs();
   }, [loadJobs]);
 
-  /* ------------------------------------------------
-        SEARCH FUNCTION
-  ---------------------------------------------------*/
   const handleSearch = (value) => {
     setSearch(value);
 
@@ -87,32 +86,28 @@ export default function Home() {
 
   const submitSearch = (e) => {
     e.preventDefault();
-
     if (search.trim().length > 0) {
       router.push(`/jobs?q=${search}`);
       setShowResults(false);
     }
   };
 
-  /* ------------------------------------------------
-        CARD DATA
-  ---------------------------------------------------*/
   const cardData = [
     {
       title: "Jobs",
-      description: "Explore verified job openings across top companies.",
+      description: "Explore verified job openings across trusted companies.",
       icon: Briefcase,
       link: "/jobs",
     },
     {
       title: "Internships",
-      description: "Find meaningful internships with real work experience.",
+      description: "Find real-world internships to start your career.",
       icon: GraduationCap,
       link: "/internships",
     },
     {
       title: "Resume ATS Checker",
-      description: "Check if your resume can pass ATS filters.",
+      description: "Analyze your resume for ATS compatibility.",
       icon: FileSearch,
       link: "/resume-checker",
     },
@@ -121,18 +116,26 @@ export default function Home() {
   return (
     <main className="mx-auto bg-white text-black">
 
-      {/* HEADER */}
-      <HeaderHero />
+      {/* HERO SECTION */}
+      <section className="bg-gradient-to-b from-blue-50 to-white py-16 px-4 text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+          Find the Best Jobs & Internships for Freshers
+        </h1>
+        <p className="text-lg md:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
+          Welcome to <strong>FreshersJobs</strong> — a reliable platform helping
+          fresh graduates discover verified jobs, internships, and tools for career growth.
+        </p>
+      </section>
 
       {/* SEARCH BAR */}
-      <div className="max-w-lg mx-auto mt-10 relative">
+      <div className="max-w-xl mx-auto mt-10 relative px-4">
         <form onSubmit={submitSearch}>
           <input
             type="text"
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
-            placeholder="Search jobs..."
-            className="w-full px-4 py-3 border rounded-xl shadow-sm text-gray-800 focus:border-blue-600 outline-none"
+            placeholder="Search job titles, roles, or companies..."
+            className="w-full px-4 py-3 border rounded-xl shadow-sm text-gray-800"
           />
         </form>
 
@@ -141,7 +144,7 @@ export default function Home() {
             {results.map((job) => (
               <Link
                 key={job._id}
-                href={`/job/${job._id}`}
+                href={`/jobs/${job._id}`}
                 onClick={() => setShowResults(false)}
                 className="block px-4 py-2 hover:bg-gray-100 text-sm"
               >
@@ -152,60 +155,82 @@ export default function Home() {
         )}
       </div>
 
-      {/* TITLE */}
-      <section className="text-center mt-10">
-        <h1 className="text-4xl font-extrabold">FreshersJobs</h1>
-        <p className="text-lg mt-3 leading-relaxed max-w-2xl mx-auto">
-          Your trusted platform for freshers jobs, internships, and resume tools —
-          designed with a clean, readable, and AdSense-friendly layout.
-        </p>
-      </section>
+      {/* ADSENSE PLACEHOLDER
+      <div className="max-w-4xl mx-auto mt-10 mb-6 px-4">
+        <div className="w-full h-32 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
+          AdSense Banner (Placeholder)
+        </div>
+      </div> */}
 
       {/* FEATURE CARDS */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-18">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-4">
         {cardData.map((item, i) => (
           <Link
             key={i}
             href={item.link}
-            className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition"
+            className="bg-white border rounded-xl p-6 shadow-sm hover:shadow-md"
           >
-            <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center mb-4">
-              <item.icon size={30} stroke="#000" />
+            <div className="w-14 h-14 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+              <item.icon size={30} stroke="#1d4ed8" />
             </div>
             <h2 className="text-xl font-semibold">{item.title}</h2>
-            <p className="text-gray-700 text-sm mt-1">{item.description}</p>
-            <p className="mt-4 font-medium text-blue-600">Learn more</p>
+            <p className="text-gray-700 text-sm mt-2">{item.description}</p>
+            <p className="mt-4 text-blue-600 font-medium">Explore →</p>
           </Link>
         ))}
       </section>
 
-      {/* LATEST JOBS */}
-      <section className="mt-16">
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Latest Job Openings
+      {/* INFO SECTION */}
+      <section className="mt-20 px-4 text-center max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-900">
+          Why Choose FreshersJobs?
         </h2>
+        <p className="text-gray-700 mt-3 text-lg">
+          We curate high-quality and safe job listings for fresh graduates.
+        </p>
+      </section>
 
-        {fetchError && <p className="text-center text-red-600">{fetchError}</p>}
+      {/* IN-ARTICLE AD PLACEHOLDER
+      <div className="max-w-4xl mx-auto mt-12 mb-6 px-4">
+        <div className="w-full h-28 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
+          AdSense In-Article Ad (Placeholder)
+        </div>
+      </div> */}
+
+      {/* LATEST JOBS */}
+      <section className="mt-16 px-4">
+        <h2 className="text-2xl font-bold text-center mb-6">Latest Job Openings</h2>
+
+        {fetchError && (
+          <p className="text-center text-red-600">{fetchError}</p>
+        )}
 
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {jobs.slice(0, 6).map((job) => (
               <Link
                 key={job._id}
-                href={`/job/${job._id}`}
-                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition"
+                href={`/jobs/${job._id}`}
+                className="bg-white border rounded-xl p-6 shadow-sm hover:shadow-md"
               >
                 <h3 className="text-xl font-semibold">{job.title}</h3>
                 <p className="text-gray-700">{job.company}</p>
                 <p className="text-gray-600 text-sm mt-1">
                   {job.location || "Location not specified"}
                 </p>
-                <p className="mt-4 text-blue-600 font-medium">Learn more</p>
+                <p className="mt-4 text-blue-600 font-medium">Apply Now →</p>
               </Link>
             ))}
           </div>
         )}
       </section>
+
+      {/* FOOTER AD PLACEHOLDER
+      <div className="max-w-4xl mx-auto mt-16 mb-16 px-4">
+        <div className="w-full h-36 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
+          AdSense Footer Ad (Placeholder)
+        </div>
+      </div> */}
 
     </main>
   );

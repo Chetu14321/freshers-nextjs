@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, User, Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, X, User } from "lucide-react";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
@@ -19,19 +19,12 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdown, setDropdown] = useState(false);
 
-  // 🔎 Search states
-  const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
-
   /* ------------------------------------------------
-        LOAD USER
+        LOAD USER (no console warnings for 401)
   ---------------------------------------------------*/
   useEffect(() => {
     (async () => {
@@ -40,9 +33,13 @@ export default function Navbar() {
           credentials: "include",
         });
 
-        if (res.status === 401) return setUser(null);
+        if (res.status === 401) {
+          setUser(null); // Not logged in — silent fail (Lighthouse fix)
+          return;
+        }
 
         const data = await res.json();
+
         if (res.ok && data.authenticated) {
           setUser(data.user);
         } else {
@@ -54,45 +51,6 @@ export default function Navbar() {
     })();
   }, [pathname]);
 
-  /* ------------------------------------------------
-        SEARCH HANDLER
-  ---------------------------------------------------*/
-  const handleSearch = async (value) => {
-    setSearch(value);
-
-    if (value.trim().length < 2) {
-      setShowResults(false);
-      return;
-    }
-
-    try {
-      // Fetch ALL jobs and filter locally
-      const res = await fetch(`${BACKEND_URL}/api/jobs`);
-      const data = await res.json();
-      const list = data.jobs || data.data || [];
-
-      const filtered = list.filter((job) =>
-        job.title.toLowerCase().includes(value.toLowerCase())
-      );
-
-      setResults(filtered.slice(0, 8)); // show max 8
-      setShowResults(true);
-    } catch (err) {
-      console.log("Search failed", err);
-    }
-  };
-
-  const submitSearch = (e) => {
-    e.preventDefault();
-    if (search.trim().length > 0) {
-      router.push(`/jobs?q=${search}`);
-      setShowResults(false);
-    }
-  };
-
-  /* ------------------------------------------------
-        HELPERS
-  ---------------------------------------------------*/
   const isActive = (href) => {
     if (href === "/jobs" && pathname.startsWith("/job")) return true;
     if (href === "/internships" && pathname.startsWith("/internships"))
@@ -117,7 +75,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* NAVBAR */}
+      {/* NAVBAR WRAPPER */}
       <nav className="w-full bg-white/90 backdrop-blur-lg border-b shadow-sm fixed top-0 left-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
@@ -126,34 +84,10 @@ export default function Navbar() {
             FreshersJobs<span className="text-gray-900">.shop</span>
           </Link>
 
-          {/* DESKTOP SEARCH */}
-          <form onSubmit={submitSearch} className="hidden md:block relative w-72">
-            <input
-              type="text"
-              placeholder="Search jobs..."
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 focus:bg-white focus:border-blue-500 outline-none"
-            />
-
-            {showResults && results.length > 0 && (
-              <div className="absolute top-12 left-0 w-full bg-white border rounded-md shadow-lg z-50">
-                {results.map((job) => (
-                  <Link
-                    key={job._id}
-                    href={`/job/${job._id}`}
-                    onClick={() => setShowResults(false)}
-                    className="block px-4 py-2 hover:bg-gray-100 text-sm"
-                  >
-                    {job.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </form>
-
-          {/* DESKTOP LINKS */}
+          {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-6">
+
+            {/* LINKS */}
             <ul className="flex gap-5 text-sm font-medium">
               {links.map((link) => (
                 <li key={link.href}>
@@ -176,21 +110,29 @@ export default function Navbar() {
             {user ? (
               <div className="relative">
                 <button
+                  aria-label="User menu"
                   onClick={() => setDropdown(!dropdown)}
                   className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100 transition"
                 >
                   <User size={20} className="text-gray-700" />
-                  {user.name?.split(" ")[0]}
+                  <span className="text-sm font-semibold">
+                    {user.name?.split(" ")[0]}
+                  </span>
                 </button>
 
                 {dropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2">
-                    <Link href="/profile" className="block px-3 py-2 hover:bg-gray-100">
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2 animate-fadeIn">
+                    <Link
+                      href="/profile"
+                      onClick={() => setDropdown(false)}
+                      className="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
+                    >
                       View Profile
                     </Link>
+
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50"
+                      className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50 text-sm"
                     >
                       Logout
                     </button>
@@ -200,15 +142,19 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={handleLogin}
-                className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700"
+                className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold text-sm hover:bg-blue-700 transition"
               >
                 Sign In
               </button>
             )}
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <button onClick={() => setOpen(true)} className="md:hidden p-2 rounded hover:bg-gray-100">
+          {/* MOBILE MENU ICON */}
+          <button
+            aria-label="Open mobile menu"
+            onClick={() => setOpen(true)}
+            className="md:hidden p-2 rounded hover:bg-gray-100"
+          >
             <Menu size={26} />
           </button>
         </div>
@@ -216,7 +162,10 @@ export default function Navbar() {
 
       {/* MOBILE OVERLAY */}
       {open && (
-        <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setOpen(false)}></div>
+        <div
+          className="fixed inset-0 bg-black/30 z-40"
+          onClick={() => setOpen(false)}
+        ></div>
       )}
 
       {/* MOBILE SIDEBAR */}
@@ -225,53 +174,24 @@ export default function Navbar() {
           ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          <h3 className="text-lg font-semibold">Menu</h3>
-          <button onClick={() => setOpen(false)}>
+          <h3 className="text-lg font-semibold">Navigation</h3>
+          <button aria-label="Close menu" onClick={() => setOpen(false)}>
             <X size={24} />
           </button>
         </div>
 
-        {/* MOBILE SEARCH */}
-        <div className="px-4 mt-4">
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 focus:bg-white"
-          />
-
-          {showResults && results.length > 0 && (
-            <div className="bg-white border rounded-md mt-2 shadow-lg">
-              {results.map((job) => (
-                <Link
-                  key={job._id}
-                  href={`/job/${job._id}`}
-                  onClick={() => {
-                    setOpen(false);
-                    setShowResults(false);
-                  }}
-                  className="block px-4 py-2 hover:bg-gray-100 text-sm"
-                >
-                  {job.title}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* MOBILE MENU LINKS */}
         <ul className="flex flex-col gap-1 mt-4 text-base font-medium px-4">
           {links.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`block px-3 py-2 rounded-md ${
-                  isActive(link.href)
-                    ? "bg-blue-600 text-white"
-                    : "hover:bg-gray-100"
-                }`}
+                className={`block px-3 py-2 rounded-md
+                  ${
+                    isActive(link.href)
+                      ? "bg-blue-600 text-white font-semibold"
+                      : "text-gray-900 hover:bg-gray-100"
+                  }`}
               >
                 {link.label}
               </Link>
@@ -285,13 +205,14 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   onClick={() => setOpen(false)}
-                  className="px-3 py-2 block hover:bg-gray-100"
+                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100"
                 >
-                  My Profile
+                  <User size={22} /> My Profile
                 </Link>
+
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-2 mt-2 bg-red-500 text-white rounded-md w-full"
+                  className="px-3 py-2 mt-2 bg-red-500 text-white rounded-md"
                 >
                   Logout
                 </button>
@@ -299,7 +220,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={handleLogin}
-                className="w-full px-3 py-2 bg-blue-600 text-white rounded-md"
+                className="w-full px-3 py-2 mt-2 bg-blue-600 text-white rounded-md"
               >
                 Sign In
               </button>
@@ -310,6 +231,17 @@ export default function Navbar() {
 
       {/* SPACER */}
       <div className="h-16"></div>
+
+      {/* DROPDOWN ANIMATION */}
+      <style>{`
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </>
   );
 }
