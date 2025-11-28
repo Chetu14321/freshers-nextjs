@@ -19,7 +19,9 @@ export default function JobDetails() {
       try {
         const res = await fetch(`${BACKEND_URL}/api/jobs/${id}`);
         const data = await res.json();
-        setJob(data);
+
+        // API returns: { success: true, job: {...} }
+        setJob(data.job || data);
       } catch (err) {
         console.log("Error loading job:", err);
       }
@@ -48,9 +50,11 @@ export default function JobDetails() {
         <p><b>Role:</b> {job.role}</p>
       </div>
 
-      <p className="mt-4 text-gray-800 whitespace-pre-line">
-        {job.description}
-      </p>
+      {/* FIXED RENDERING HTML */}
+      <div
+        className="mt-4 text-gray-800 leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: job.description }}
+      ></div>
 
       <a
         href={job.applyUrl}
