@@ -1,58 +1,64 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-// Fetch job by ID
-async function loadJob(id) {
-  try {
-    const res = await fetch(
-      `https://freshersjobs-shop.onrender.com/api/jobs/${id}`,
-      { cache: "no-store" }
-    );
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (err) {
-    console.error("Job Fetch Error:", err);
-    return null;
-  }
-}
+const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
-export default async function JobDetailsPage({ params }) {
-  const { id } = params;
+export default function JobDetails() {
+  const params = useParams();
+  const id = params?.id;
 
-  const data = await loadJob(id);
-  const job = data?.job || data;  // ✅ FIX: extract actual job object
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!job) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Job not found.</p>
-      </main>
-    );
-  }
+  useEffect(() => {
+    if (!id) return;
+
+    const loadJob = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/jobs/${id}`);
+        const data = await res.json();
+        setJob(data);
+      } catch (err) {
+        console.log("Error loading job:", err);
+      }
+      setLoading(false);
+    };
+
+    loadJob();
+  }, [id]);
+
+  if (loading) return <p className="p-6">Loading...</p>;
+  if (!job?._id) return <p className="p-6">Job Not Found</p>;
 
   return (
-    <main className="min-h-screen bg-white text-black w-full px-6 py-10">
+    <div className="max-w-4xl mx-auto p-6 mt-20">
       <h1 className="text-3xl font-bold">{job.title}</h1>
-      <p className="text-gray-700 text-lg mt-1">{job.company}</p>
-      <p className="text-gray-600 mt-2">📍 {job.location}</p>
+      <p className="text-gray-600">{job.company}</p>
 
-      <div className="mt-6">
-        <h2 className="font-semibold text-xl mb-2">Job Description</h2>
-        <div
-          className="text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: job.description }}
-        />
+      {job.img && (
+        <img src={job.img} className="w-full h-64 object-cover rounded-lg mt-4" />
+      )}
+
+      <div className="mt-6 space-y-2">
+        <p><b>Location:</b> {job.location}</p>
+        <p><b>Experience:</b> {job.experience}</p>
+        <p><b>Salary:</b> {job.salary}</p>
+        <p><b>Role:</b> {job.role}</p>
       </div>
 
-      {job.applyUrl && (
-        <a
-          href={job.applyUrl}
-          target="_blank"
-          className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-        >
-          Apply Now →
-        </a>
-      )}
-    </main>
+      <p className="mt-4 text-gray-800 whitespace-pre-line">
+        {job.description}
+      </p>
+
+      <a
+        href={job.applyUrl}
+        target="_blank"
+        className="block mt-6 bg-blue-600 text-white py-3 text-center rounded-md"
+      >
+        Apply Now
+      </a>
+    </div>
   );
 }
