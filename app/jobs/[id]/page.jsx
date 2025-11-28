@@ -17,8 +17,10 @@ async function loadJob(id) {
 }
 
 export default async function JobDetailsPage({ params }) {
-  const { id } = await params; // ✅ UNWRAP THE PROMISE
-  const job = await loadJob(id);
+  const { id } = params;
+
+  const data = await loadJob(id);
+  const job = data?.job || data;  // ✅ FIX: extract actual job object
 
   if (!job) {
     return (
@@ -42,13 +44,15 @@ export default async function JobDetailsPage({ params }) {
         />
       </div>
 
-      <a
-        href={job.applyUrl}
-        target="_blank"
-        className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-      >
-        Apply Now →
-      </a>
+      {job.applyUrl && (
+        <a
+          href={job.applyUrl}
+          target="_blank"
+          className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+        >
+          Apply Now →
+        </a>
+      )}
     </main>
   );
 }
