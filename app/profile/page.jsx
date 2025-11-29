@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
