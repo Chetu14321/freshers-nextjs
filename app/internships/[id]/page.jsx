@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 async function getInternship(id) {
   try {
     const res = await fetch(
-      `https://freshersjobs-shop.onrender.com/api/jobs/${id}`,
+      `http://13.50.111.42:5000/api/jobs/${id}`,
       { cache: "no-store" }
     );
     if (!res.ok) return null;

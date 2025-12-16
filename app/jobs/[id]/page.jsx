@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
+const BACKEND_URL = "http://13.50.111.42:5000";
 
 export default function JobDetails() {
   const params = useParams();

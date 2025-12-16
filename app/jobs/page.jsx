@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 async function loadJobs() {
   try {
     const res = await fetch(
-      "https://freshersjobs-shop.onrender.com/api/jobs",
+      "http://13.50.111.42:5000/api/jobs",
       { cache: "no-store" }
     );
 

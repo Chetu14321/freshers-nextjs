@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, User } from "lucide-react";
 
-const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
+const BACKEND_URL = "http://13.50.111.42:5000";
 
 const links = [
   { href: "/jobs", label: "Jobs" },

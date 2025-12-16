@@ -5,7 +5,7 @@ export const metadata = {
   description:
     "Read the Privacy Policy of FreshersJobs to understand how we collect, use, and protect your personal information.",
   alternates: {
-    canonical: "https://freshersjobs.shop/privacy",
+    canonical: "http://13.50.111.42:5000/privacy",
   },
 };
 

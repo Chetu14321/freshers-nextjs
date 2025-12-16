@@ -7,7 +7,7 @@ export const metadata = {
   title: "Internship Opportunities for Freshers | FreshersJobs.shop",
   description:
     "Explore the latest internship opportunities for freshers across India. Find remote, paid, part-time, and full-time internships to kickstart your career.",
-  alternates: { canonical: "https://freshersjobs.shop/internships" },
+  alternates: { canonical: "http://13.50.111.42:5000/internships" },
 };
 
 export default async function InternshipsPage() {
@@ -16,7 +16,7 @@ export default async function InternshipsPage() {
 
   try {
     const res = await fetch(
-      "https://freshersjobs-shop.onrender.com/api/jobs",
+      "http://13.50.111.42:5000/api/jobs",
       { cache: "no-store" }
     );
 

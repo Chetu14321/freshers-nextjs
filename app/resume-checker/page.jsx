@@ -34,7 +34,7 @@ export default function ResumeChecker() {
       formData.append("jobDesc", jobDesc);
 
       const response = await axios.post(
-        "https://freshersjobs-shop.onrender.com/api/resume-checker",
+        "http://13.50.111.42:5000/api/resume-checker",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
