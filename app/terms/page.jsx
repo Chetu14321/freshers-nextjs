@@ -50,7 +50,7 @@ export default function TermsPage() {
         <p className="text-gray-700 leading-relaxed">
           All content on FreshersJobs—including text, graphics, and design—is
           the property of FreshersJobs and may not be copied or reproduced
-          without prior written consent.
+          without prior written consent ok.
         </p>
 
         <h4 className="mt-6 font-semibold text-xl">Limitation of Liability</h4>
