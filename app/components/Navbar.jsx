@@ -19,37 +19,39 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [dropdown, setDropdown] = useState(false);
 
-  /* ------------------------------------------------
-        LOAD USER (no console warnings for 401)
-  ---------------------------------------------------*/
+  const [open, setOpen] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // ✅ Hydration guard (REQUIRED in Next.js)
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+
     (async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/auth/me`, {
           credentials: "include",
         });
 
-        if (res.status === 401) {
-          setUser(null); // Not logged in — silent fail (Lighthouse fix)
+        if (!res.ok) {
+          setUser(null);
           return;
         }
 
         const data = await res.json();
-
-        if (res.ok && data.authenticated) {
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
+        setUser(data?.user || null);
       } catch {
         setUser(null);
       }
     })();
   }, [pathname]);
+
+  // 🚨 Prevent hydration mismatch
+  if (!mounted) return null;
 
   const isActive = (href) => {
     if (href === "/jobs" && pathname.startsWith("/job")) return true;
@@ -63,10 +65,11 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
-    await fetch(`${BACKEND_URL}/auth/logout`, {
-      method: "GET",
-      credentials: "include",
-    });
+    try {
+      await fetch(`${BACKEND_URL}/auth/logout`, {
+        credentials: "include",
+      });
+    } catch {}
 
     setUser(null);
     setDropdown(false);
@@ -75,30 +78,29 @@ export default function Navbar() {
 
   return (
     <>
-      {/* NAVBAR WRAPPER */}
+      {/* NAVBAR */}
       <nav className="w-full bg-white/90 backdrop-blur-lg border-b shadow-sm fixed top-0 left-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-
           {/* LOGO */}
-          <Link href="/" className="text-2xl font-extrabold text-blue-600 tracking-tight">
+          <Link
+            href="/"
+            className="text-2xl font-extrabold text-blue-600 tracking-tight"
+          >
             FreshersJobs<span className="text-gray-900">.shop</span>
           </Link>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-6">
-
-            {/* LINKS */}
             <ul className="flex gap-5 text-sm font-medium">
               {links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`px-3 py-1.5 rounded-md transition-all
-                      ${
-                        isActive(link.href)
-                          ? "bg-blue-600 text-white font-semibold"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                    className={`px-3 py-1.5 rounded-md transition-all ${
+                      isActive(link.href)
+                        ? "bg-blue-600 text-white font-semibold"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -110,18 +112,17 @@ export default function Navbar() {
             {user ? (
               <div className="relative">
                 <button
-                  aria-label="User menu"
-                  onClick={() => setDropdown(!dropdown)}
+                  onClick={() => setDropdown((v) => !v)}
                   className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100 transition"
                 >
-                  <User size={20} className="text-gray-700" />
+                  <User size={20} />
                   <span className="text-sm font-semibold">
                     {user.name?.split(" ")[0]}
                   </span>
                 </button>
 
                 {dropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2 animate-fadeIn">
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2">
                     <Link
                       href="/profile"
                       onClick={() => setDropdown(false)}
@@ -151,9 +152,9 @@ export default function Navbar() {
 
           {/* MOBILE MENU ICON */}
           <button
-            aria-label="Open mobile menu"
             onClick={() => setOpen(true)}
             className="md:hidden p-2 rounded hover:bg-gray-100"
+            aria-label="Open mobile menu"
           >
             <Menu size={26} />
           </button>
@@ -165,17 +166,18 @@ export default function Navbar() {
         <div
           className="fixed inset-0 bg-black/30 z-40"
           onClick={() => setOpen(false)}
-        ></div>
+        />
       )}
 
       {/* MOBILE SIDEBAR */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform duration-300
-          ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="p-4 flex items-center justify-between border-b">
           <h3 className="text-lg font-semibold">Navigation</h3>
-          <button aria-label="Close menu" onClick={() => setOpen(false)}>
+          <button onClick={() => setOpen(false)} aria-label="Close menu">
             <X size={24} />
           </button>
         </div>
@@ -186,12 +188,11 @@ export default function Navbar() {
               <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`block px-3 py-2 rounded-md
-                  ${
-                    isActive(link.href)
-                      ? "bg-blue-600 text-white font-semibold"
-                      : "text-gray-900 hover:bg-gray-100"
-                  }`}
+                className={`block px-3 py-2 rounded-md ${
+                  isActive(link.href)
+                    ? "bg-blue-600 text-white font-semibold"
+                    : "text-gray-900 hover:bg-gray-100"
+                }`}
               >
                 {link.label}
               </Link>
@@ -212,7 +213,7 @@ export default function Navbar() {
 
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-2 mt-2 bg-red-500 text-white rounded-md"
+                  className="w-full px-3 py-2 mt-2 bg-red-500 text-white rounded-md"
                 >
                   Logout
                 </button>
@@ -230,18 +231,7 @@ export default function Navbar() {
       </div>
 
       {/* SPACER */}
-      <div className="h-16"></div>
-
-      {/* DROPDOWN ANIMATION */}
-      <style>{`
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-6px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      <div className="h-16" />
     </>
   );
 }

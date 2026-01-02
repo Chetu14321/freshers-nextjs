@@ -38,7 +38,7 @@ export default function Home() {
         raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt))
       );
     } catch (err) {
-      setFetchError("Error fetching jobs.");
+      setFetchError("Error fetching jobs.",err);
     } finally {
       setLoading(false);
     }
