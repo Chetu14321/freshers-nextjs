@@ -2,28 +2,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import {
-  Briefcase,
-  GraduationCap,
-  FileSearch,
-} from "lucide-react";
-import HeaderHero from "./components/HeaderHero";
+import { Briefcase, GraduationCap, FileSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
 export default function Home() {
   const router = useRouter();
-
-  // Load AdSense script (verification only)
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.async = true;
-    script.src =
-      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3736460456527304";
-    script.crossOrigin = "anonymous";
-    document.head.appendChild(script);
-  }, []);
 
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,19 +30,14 @@ export default function Home() {
       }
 
       const data = await res.json();
-
       const raw = Array.isArray(data)
         ? data
-        : data.jobs
-        ? data.jobs
-        : data.data
-        ? data.data
-        : [];
+        : data.jobs || data.data || [];
 
       setJobs(
         raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt))
       );
-    } catch (error) {
+    } catch (err) {
       setFetchError("Error fetching jobs.");
     } finally {
       setLoading(false);
@@ -86,7 +66,7 @@ export default function Home() {
 
   const submitSearch = (e) => {
     e.preventDefault();
-    if (search.trim().length > 0) {
+    if (search.trim()) {
       router.push(`/jobs?q=${search}`);
       setShowResults(false);
     }
@@ -115,19 +95,19 @@ export default function Home() {
 
   return (
     <main className="mx-auto bg-white text-black">
-
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="bg-gradient-to-b from-blue-50 to-white py-16 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
           Find the Best Jobs & Internships for Freshers
         </h1>
         <p className="text-lg md:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
           Welcome to <strong>FreshersJobs</strong> — a reliable platform helping
-          fresh graduates discover verified jobs, internships, and tools for career growth.
+          fresh graduates discover verified jobs, internships, and tools for
+          career growth.
         </p>
       </section>
 
-      {/* SEARCH BAR */}
+      {/* SEARCH */}
       <div className="max-w-xl mx-auto mt-10 relative px-4">
         <form onSubmit={submitSearch}>
           <input
@@ -155,15 +135,8 @@ export default function Home() {
         )}
       </div>
 
-      {/* ADSENSE PLACEHOLDER
-      <div className="max-w-4xl mx-auto mt-10 mb-6 px-4">
-        <div className="w-full h-32 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
-          AdSense Banner (Placeholder)
-        </div>
-      </div> */}
-
       {/* FEATURE CARDS */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-4">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 px-4">
         {cardData.map((item, i) => (
           <Link
             key={i}
@@ -174,32 +147,19 @@ export default function Home() {
               <item.icon size={30} stroke="#1d4ed8" />
             </div>
             <h2 className="text-xl font-semibold">{item.title}</h2>
-            <p className="text-gray-700 text-sm mt-2">{item.description}</p>
+            <p className="text-gray-700 text-sm mt-2">
+              {item.description}
+            </p>
             <p className="mt-4 text-blue-600 font-medium">Explore →</p>
           </Link>
         ))}
       </section>
 
-      {/* INFO SECTION */}
-      <section className="mt-20 px-4 text-center max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-900">
-          Why Choose FreshersJobs?
-        </h2>
-        <p className="text-gray-700 mt-3 text-lg">
-          We curate high-quality and safe job listings for fresh graduates.
-        </p>
-      </section>
-
-      {/* IN-ARTICLE AD PLACEHOLDER
-      <div className="max-w-4xl mx-auto mt-12 mb-6 px-4">
-        <div className="w-full h-28 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
-          AdSense In-Article Ad (Placeholder)
-        </div>
-      </div> */}
-
       {/* LATEST JOBS */}
       <section className="mt-16 px-4">
-        <h2 className="text-2xl font-bold text-center mb-6">Latest Job Openings</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Latest Job Openings
+        </h2>
 
         {fetchError && (
           <p className="text-center text-red-600">{fetchError}</p>
@@ -218,20 +178,14 @@ export default function Home() {
                 <p className="text-gray-600 text-sm mt-1">
                   {job.location || "Location not specified"}
                 </p>
-                <p className="mt-4 text-blue-600 font-medium">Apply Now →</p>
+                <p className="mt-4 text-blue-600 font-medium">
+                  Apply Now →
+                </p>
               </Link>
             ))}
           </div>
         )}
       </section>
-
-      {/* FOOTER AD PLACEHOLDER
-      <div className="max-w-4xl mx-auto mt-16 mb-16 px-4">
-        <div className="w-full h-36 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-500">
-          AdSense Footer Ad (Placeholder)
-        </div>
-      </div> */}
-
     </main>
   );
 }
