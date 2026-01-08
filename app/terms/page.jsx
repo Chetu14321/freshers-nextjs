@@ -5,7 +5,7 @@ export const metadata = {
   description:
     "Read the Terms & Conditions of FreshersJobs to understand the rules, responsibilities, and limitations of using our website.",
   alternates: {
-    canonical: "http://13.50.111.42:5000/terms",
+    canonical: "https://freshersjobs-shop.onrender.com/terms",
   },
 };
 

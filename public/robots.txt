@@ -3,3 +3,5 @@ Allow: /
 
 User-agent: GPTBot
 Disallow: /
+
+Sitemap: https://freshersjobs.shop/sitemap.xml

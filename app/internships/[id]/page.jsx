@@ -1,14 +1,15 @@
 export const dynamic = "force-dynamic";
 
-// Fetch single internship
-async function getInternship(id) {
+const API_BASE = "https://freshersjobs-shop.onrender.com";
+
+/* -------------------- Fetch Internships -------------------- */
+async function loadInternships(page) {
   try {
     const res = await fetch(
-      `http://13.50.111.42:5000/api/jobs/${id}`,
+      `${API_BASE}/api/jobs?page=${page}&limit=9&type=internship`,
       { cache: "no-store" }
     );
     if (!res.ok) return null;
-
     return await res.json();
   } catch (e) {
     console.error("Internship Fetch Error:", e);
@@ -16,123 +17,105 @@ async function getInternship(id) {
   }
 }
 
-// Fetch related internships
-async function getAllInternships() {
-  try {
-    const res = await fetch(
-      `https://freshersjobs-shop.onrender.com/api/jobs`,
-      { cache: "no-store" }
-    );
+/* -------------------- Page -------------------- */
+export default async function InternshipsPage({ searchParams }) {
 
-    if (!res.ok) return [];
+  /* ✅ SAFE PAGINATION */
+  const rawPage = Number(searchParams?.page);
+  const page = Number.isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
 
-    const data = await res.json();
+  const data = await loadInternships(page);
 
-    return Array.isArray(data)
-      ? data
-      : data.jobs
-      ? data.jobs
-      : data.data
-      ? data.data
-      : [];
-  } catch {
-    return [];
-  }
-}
-
-export default async function InternshipDetailsPage({ params }) {
-  const id = (await params).id;
-
-  const internship = await getInternship(id);
-  const all = await getAllInternships();
-
-  // Related internships
-  const related = all
-    .filter((i) => i._id !== id && i.type === "internship")
-    .slice(0, 3);
-
-  if (!internship) {
+  if (!data || !data.jobs?.length) {
     return (
-      <div className="text-center py-10 text-gray-600">
-        Internship not found.
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <p className="text-gray-600 text-lg">
+          No internships available right now.
+        </p>
       </div>
     );
   }
+
+  const { jobs, totalPages } = data;
 
   return (
-    <main className="min-h-screen bg-gray-50 text-black px-4 md:px-10 py-10">
+    <main className="min-h-screen bg-white w-full">
 
-      {/* Title */}
-      <h1 className="text-3xl md:text-4xl font-extrabold text-center mb-6">
-        🎓 {internship.title}
+      <h1 className="text-4xl md:text-5xl font-extrabold text-center py-12">
+        🎓 Internship Opportunities
       </h1>
 
-      <p className="text-center text-gray-700 text-lg mb-10">
-        {internship.company}
-      </p>
+      <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8">
+        {jobs.map((intern, idx) => (
+          <a
+            key={intern._id}
+            href={`/internships/${intern._id}`}
+            className="bg-white shadow-sm hover:shadow-xl transition p-6 internship-card"
+            style={{ animationDelay: `${idx * 0.06}s` }}
+          >
+            <h3 className="font-bold text-lg text-blue-700 mb-1">
+              {intern.title}
+            </h3>
+            <p className="text-gray-700">{intern.company}</p>
+            <p className="text-gray-500 text-sm mt-1">
+              📍 {intern.location || "Not specified"}
+            </p>
+          </a>
+        ))}
+      </section>
 
-      {/* Details Card */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10 border border-gray-200">
-
-        {/* Banner if exists */}
-        {internship.banner && (
-          <img
-            src={internship.banner}
-            alt="Internship Banner"
-            className="w-full h-72 object-cover rounded-lg mb-6"
-          />
+      {/* PAGINATION */}
+      <div className="flex justify-center gap-3 py-14">
+        {page > 1 && (
+          <a
+            href={`/internships?page=${page - 1}`}
+            className="px-4 py-2 border hover:bg-gray-100"
+          >
+            ← Previous
+          </a>
         )}
 
-        {/* Basic Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-          <p><strong>📍 Location:</strong> {internship.location}</p>
-          <p><strong>💼 Stipend:</strong> {internship.stipend || "Not Mentioned"}</p>
-          <p><strong>🕒 Duration:</strong> {internship.duration || "Not Mentioned"}</p>
-          <p><strong>📅 Posted:</strong> {new Date(internship.postedAt).toLocaleDateString()}</p>
-          <p><strong>🧑‍🎓 Qualification:</strong> {internship.qualification || "-"}</p>
-          <p><strong>Batch:</strong> {internship.batch || "-"}</p>
-        </div>
+        {[...Array(totalPages)].map((_, i) => {
+          const p = i + 1;
+          return (
+            <a
+              key={p}
+              href={`/internships?page=${p}`}
+              className={`px-4 py-2 border ${
+                p === page
+                  ? "bg-blue-600 text-white font-semibold"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {p}
+            </a>
+          );
+        })}
 
-        {/* Description */}
-        <h2 className="text-2xl font-bold mb-4">Internship Description</h2>
-
-        <div
-          className="text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: internship.description }}
-        />
-
-        {/* Apply Button */}
-        <div className="mt-10">
+        {page < totalPages && (
           <a
-            href={internship.applyUrl}
-            target="_blank"
-            className="block w-full text-center bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition"
+            href={`/internships?page=${page + 1}`}
+            className="px-4 py-2 border hover:bg-gray-100"
           >
-            🚀 Apply Now
+            Next →
           </a>
-        </div>
+        )}
       </div>
 
-      {/* RELATED Internships */}
-      {related.length > 0 && (
-        <section className="mt-16">
-          <h3 className="text-2xl font-bold mb-6">Related Internships</h3>
+      <style>{`
+        .internship-card {
+          opacity: 0;
+          transform: translateY(16px);
+          animation: fadeUp 0.4s ease forwards;
+        }
+        @keyframes fadeUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {related.map((intern, i) => (
-              <a
-                key={intern._id}
-                href={`/internships/${intern._id}`}
-                className="bg-white p-5 rounded-xl border shadow-sm hover:shadow-lg transition hover:-translate-y-1"
-              >
-                <h4 className="font-bold text-lg text-blue-700">{intern.title}</h4>
-                <p className="text-gray-700">{intern.company}</p>
-                <p className="text-gray-500 text-sm mt-1">📍 {intern.location}</p>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
     </main>
   );
 }

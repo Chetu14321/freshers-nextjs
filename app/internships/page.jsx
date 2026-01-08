@@ -2,106 +2,118 @@ import InternshipCard from "../components/IntershipCard";
 
 export const dynamic = "force-dynamic";
 
-// 🔹 SEO Metadata
 export const metadata = {
   title: "Internship Opportunities for Freshers | FreshersJobs.shop",
   description:
-    "Explore the latest internship opportunities for freshers across India. Find remote, paid, part-time, and full-time internships to kickstart your career.",
-  alternates: { canonical: "http://13.50.111.42:5000/internships" },
+    "Explore the latest internship opportunities for freshers across India.",
+  alternates: {
+    canonical: "https://freshersjobs-shop.onrender.com/internships",
+  },
 };
 
-export default async function InternshipsPage() {
-  let internships = [];
-  let error = null;
+const API_BASE = "https://freshersjobs-shop.onrender.com";
 
+/* -------------------- Fetch Internships -------------------- */
+async function loadInternships(page) {
   try {
     const res = await fetch(
-      "http://13.50.111.42:5000/api/jobs",
+      `${API_BASE}/api/jobs?page=${page}&limit=9&type=internship`,
       { cache: "no-store" }
     );
 
-    if (!res.ok) throw new Error("Unable to fetch internships");
+    if (!res.ok) return null;
+    return res.json();
+  } catch (e) {
+    console.error("Internship Fetch Error:", e);
+    return null;
+  }
+}
 
-    const data = await res.json();
+/* -------------------- Page -------------------- */
+export default async function InternshipsPage({ searchParams = {} }) {
+  const page =
+    Number(searchParams.page) && Number(searchParams.page) > 0
+      ? Number(searchParams.page)
+      : 1;
 
-    const rawJobs = Array.isArray(data)
-      ? data
-      : data.jobs
-      ? data.jobs
-      : data.data
-      ? data.data
-      : [];
+  const data = await loadInternships(page);
 
-    internships = rawJobs.filter(
-      (job) =>
-        job.type?.toLowerCase() === "internship" ||
-        job.category?.toLowerCase() === "internship" ||
-        job.jobType?.toLowerCase() === "internship"
+  if (!data || !data.jobs?.length) {
+    return (
+      <p className="text-center text-gray-500 mt-20 text-lg">
+        No internships available right now 😢
+      </p>
     );
-  } catch (err) {
-    error = err.message;
   }
 
+  const { jobs, totalPages } = data;
+
   return (
-    <main className="w-full min-h-screen bg-white text-black overflow-x-hidden">
+    <main className="w-full min-h-screen bg-gray-50 text-black">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
 
-      {/* Title */}
-      <div className="text-center mt-6">
-        <h1 className="text-3xl md:text-4xl font-bold">
-          🎓 Internship Opportunities
-        </h1>
+        {/* TITLE */}
+        <section className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold">
+            🎓 Internship Opportunities
+          </h1>
+          <p className="text-gray-700 max-w-3xl mx-auto mt-4 text-lg">
+            Verified internships for students & freshers across India.
+          </p>
+        </section>
 
-        <p className="text-gray-700 max-w-3xl mx-auto mt-2 leading-relaxed">
-          Browse the best internship opportunities for freshers across India.
-        </p>
+        {/* GRID */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {jobs.map((intern) => (
+            <InternshipCard
+              key={intern._id}
+              title={intern.title}
+              company={intern.company}
+              location={intern.location}
+              stipend={intern.stipend || intern.salary}
+              link={`/internships/${intern._id}`}
+            />
+          ))}
+        </section>
+
+        {/* PAGINATION */}
+        <div className="flex flex-wrap justify-center mt-16 gap-4">
+          {page > 1 && (
+            <a
+              href={`/internships?page=${page - 1}`}
+              className="px-5 py-2.5 rounded-xl border bg-white hover:bg-gray-100"
+            >
+              ← Previous
+            </a>
+          )}
+
+          {[...Array(totalPages)].map((_, i) => {
+            const p = i + 1;
+            return (
+              <a
+                key={p}
+                href={`/internships?page=${p}`}
+                className={`px-5 py-2.5 rounded-xl border ${
+                  p === page
+                    ? "bg-blue-600 text-white font-semibold"
+                    : "bg-white hover:bg-gray-100"
+                }`}
+              >
+                {p}
+              </a>
+            );
+          })}
+
+          {page < totalPages && (
+            <a
+              href={`/internships?page=${page + 1}`}
+              className="px-5 py-2.5 rounded-xl border bg-white hover:bg-gray-100"
+            >
+              Next →
+            </a>
+          )}
+        </div>
       </div>
-
-      {/* Error */}
-      {error && (
-        <p className="text-center text-red-600 mt-6">{error}</p>
-      )}
-
-      {/* Count */}
-      {!error && internships.length > 0 && (
-        <p className="text-gray-600 text-center mt-4">
-          Showing <strong>{internships.length}</strong> internship opportunities
-        </p>
-      )}
-
-      {/* Empty State */}
-      {internships.length === 0 && !error && (
-        <p className="text-center text-gray-500 mt-10">
-          No internships available right now 😢
-        </p>
-      )}
-
-      {/* GRID */}
-      <div
-        className="
-        w-full 
-        grid 
-        grid-cols-1 
-        sm:grid-cols-2 
-        lg:grid-cols-3 
-        gap-5 
-        mt-10
-        px-2
-      "
-      >
-        {internships.map((intern) => (
-          <InternshipCard
-            key={intern._id}
-            title={intern.title}
-            company={intern.company}
-            location={intern.location}
-            stipend={intern.stipend || intern.salary}
-            // ✅ FIXED LINK
-            link={`/internships/${intern._id}`}
-          />
-        ))}
-      </div>
-
-      <div className="h-10"></div>
     </main>
   );
 }
