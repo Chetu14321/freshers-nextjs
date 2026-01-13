@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import "./job-details.css"; // reuse SAME CSS
+import "./job-details.css";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
@@ -19,7 +19,7 @@ export default function InternshipDetails() {
 
     const loadData = async () => {
       try {
-        const [internRes, latestRes] = await Promise.all([
+        const [internRes, listRes] = await Promise.all([
           fetch(`${BACKEND_URL}/api/jobs/${id}`, { cache: "no-store" }),
           fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`, {
             cache: "no-store",
@@ -27,11 +27,11 @@ export default function InternshipDetails() {
         ]);
 
         const internData = await internRes.json();
-        const latestData = await latestRes.json();
+        const listData = await listRes.json();
 
         setInternship(internData.job || internData);
         setLatestInternships(
-          (latestData.jobs || latestData || []).filter(i => i._id !== id)
+          (listData.jobs || listData || []).filter((i) => i._id !== id)
         );
       } catch (err) {
         console.error("Error loading internship:", err);
@@ -43,35 +43,71 @@ export default function InternshipDetails() {
     loadData();
   }, [id]);
 
-  if (loading) return <p className="center-text">Loading internship…</p>;
+  if (loading) return <p className="center-text">Loading internship details…</p>;
   if (!internship?._id)
     return <p className="center-text">Internship not found</p>;
 
   return (
     <main className="document-page">
-
       {/* ================= MAIN LAYOUT ================= */}
       <div className="layout">
-
         {/* ================= LEFT: DOCUMENT ================= */}
         <article className="document print-area">
-
+          {/* HEADER */}
           <header className="doc-header">
             <h1>{internship.title}</h1>
             <p className="company">{internship.company}</p>
           </header>
 
-          <section className="meta">
-            <p><b>Location:</b> {internship.location || "N/A"}</p>
-            <p><b>Type:</b> Internship</p>
-            <p><b>Duration:</b> {internship.duration || "N/A"}</p>
-            <p>
-              <b>Stipend:</b>{" "}
-              {internship.stipend || internship.salary || "Not disclosed"}
-            </p>
-            {internship.isWFH && <p><b>Work From Home:</b> Yes</p>}
+          {/* ================= INTERNSHIP DETAILS TABLE ================= */}
+          <section className="job-table">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Company Name</th>
+                  <td>{internship.company}</td>
+                </tr>
+
+                <tr>
+                  <th>Internship Role</th>
+                  <td>{internship.role || internship.title}</td>
+                </tr>
+
+                <tr>
+                  <th>Qualification</th>
+                  <td>{internship.qualification || "Any Graduate / Student"}</td>
+                </tr>
+
+                <tr>
+                  <th>Duration</th>
+                  <td>{internship.duration || "Not mentioned"}</td>
+                </tr>
+
+                <tr>
+                  <th>Stipend</th>
+                  <td>
+                    {internship.stipend ||
+                      internship.salary ||
+                      "Unpaid / Not disclosed"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Location</th>
+                  <td>{internship.location || "Remote / India"}</td>
+                </tr>
+
+                <tr>
+                  <th>Internship Type</th>
+                  <td>
+                    {internship.isWFH ? "Work From Home" : "On-site / Hybrid"}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </section>
 
+          {/* ================= DESCRIPTION ================= */}
           <section className="content">
             <div
               dangerouslySetInnerHTML={{
@@ -80,6 +116,7 @@ export default function InternshipDetails() {
             />
           </section>
 
+          {/* ================= APPLY ================= */}
           {internship.applyUrl && (
             <div className="apply">
               <a
@@ -87,7 +124,7 @@ export default function InternshipDetails() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Apply Now →
+                Apply for Internship →
               </a>
             </div>
           )}
@@ -97,7 +134,7 @@ export default function InternshipDetails() {
         <aside className="latest-jobs screen-only">
           <h3>Latest Internships</h3>
           <ul>
-            {latestInternships.slice(0, 6).map(i => (
+            {latestInternships.slice(0, 6).map((i) => (
               <li
                 key={i._id}
                 onClick={() => router.push(`/internships/${i._id}`)}
@@ -116,11 +153,14 @@ export default function InternshipDetails() {
 
         <form className="comment-form">
           <input type="text" placeholder="Your name" required />
-          <textarea placeholder="Write your comment..." rows="5" required />
+          <textarea
+            placeholder="Write your comment..."
+            rows="5"
+            required
+          />
           <button type="submit">Post Comment</button>
         </form>
       </section>
-
     </main>
   );
 }

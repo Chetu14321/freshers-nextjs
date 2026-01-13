@@ -255,3 +255,32 @@
   }
 }
 
+/* ================= JOB DETAILS TABLE ================= */
+.job-table {
+  margin: 32px 0;
+}
+
+.job-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.job-table th,
+.job-table td {
+  border: 1px solid #e5e5e5;
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.job-table th {
+  width: 32%;
+  background: #f9fafb;
+  font-weight: 600;
+  color: #111;
+}
+
+.job-table td {
+  color: #333;
+}

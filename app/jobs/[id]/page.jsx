@@ -29,7 +29,7 @@ export default function JobDetails() {
 
         setJob(jobData.job || jobData);
         setLatestJobs(
-          (jobsData.jobs || jobsData || []).filter(j => j._id !== id)
+          (jobsData.jobs || jobsData || []).filter((j) => j._id !== id)
         );
       } catch (err) {
         console.error("Error loading jobs:", err);
@@ -46,33 +46,66 @@ export default function JobDetails() {
 
   return (
     <main className="document-page">
-
       {/* ================= MAIN LAYOUT ================= */}
       <div className="layout">
-
         {/* ================= LEFT: JOB DOCUMENT ================= */}
         <article className="document print-area">
-
+          {/* HEADER */}
           <header className="doc-header">
             <h1>{job.title}</h1>
             <p className="company">{job.company}</p>
           </header>
 
-          <section className="meta">
-            <p><b>Location:</b> {job.location || "N/A"}</p>
-            <p><b>Type:</b> {job.type || "N/A"}</p>
-            <p><b>Experience:</b> {job.experience || "N/A"}</p>
-            <p><b>Salary:</b> {job.salary || "Not disclosed"}</p>
-            {job.isWFH && <p><b>Work From Home:</b> Yes</p>}
+          {/* ================= JOB DETAILS TABLE ================= */}
+          <section className="job-table">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Company Name</th>
+                  <td>{job.company}</td>
+                </tr>
+
+                <tr>
+                  <th>Job Role</th>
+                  <td>{job.role || job.title}</td>
+                </tr>
+
+                <tr>
+                  <th>Qualification</th>
+                  <td>{job.qualification || "Any Graduate"}</td>
+                </tr>
+
+                <tr>
+                  <th>Experience</th>
+                  <td>{job.experience || "Freshers Eligible"}</td>
+                </tr>
+
+                <tr>
+                  <th>Salary</th>
+                  <td>{job.salary || "As per company standards"}</td>
+                </tr>
+
+                <tr>
+                  <th>Location</th>
+                  <td>{job.location || "Across India"}</td>
+                </tr>
+              </tbody>
+            </table>
           </section>
 
+          {/* ================= DESCRIPTION ================= */}
           <section className="content">
             <div dangerouslySetInnerHTML={{ __html: job.description }} />
           </section>
 
+          {/* ================= APPLY ================= */}
           {job.applyUrl && (
             <div className="apply">
-              <a href={job.applyUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={job.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Apply Now →
               </a>
             </div>
@@ -83,7 +116,7 @@ export default function JobDetails() {
         <aside className="latest-jobs screen-only">
           <h3>Latest Jobs</h3>
           <ul>
-            {latestJobs.slice(0, 6).map(j => (
+            {latestJobs.slice(0, 6).map((j) => (
               <li key={j._id} onClick={() => router.push(`/jobs/${j._id}`)}>
                 <p className="lj-title">{j.title}</p>
                 <p className="lj-company">{j.company}</p>
@@ -99,11 +132,14 @@ export default function JobDetails() {
 
         <form className="comment-form">
           <input type="text" placeholder="Your name" required />
-          <textarea placeholder="Write your comment..." rows="5" required />
+          <textarea
+            placeholder="Write your comment..."
+            rows="5"
+            required
+          />
           <button type="submit">Post Comment</button>
         </form>
       </section>
-
     </main>
   );
 }
