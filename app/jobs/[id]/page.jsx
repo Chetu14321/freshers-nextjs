@@ -1,130 +1,109 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import "./job-details.css";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
-/* ===================== Loader ===================== */
-function JobDetailsLoader() {
-  return (
-    <div className="min-h-screen bg-white pt-24">
-      <div className="max-w-4xl mx-auto px-4 animate-pulse">
-
-        <div className="h-8 bg-gray-200 w-3/4 mb-3" />
-        <div className="h-4 bg-gray-200 w-1/3 mb-8" />
-
-        <div className="h-64 bg-gray-200 mb-8" />
-
-        <div className="space-y-3">
-          <div className="h-4 bg-gray-200 w-1/2" />
-          <div className="h-4 bg-gray-200 w-1/3" />
-          <div className="h-4 bg-gray-200 w-2/3" />
-        </div>
-
-        <div className="h-12 bg-blue-200 mt-10 w-full" />
-
-        <p className="text-center text-sm text-gray-500 mt-8">
-          Loading job details…
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ===================== Page ===================== */
 export default function JobDetails() {
   const { id } = useParams();
+  const router = useRouter();
 
   const [job, setJob] = useState(null);
+  const [latestJobs, setLatestJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
 
-    const loadJob = async () => {
+    const loadData = async () => {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/jobs/${id}`);
-        const data = await res.json();
-        setJob(data.job || data);
+        const [jobRes, jobsRes] = await Promise.all([
+          fetch(`${BACKEND_URL}/api/jobs/${id}`, { cache: "no-store" }),
+          fetch(`${BACKEND_URL}/api/jobs?limit=6`, { cache: "no-store" }),
+        ]);
+
+        const jobData = await jobRes.json();
+        const jobsData = await jobsRes.json();
+
+        setJob(jobData.job || jobData);
+        setLatestJobs(
+          (jobsData.jobs || jobsData || []).filter(j => j._id !== id)
+        );
       } catch (err) {
-        console.error("Error loading job:", err);
+        console.error("Error loading jobs:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadJob();
+    loadData();
   }, [id]);
 
-  /* ---------------- Loading ---------------- */
-  if (loading) return <JobDetailsLoader />;
+  if (loading) return <p className="center-text">Loading job details…</p>;
+  if (!job?._id) return <p className="center-text">Job not found</p>;
 
-  /* ---------------- Not Found ---------------- */
-  if (!job?._id) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-gray-600 text-lg">Job not found</p>
-      </div>
-    );
-  }
-
-  /* ---------------- Page ---------------- */
   return (
-    <main className="min-h-screen bg-white pt-20 pb-20">
+    <main className="document-page">
 
-      <div className="max-w-4xl mx-auto px-4">
+      {/* ================= MAIN LAYOUT ================= */}
+      <div className="layout">
 
-        {/* ================= Header ================= */}
-        <header className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
-            {job.title}
-          </h1>
-          <p className="text-gray-600 mt-2 text-lg">
-            {job.company}
-          </p>
-        </header>
+        {/* ================= LEFT: JOB DOCUMENT ================= */}
+        <article className="document print-area">
 
-        {/* ================= Image ================= */}
-        {job.img && (
-          <img
-            src={job.img}
-            alt={job.title}
-            className="w-full h-64 md:h-72 object-cover mb-10"
-          />
-        )}
+          <header className="doc-header">
+            <h1>{job.title}</h1>
+            <p className="company">{job.company}</p>
+          </header>
 
-        {/* ================= Meta ================= */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8 text-gray-800 text-sm mb-10">
-          <p><b>📍 Location:</b> {job.location || "Not specified"}</p>
-          <p><b>💼 Experience:</b> {job.experience || "Not specified"}</p>
-          <p><b>💰 Salary:</b> {job.salary || "Not disclosed"}</p>
-          <p><b>🧑‍💻 Role:</b> {job.role || "Not specified"}</p>
-        </section>
-
-        {/* ================= Description ================= */}
-        <section className="prose max-w-none text-gray-800 leading-relaxed">
-          <h2>Job Description</h2>
-          <div
-            dangerouslySetInnerHTML={{ __html: job.description }}
-          />
-        </section>
-
-        {/* ================= CTA ================= */}
-        {job.applyUrl && (
-          <section className="mt-14">
-            <a
-              href={job.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full text-center bg-blue-600 hover:bg-blue-700 transition text-white py-4 text-lg font-semibold"
-            >
-              Apply Now →
-            </a>
+          <section className="meta">
+            <p><b>Location:</b> {job.location || "N/A"}</p>
+            <p><b>Type:</b> {job.type || "N/A"}</p>
+            <p><b>Experience:</b> {job.experience || "N/A"}</p>
+            <p><b>Salary:</b> {job.salary || "Not disclosed"}</p>
+            {job.isWFH && <p><b>Work From Home:</b> Yes</p>}
           </section>
-        )}
 
+          <section className="content">
+            <div dangerouslySetInnerHTML={{ __html: job.description }} />
+          </section>
+
+          {job.applyUrl && (
+            <div className="apply">
+              <a href={job.applyUrl} target="_blank" rel="noopener noreferrer">
+                Apply Now →
+              </a>
+            </div>
+          )}
+        </article>
+
+        {/* ================= RIGHT: LATEST JOBS ================= */}
+        <aside className="latest-jobs screen-only">
+          <h3>Latest Jobs</h3>
+          <ul>
+            {latestJobs.slice(0, 6).map(j => (
+              <li key={j._id} onClick={() => router.push(`/jobs/${j._id}`)}>
+                <p className="lj-title">{j.title}</p>
+                <p className="lj-company">{j.company}</p>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
+
+      {/* ================= COMMENTS ================= */}
+      <section className="comments">
+        <h2>Leave a Comment</h2>
+
+        <form className="comment-form">
+          <input type="text" placeholder="Your name" required />
+          <textarea placeholder="Write your comment..." rows="5" required />
+          <button type="submit">Post Comment</button>
+        </form>
+      </section>
+
     </main>
   );
 }

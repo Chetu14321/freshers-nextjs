@@ -7,10 +7,14 @@ import { Menu, X, User } from "lucide-react";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
-const links = [
+/* ----------- LINK GROUPS ----------- */
+const mainLinks = [
   { href: "/jobs", label: "Jobs" },
   { href: "/internships", label: "Internships" },
   { href: "/resume-checker", label: "ATS Checker" },
+];
+
+const aboutLinks = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/terms", label: "Terms" },
@@ -24,41 +28,27 @@ export default function Navbar() {
   const [dropdown, setDropdown] = useState(false);
   const [user, setUser] = useState(null);
 
-  // ✅ Hydration guard (REQUIRED in Next.js)
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
+ const [mounted] = useState(true);
 
-    (async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/auth/me`, {
-          credentials: "include",
-        });
+useEffect(() => {
+  (async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/auth/me`, {
+        credentials: "include",
+      });
+      if (!res.ok) return setUser(null);
+      const data = await res.json();
+      setUser(data?.user || null);
+    } catch {
+      setUser(null);
+    }
+  })();
+}, [pathname]);
 
-        if (!res.ok) {
-          setUser(null);
-          return;
-        }
 
-        const data = await res.json();
-        setUser(data?.user || null);
-      } catch {
-        setUser(null);
-      }
-    })();
-  }, [pathname]);
-
-  // 🚨 Prevent hydration mismatch
-  if (!mounted) return null;
-
-  const isActive = (href) => {
-    if (href === "/jobs" && pathname.startsWith("/job")) return true;
-    if (href === "/internships" && pathname.startsWith("/internships"))
-      return true;
-    return pathname === href;
-  };
+  const isActive = (href) =>
+    pathname === href || pathname.startsWith(href + "/");
 
   const handleLogin = () => {
     window.location.href = `${BACKEND_URL}/auth/google`;
@@ -70,7 +60,6 @@ export default function Navbar() {
         credentials: "include",
       });
     } catch {}
-
     setUser(null);
     setDropdown(false);
     window.location.href = "/";
@@ -78,25 +67,25 @@ export default function Navbar() {
 
   return (
     <>
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
       <nav className="w-full bg-white/90 backdrop-blur-lg border-b shadow-sm fixed top-0 left-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+
           {/* LOGO */}
-          <Link
-            href="/"
-            className="text-2xl font-extrabold text-blue-600 tracking-tight"
-          >
+          <Link href="/" className="text-2xl font-extrabold text-blue-600">
             FreshersJobs<span className="text-gray-900">.shop</span>
           </Link>
 
-          {/* DESKTOP MENU */}
+          {/* ================= DESKTOP MENU ================= */}
           <div className="hidden md:flex items-center gap-6">
-            <ul className="flex gap-5 text-sm font-medium">
-              {links.map((link) => (
+            <ul className="flex gap-5 text-sm font-medium items-center">
+
+              {/* MAIN LINKS */}
+              {mainLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`px-3 py-1.5 rounded-md transition-all ${
+                    className={`px-3 py-1.5 rounded-md transition ${
                       isActive(link.href)
                         ? "bg-blue-600 text-white font-semibold"
                         : "text-gray-700 hover:bg-gray-100"
@@ -106,16 +95,46 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
+
+              {/* ABOUT DROPDOWN (DESKTOP ONLY) */}
+              <li className="relative group">
+                <span
+                  className={`px-3 py-1.5 rounded-md cursor-pointer transition ${
+                    aboutLinks.some((l) => isActive(l.href))
+                      ? "bg-blue-600 text-white font-semibold"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  About
+                </span>
+
+                {/* DROPDOWN */}
+                <div className="absolute left-0 top-full mt-2 w-44 bg-white border shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                  {aboutLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block px-4 py-2 text-sm hover:bg-gray-100 ${
+                        isActive(link.href)
+                          ? "font-semibold text-blue-600"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </li>
             </ul>
 
             {/* AUTH */}
             {user ? (
               <div className="relative">
                 <button
-                  onClick={() => setDropdown((v) => !v)}
-                  className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100 transition"
+                  onClick={() => setDropdown(!dropdown)}
+                  className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100"
                 >
-                  <User size={20} />
+                  <User size={18} />
                   <span className="text-sm font-semibold">
                     {user.name?.split(" ")[0]}
                   </span>
@@ -143,25 +162,24 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={handleLogin}
-                className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold text-sm hover:bg-blue-700 transition"
+                className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold text-sm hover:bg-blue-700"
               >
                 Sign In
               </button>
             )}
           </div>
 
-          {/* MOBILE MENU ICON */}
+          {/* ================= MOBILE MENU ICON ================= */}
           <button
             onClick={() => setOpen(true)}
             className="md:hidden p-2 rounded hover:bg-gray-100"
-            aria-label="Open mobile menu"
           >
             <Menu size={26} />
           </button>
         </div>
       </nav>
 
-      {/* MOBILE OVERLAY */}
+      {/* ================= MOBILE OVERLAY ================= */}
       {open && (
         <div
           className="fixed inset-0 bg-black/30 z-40"
@@ -169,21 +187,21 @@ export default function Navbar() {
         />
       )}
 
-      {/* MOBILE SIDEBAR */}
+      {/* ================= MOBILE SIDEBAR ================= */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 transform transition-transform ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          <h3 className="text-lg font-semibold">Navigation</h3>
-          <button onClick={() => setOpen(false)} aria-label="Close menu">
+          <h3 className="text-lg font-semibold">Dashboard</h3>
+          <button onClick={() => setOpen(false)}>
             <X size={24} />
           </button>
         </div>
 
-        <ul className="flex flex-col gap-1 mt-4 text-base font-medium px-4">
-          {links.map((link) => (
+        <ul className="flex flex-col gap-1 mt-4 px-4 font-medium">
+          {[...mainLinks, ...aboutLinks].map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
@@ -210,7 +228,6 @@ export default function Navbar() {
                 >
                   <User size={22} /> My Profile
                 </Link>
-
                 <button
                   onClick={handleLogout}
                   className="w-full px-3 py-2 mt-2 bg-red-500 text-white rounded-md"

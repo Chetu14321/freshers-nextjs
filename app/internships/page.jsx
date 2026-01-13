@@ -30,11 +30,12 @@ async function loadInternships(page) {
 }
 
 /* -------------------- Page -------------------- */
-export default async function InternshipsPage({ searchParams = {} }) {
-  const page =
-    Number(searchParams.page) && Number(searchParams.page) > 0
-      ? Number(searchParams.page)
-      : 1;
+export default async function InternshipsPage({ searchParams }) {
+  /* ✅ NEXT.JS 15 SAFE */
+  const params = await searchParams;
+
+  const rawPage = Number(params?.page);
+  const page = Number.isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
 
   const data = await loadInternships(page);
 

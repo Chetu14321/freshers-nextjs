@@ -1,120 +1,125 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-const API_BASE = "https://freshersjobs-shop.onrender.com";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import "./job-details.css"; // reuse SAME CSS
 
-/* -------------------- Fetch Internships -------------------- */
-async function loadInternships(page) {
-  try {
-    const res = await fetch(
-      `${API_BASE}/api/jobs?page=${page}&limit=9&type=internship`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (e) {
-    console.error("Internship Fetch Error:", e);
-    return null;
-  }
-}
+const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
-/* -------------------- Page -------------------- */
-export default async function InternshipsPage({ searchParams }) {
+export default function InternshipDetails() {
+  const { id } = useParams();
+  const router = useRouter();
 
-  /* ✅ SAFE PAGINATION */
-  const rawPage = Number(searchParams?.page);
-  const page = Number.isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
+  const [internship, setInternship] = useState(null);
+  const [latestInternships, setLatestInternships] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const data = await loadInternships(page);
+  useEffect(() => {
+    if (!id) return;
 
-  if (!data || !data.jobs?.length) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-gray-600 text-lg">
-          No internships available right now.
-        </p>
-      </div>
-    );
-  }
+    const loadData = async () => {
+      try {
+        const [internRes, latestRes] = await Promise.all([
+          fetch(`${BACKEND_URL}/api/jobs/${id}`, { cache: "no-store" }),
+          fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`, {
+            cache: "no-store",
+          }),
+        ]);
 
-  const { jobs, totalPages } = data;
+        const internData = await internRes.json();
+        const latestData = await latestRes.json();
+
+        setInternship(internData.job || internData);
+        setLatestInternships(
+          (latestData.jobs || latestData || []).filter(i => i._id !== id)
+        );
+      } catch (err) {
+        console.error("Error loading internship:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [id]);
+
+  if (loading) return <p className="center-text">Loading internship…</p>;
+  if (!internship?._id)
+    return <p className="center-text">Internship not found</p>;
 
   return (
-    <main className="min-h-screen bg-white w-full">
+    <main className="document-page">
 
-      <h1 className="text-4xl md:text-5xl font-extrabold text-center py-12">
-        🎓 Internship Opportunities
-      </h1>
+      {/* ================= MAIN LAYOUT ================= */}
+      <div className="layout">
 
-      <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8">
-        {jobs.map((intern, idx) => (
-          <a
-            key={intern._id}
-            href={`/internships/${intern._id}`}
-            className="bg-white shadow-sm hover:shadow-xl transition p-6 internship-card"
-            style={{ animationDelay: `${idx * 0.06}s` }}
-          >
-            <h3 className="font-bold text-lg text-blue-700 mb-1">
-              {intern.title}
-            </h3>
-            <p className="text-gray-700">{intern.company}</p>
-            <p className="text-gray-500 text-sm mt-1">
-              📍 {intern.location || "Not specified"}
+        {/* ================= LEFT: DOCUMENT ================= */}
+        <article className="document print-area">
+
+          <header className="doc-header">
+            <h1>{internship.title}</h1>
+            <p className="company">{internship.company}</p>
+          </header>
+
+          <section className="meta">
+            <p><b>Location:</b> {internship.location || "N/A"}</p>
+            <p><b>Type:</b> Internship</p>
+            <p><b>Duration:</b> {internship.duration || "N/A"}</p>
+            <p>
+              <b>Stipend:</b>{" "}
+              {internship.stipend || internship.salary || "Not disclosed"}
             </p>
-          </a>
-        ))}
-      </section>
+            {internship.isWFH && <p><b>Work From Home:</b> Yes</p>}
+          </section>
 
-      {/* PAGINATION */}
-      <div className="flex justify-center gap-3 py-14">
-        {page > 1 && (
-          <a
-            href={`/internships?page=${page - 1}`}
-            className="px-4 py-2 border hover:bg-gray-100"
-          >
-            ← Previous
-          </a>
-        )}
+          <section className="content">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: internship.description,
+              }}
+            />
+          </section>
 
-        {[...Array(totalPages)].map((_, i) => {
-          const p = i + 1;
-          return (
-            <a
-              key={p}
-              href={`/internships?page=${p}`}
-              className={`px-4 py-2 border ${
-                p === page
-                  ? "bg-blue-600 text-white font-semibold"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              {p}
-            </a>
-          );
-        })}
+          {internship.applyUrl && (
+            <div className="apply">
+              <a
+                href={internship.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Apply Now →
+              </a>
+            </div>
+          )}
+        </article>
 
-        {page < totalPages && (
-          <a
-            href={`/internships?page=${page + 1}`}
-            className="px-4 py-2 border hover:bg-gray-100"
-          >
-            Next →
-          </a>
-        )}
+        {/* ================= RIGHT: LATEST INTERNSHIPS ================= */}
+        <aside className="latest-jobs screen-only">
+          <h3>Latest Internships</h3>
+          <ul>
+            {latestInternships.slice(0, 6).map(i => (
+              <li
+                key={i._id}
+                onClick={() => router.push(`/internships/${i._id}`)}
+              >
+                <p className="lj-title">{i.title}</p>
+                <p className="lj-company">{i.company}</p>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
 
-      <style>{`
-        .internship-card {
-          opacity: 0;
-          transform: translateY(16px);
-          animation: fadeUp 0.4s ease forwards;
-        }
-        @keyframes fadeUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+      {/* ================= COMMENTS ================= */}
+      <section className="comments">
+        <h2>Leave a Comment</h2>
+
+        <form className="comment-form">
+          <input type="text" placeholder="Your name" required />
+          <textarea placeholder="Write your comment..." rows="5" required />
+          <button type="submit">Post Comment</button>
+        </form>
+      </section>
 
     </main>
   );
