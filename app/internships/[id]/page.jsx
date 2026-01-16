@@ -117,17 +117,25 @@ export default function InternshipDetails() {
           </section>
 
           {/* ================= APPLY ================= */}
-          {internship.applyUrl && (
-            <div className="apply">
-              <a
-                href={internship.applyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Apply for Internship →
-              </a>
-            </div>
-          )}
+          {/* ================= APPLY ================= */}
+{internship.applyUrl && (
+  <div className="apply">
+    <a
+      href={internship.applyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Apply on Official Company Website →
+    </a>
+
+    <p className="apply-disclaimer">
+      Disclaimer: FreshersJobs.shop does not charge any fees for internship
+      applications. Candidates are advised to apply only through official
+      company websites or verified hiring partners.
+    </p>
+  </div>
+)}
+
         </article>
 
         {/* ================= RIGHT: LATEST INTERNSHIPS ================= */}

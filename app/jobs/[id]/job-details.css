@@ -284,3 +284,9 @@
 .job-table td {
   color: #333;
 }
+.apply-disclaimer {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}

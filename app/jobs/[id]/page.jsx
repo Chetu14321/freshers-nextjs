@@ -99,17 +99,25 @@ export default function JobDetails() {
           </section>
 
           {/* ================= APPLY ================= */}
-          {job.applyUrl && (
-            <div className="apply">
-              <a
-                href={job.applyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Apply Now →
-              </a>
-            </div>
-          )}
+          {/* ================= APPLY ================= */}
+{job.applyUrl && (
+  <div className="apply">
+    <a
+      href={job.applyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Apply on Official Company Website →
+    </a>
+
+    <p className="apply-disclaimer">
+      Disclaimer: FreshersJobs.shop does not charge any fees for job applications.
+      Candidates are advised to apply only through official company career pages
+      or verified hiring partners.
+    </p>
+  </div>
+)}
+
         </article>
 
         {/* ================= RIGHT: LATEST JOBS ================= */}
