@@ -78,10 +78,7 @@ export default function InternshipDetails() {
                   <td>{internship.qualification || "Any Graduate / Student"}</td>
                 </tr>
 
-                <tr>
-                  <th>Duration</th>
-                  <td>{internship.duration || "Not mentioned"}</td>
-                </tr>
+                
 
                 <tr>
                   <th>Stipend</th>
@@ -97,12 +94,7 @@ export default function InternshipDetails() {
                   <td>{internship.location || "Remote / India"}</td>
                 </tr>
 
-                <tr>
-                  <th>Internship Type</th>
-                  <td>
-                    {internship.isWFH ? "Work From Home" : "On-site / Hybrid"}
-                  </td>
-                </tr>
+                
               </tbody>
             </table>
           </section>
