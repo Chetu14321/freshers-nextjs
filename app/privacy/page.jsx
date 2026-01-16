@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "Read the Privacy Policy of FreshersJobs.shop to understand how we collect, use, store, and protect your personal information.",
   alternates: {
-    canonical: "https://freshersjobs-shop.onrender.com/privacy",
+    canonical: "https://freshersjobs.shop/privacy",
   },
 };
 
@@ -69,6 +69,10 @@ export default function PrivacyPolicy() {
             <li>To comply with legal obligations</li>
             <li>To protect the rights, safety, and integrity of our platform</li>
           </ul>
+          <p className="text-gray-700 mt-2">
+            We do not collect or process sensitive personal information such as
+            financial details, passwords, or government identification numbers.
+          </p>
 
           {/* SECTION 4 */}
           <h2 className="mt-8 text-xl font-semibold text-gray-900">
@@ -83,9 +87,14 @@ export default function PrivacyPolicy() {
             <li>Improve site speed, content relevance, and usability</li>
           </ul>
           <p className="text-gray-700 mt-2">
-            You can disable cookies through your browser settings if you prefer.
-            By continuing to use this website, you consent to the use of cookies
-            in accordance with this Privacy Policy.
+            We may also use analytics services such as <strong>Google Analytics</strong>
+            to understand how users interact with our website and to improve
+            content and performance.
+          </p>
+          <p className="text-gray-700 mt-2">
+            You can disable cookies through your browser settings. By continuing
+            to use this website, you consent to the use of cookies in accordance
+            with this Privacy Policy.
           </p>
 
           {/* SECTION 5 */}
@@ -100,7 +109,7 @@ export default function PrivacyPolicy() {
           </p>
           <p className="text-gray-700 mt-2">
             Google’s use of advertising cookies enables it and its partners to
-            display advertisements that are relevant to users.
+            display advertisements relevant to users.
           </p>
           <p className="text-gray-700 mt-2">
             Users may opt out of personalized advertising by visiting{" "}
@@ -130,9 +139,8 @@ export default function PrivacyPolicy() {
           </h2>
           <p className="text-gray-700 mt-2">
             FreshersJobs.shop does not knowingly collect personal information
-            from children under the age of 13. If you believe that a child has
-            provided personal data on our website, please contact us and we will
-            promptly remove it.
+            from children under the age of 13. If you believe a child has
+            provided data on our website, please contact us for immediate removal.
           </p>
 
           {/* SECTION 8 */}
@@ -140,9 +148,8 @@ export default function PrivacyPolicy() {
             8. Third-Party Links
           </h2>
           <p className="text-gray-700 mt-2">
-            Our website may contain links to external websites, including company
-            career pages. We are not responsible for the privacy practices or
-            content of those websites.
+            Our website may contain links to external websites. We are not
+            responsible for the privacy practices or content of those sites.
           </p>
 
           {/* SECTION 9 */}
@@ -150,9 +157,8 @@ export default function PrivacyPolicy() {
             9. Updates to This Privacy Policy
           </h2>
           <p className="text-gray-700 mt-2">
-            We may update this Privacy Policy from time to time. Continued use of
-            the website after changes are posted indicates acceptance of the
-            updated policy.
+            We may update this Privacy Policy periodically. Continued use of the
+            website indicates acceptance of the updated policy.
           </p>
 
           {/* SECTION 10 */}
@@ -160,8 +166,7 @@ export default function PrivacyPolicy() {
             10. Contact Us
           </h2>
           <p className="text-gray-700 mt-2">
-            If you have any questions regarding this Privacy Policy, you may
-            contact us at:
+            If you have any questions regarding this Privacy Policy, contact us at:
           </p>
           <p className="mt-2">
             📧{" "}

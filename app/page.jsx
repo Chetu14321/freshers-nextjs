@@ -60,10 +60,12 @@ export default function Home() {
         : data.jobs || data.data || [];
 
       setJobs(
-        raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt))
+        raw.sort(
+          (a, b) => new Date(b.postedAt) - new Date(a.postedAt)
+        )
       );
     } catch (err) {
-      setFetchError("Error fetching jobs. Please try again later.");
+      setFetchError("Error fetching jobs. Please try again later.",err);
     } finally {
       setLoading(false);
     }
@@ -73,7 +75,7 @@ export default function Home() {
     loadJobs();
   }, [loadJobs]);
 
-  /* -------------------- Live Search Logic -------------------- */
+  /* -------------------- Live Search -------------------- */
   useEffect(() => {
     if (!debouncedSearch || debouncedSearch.trim().length < 2) {
       setShowResults(false);
@@ -82,7 +84,7 @@ export default function Home() {
     }
 
     const filtered = jobs.filter((job) =>
-      job.title.toLowerCase().includes(debouncedSearch.toLowerCase())
+      job.title?.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
 
     setResults(filtered.slice(0, 8));
@@ -119,7 +121,6 @@ export default function Home() {
     },
   ];
 
-  /* -------------------- JSX -------------------- */
   return (
     <main className="mx-auto bg-white text-black">
 
@@ -129,7 +130,7 @@ export default function Home() {
           Find the Best Jobs & Internships for Freshers
         </h1>
         <p className="text-lg md:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
-          Welcome to <strong>FreshersJobs</strong> — helping fresh graduates
+          Welcome to <strong>FreshersJobs.shop</strong> — helping fresh graduates
           discover verified jobs, internships, and career tools.
         </p>
       </section>
