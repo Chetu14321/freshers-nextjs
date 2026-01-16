@@ -1,9 +1,7 @@
-// app/terms/page.jsx
-
 export const metadata = {
-  title: "Terms & Conditions | FreshersJobs",
+  title: "Terms & Conditions | FreshersJobs.shop",
   description:
-    "Read the Terms & Conditions of FreshersJobs to understand the rules, responsibilities, and limitations of using our website.",
+    "Read the Terms & Conditions of FreshersJobs.shop to understand the rules, responsibilities, and limitations of using our website.",
   alternates: {
     canonical: "https://freshersjobs-shop.onrender.com/terms",
   },
@@ -11,96 +9,124 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-4xl mx-auto p-5 mt-10 fade-in">
+    <main className="w-full min-h-screen bg-gray-50 text-black">
+      <div className="max-w-4xl mx-auto px-4 py-12">
 
-      <div className="bg-white shadow-lg p-6 rounded-2xl fade-in-up border">
-        <h2 className="text-3xl font-bold mb-4 text-blue-600">
-          Terms &amp; Conditions
-        </h2>
+        <article className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 md:p-8">
 
-        <p className="text-gray-700 leading-relaxed">
-          Welcome to <strong>FreshersJobs</strong>. By accessing or using our
-          website, you agree to be bound by these Terms &amp; Conditions. Please
-          read them carefully before using our services.
-        </p>
+          {/* TITLE */}
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">
+            Terms &amp; Conditions
+          </h1>
 
-        <h4 className="mt-6 font-semibold text-xl">Use of Our Website</h4>
-        <p className="text-gray-700 leading-relaxed">
-          You agree to use FreshersJobs only for legitimate purposes such as
-          exploring jobs, internships, and career opportunities. You must not
-          use this platform for unlawful or harmful activities.
-        </p>
+          <p className="text-gray-700 leading-relaxed">
+            Welcome to <strong>FreshersJobs.shop</strong>. By accessing or using
+            our website, you agree to comply with and be bound by these Terms &amp;
+            Conditions. Please read them carefully before using our services.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Job Listings</h4>
-        <p className="text-gray-700 leading-relaxed">
-          We verify job and internship listings to the best of our ability.
-          However, <strong>FreshersJobs</strong> does not guarantee the accuracy
-          or authenticity of third-party job postings. Users must exercise due
-          diligence before applying.
-        </p>
+          {/* SECTION 1 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            1. Use of Our Website
+          </h2>
+          <p className="text-gray-700 mt-2">
+            You agree to use FreshersJobs.shop only for lawful purposes such as
+            browsing job listings, internships, and career-related information.
+            Any misuse, including fraudulent activity or abuse of the platform,
+            is strictly prohibited.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Third-Party Links</h4>
-        <p className="text-gray-700 leading-relaxed">
-          Our website may contain links to third-party websites. We are not
-          responsible for the content, privacy policies, or practices of any
-          external websites.
-        </p>
+          {/* SECTION 2 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            2. Job & Internship Listings
+          </h2>
+          <p className="text-gray-700 mt-2">
+            FreshersJobs.shop displays job and internship opportunities sourced
+            from company websites and third-party platforms. While we strive to
+            verify listings, we do not guarantee the accuracy, completeness, or
+            authenticity of third-party job postings.
+          </p>
+          <p className="text-gray-700 mt-2">
+            Users are advised to exercise due diligence before applying. We do
+            not charge any fees for job or internship applications.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Intellectual Property</h4>
-        <p className="text-gray-700 leading-relaxed">
-          All content on FreshersJobs—including text, graphics, and design—is
-          the property of FreshersJobs and may not be copied or reproduced
-          without prior written consent ok.
-        </p>
+          {/* SECTION 3 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            3. No Fees & No Guarantees
+          </h2>
+          <p className="text-gray-700 mt-2">
+            FreshersJobs.shop is an informational platform. We do not guarantee
+            job placement, interview calls, or employment outcomes. We never ask
+            users to pay money for jobs, internships, or hiring processes.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Limitation of Liability</h4>
-        <p className="text-gray-700 leading-relaxed">
-          FreshersJobs will not be held responsible for any loss, damage, or
-          inconvenience caused due to the use of our platform or reliance on
-          job listings.
-        </p>
+          {/* SECTION 4 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            4. Third-Party Links
+          </h2>
+          <p className="text-gray-700 mt-2">
+            Our website may contain links to external websites, including company
+            career pages and recruitment portals. We are not responsible for the
+            content, privacy policies, or practices of any third-party websites.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Changes to Terms</h4>
-        <p className="text-gray-700 leading-relaxed">
-          We may update these Terms &amp; Conditions periodically. Continued use
-          of our website indicates acceptance of updated terms.
-        </p>
+          {/* SECTION 5 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            5. Intellectual Property
+          </h2>
+          <p className="text-gray-700 mt-2">
+            All content published on FreshersJobs.shop, including text, design,
+            logos, graphics, and layout, is the intellectual property of
+            FreshersJobs.shop unless otherwise stated. Unauthorized reproduction
+            or redistribution is prohibited.
+          </p>
 
-        <h4 className="mt-6 font-semibold text-xl">Contact Us</h4>
-        <p className="text-gray-700 leading-relaxed">
-          For any questions regarding these Terms &amp; Conditions, reach out at:
-          <br />
-          📧{" "}
-          <a
-            href="mailto:chetuchethan87@gmail.com"
-            className="text-blue-600 underline"
-          >
-            chetuchethan87@gmail.com
-          </a>
-        </p>
+          {/* SECTION 6 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            6. Limitation of Liability
+          </h2>
+          <p className="text-gray-700 mt-2">
+            FreshersJobs.shop shall not be held liable for any loss, damage, or
+            inconvenience arising from the use of our website or reliance on job
+            listings, including but not limited to financial loss or missed
+            opportunities.
+          </p>
 
-        <p className="text-gray-500 mt-6">
-          Last updated: <strong>September 2025</strong>
-        </p>
+          {/* SECTION 7 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            7. Changes to These Terms
+          </h2>
+          <p className="text-gray-700 mt-2">
+            We reserve the right to update or modify these Terms &amp; Conditions
+            at any time. Continued use of the website after changes are posted
+            constitutes acceptance of the revised terms.
+          </p>
+
+          {/* SECTION 8 */}
+          <h2 className="mt-8 text-xl font-semibold text-gray-900">
+            8. Contact Us
+          </h2>
+          <p className="text-gray-700 mt-2">
+            If you have any questions regarding these Terms &amp; Conditions,
+            please contact us at:
+          </p>
+          <p className="mt-2">
+            📧{" "}
+            <a
+              href="mailto:chetuchethan87@gmail.com"
+              className="text-blue-600 underline"
+            >
+              chetuchethan87@gmail.com
+            </a>
+          </p>
+
+          <p className="text-gray-500 mt-10 text-sm">
+            Last updated: <strong>January 2026</strong>
+          </p>
+
+        </article>
       </div>
-
-      <style>{`
-        .fade-in { 
-          opacity: 0; 
-          animation: fadeIn 0.8s ease forwards; 
-        }
-        .fade-in-up { 
-          opacity: 0; 
-          transform: translateY(20px);
-          animation: fadeInUp 0.8s ease forwards; 
-        }
-        @keyframes fadeIn {
-          to { opacity: 1; }
-        }
-        @keyframes fadeInUp {
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </div>
+    </main>
   );
 }
