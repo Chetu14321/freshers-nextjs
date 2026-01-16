@@ -45,7 +45,6 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  /* -------------------- Load Jobs -------------------- */
   const loadJobs = useCallback(async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/jobs`, {
@@ -60,9 +59,7 @@ export default function Home() {
         : data.jobs || data.data || [];
 
       setJobs(
-        raw.sort(
-          (a, b) => new Date(b.postedAt) - new Date(a.postedAt)
-        )
+        raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt))
       );
     } catch (err) {
       setFetchError("Error fetching jobs. Please try again later.",err);
@@ -75,7 +72,6 @@ export default function Home() {
     loadJobs();
   }, [loadJobs]);
 
-  /* -------------------- Live Search -------------------- */
   useEffect(() => {
     if (!debouncedSearch || debouncedSearch.trim().length < 2) {
       setShowResults(false);
@@ -99,7 +95,6 @@ export default function Home() {
     }
   };
 
-  /* -------------------- Cards -------------------- */
   const cardData = [
     {
       title: "Jobs",
@@ -130,8 +125,8 @@ export default function Home() {
           Find the Best Jobs & Internships for Freshers
         </h1>
         <p className="text-lg md:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
-          Welcome to <strong>FreshersJobs.shop</strong> — helping fresh graduates
-          discover verified jobs, internships, and career tools.
+          FreshersJobs.shop helps students and fresh graduates discover verified
+          job openings, internships, and career opportunities across India.
         </p>
       </section>
 
@@ -225,6 +220,29 @@ export default function Home() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* SEO CONTENT SECTION */}
+      <section className="mt-20 px-4 max-w-5xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">
+          Why Choose FreshersJobs.shop?
+        </h2>
+        <p className="text-gray-700 leading-relaxed mb-4">
+          FreshersJobs.shop is a career discovery platform built specifically
+          for fresh graduates, students, and early-career professionals.
+          We focus on providing verified job listings, internships, and
+          entry-level opportunities from trusted companies across India.
+        </p>
+        <p className="text-gray-700 leading-relaxed mb-4">
+          Our goal is to reduce confusion for freshers by offering clear,
+          well-structured job information along with practical insights
+          that help candidates prepare better for interviews and applications.
+        </p>
+        <p className="text-gray-700 leading-relaxed">
+          FreshersJobs.shop does not charge any fees for job applications.
+          Candidates are always advised to apply through official company
+          websites or verified hiring platforms.
+        </p>
       </section>
 
     </main>
