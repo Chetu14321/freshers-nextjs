@@ -135,7 +135,7 @@ export default function JobDetails() {
       </div>
 
       {/* ================= COMMENTS ================= */}
-      <section className="comments">
+      {/* <section className="comments">
         <h2>Leave a Comment</h2>
 
         <form className="comment-form">
@@ -147,7 +147,7 @@ export default function JobDetails() {
           />
           <button type="submit">Post Comment</button>
         </form>
-      </section>
+      </section> */}
     </main>
   );
 }

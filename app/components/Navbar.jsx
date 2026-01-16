@@ -7,6 +7,9 @@ import { Menu, X, User } from "lucide-react";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
+/* 🔒 HIDE AUTH DURING ADSENSE REVIEW */
+const HIDE_AUTH_FOR_ADSENSE = true;
+
 /* ----------- LINK GROUPS ----------- */
 const mainLinks = [
   { href: "/jobs", label: "Jobs" },
@@ -28,24 +31,23 @@ export default function Navbar() {
   const [dropdown, setDropdown] = useState(false);
   const [user, setUser] = useState(null);
 
+  /* 🔕 DISABLE AUTH FETCH WHEN HIDDEN */
+  useEffect(() => {
+    if (HIDE_AUTH_FOR_ADSENSE) return;
 
- const [mounted] = useState(true);
-
-useEffect(() => {
-  (async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/auth/me`, {
-        credentials: "include",
-      });
-      if (!res.ok) return setUser(null);
-      const data = await res.json();
-      setUser(data?.user || null);
-    } catch {
-      setUser(null);
-    }
-  })();
-}, [pathname]);
-
+    (async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/auth/me`, {
+          credentials: "include",
+        });
+        if (!res.ok) return setUser(null);
+        const data = await res.json();
+        setUser(data?.user || null);
+      } catch {
+        setUser(null);
+      }
+    })();
+  }, [pathname]);
 
   const isActive = (href) =>
     pathname === href || pathname.startsWith(href + "/");
@@ -96,7 +98,7 @@ useEffect(() => {
                 </li>
               ))}
 
-              {/* ABOUT DROPDOWN (DESKTOP ONLY) */}
+              {/* ABOUT DROPDOWN */}
               <li className="relative group">
                 <span
                   className={`px-3 py-1.5 rounded-md cursor-pointer transition ${
@@ -108,7 +110,6 @@ useEffect(() => {
                   About
                 </span>
 
-                {/* DROPDOWN */}
                 <div className="absolute left-0 top-full mt-2 w-44 bg-white border shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                   {aboutLinks.map((link) => (
                     <Link
@@ -127,45 +128,47 @@ useEffect(() => {
               </li>
             </ul>
 
-            {/* AUTH */}
-            {user ? (
-              <div className="relative">
+            {/* 🔕 AUTH HIDDEN FOR ADSENSE */}
+            {!HIDE_AUTH_FOR_ADSENSE && (
+              user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setDropdown(!dropdown)}
+                    className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100"
+                  >
+                    <User size={18} />
+                    <span className="text-sm font-semibold">
+                      {user.name?.split(" ")[0]}
+                    </span>
+                  </button>
+
+                  {dropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2">
+                      <Link
+                        href="/profile"
+                        onClick={() => setDropdown(false)}
+                        className="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
+                      >
+                        View Profile
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50 text-sm"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
                 <button
-                  onClick={() => setDropdown(!dropdown)}
-                  className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-gray-50 hover:bg-gray-100"
+                  onClick={handleLogin}
+                  className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold text-sm hover:bg-blue-700"
                 >
-                  <User size={18} />
-                  <span className="text-sm font-semibold">
-                    {user.name?.split(" ")[0]}
-                  </span>
+                  Sign In
                 </button>
-
-                {dropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md p-2">
-                    <Link
-                      href="/profile"
-                      onClick={() => setDropdown(false)}
-                      className="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
-                    >
-                      View Profile
-                    </Link>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50 text-sm"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={handleLogin}
-                className="px-4 py-1.5 bg-blue-600 text-white rounded-md font-semibold text-sm hover:bg-blue-700"
-              >
-                Sign In
-              </button>
+              )
             )}
           </div>
 
@@ -194,7 +197,7 @@ useEffect(() => {
         }`}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          <h3 className="text-lg font-semibold">Dashboard</h3>
+          <h3 className="text-lg font-semibold">Menu</h3>
           <button onClick={() => setOpen(false)}>
             <X size={24} />
           </button>
@@ -217,33 +220,35 @@ useEffect(() => {
             </li>
           ))}
 
-          {/* MOBILE AUTH */}
-          <li className="mt-4 border-t pt-4">
-            {user ? (
-              <>
-                <Link
-                  href="/profile"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100"
-                >
-                  <User size={22} /> My Profile
-                </Link>
+          {/* 🔕 MOBILE AUTH HIDDEN */}
+          {!HIDE_AUTH_FOR_ADSENSE && (
+            <li className="mt-4 border-t pt-4">
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100"
+                  >
+                    <User size={22} /> My Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-3 py-2 mt-2 bg-red-500 text-white rounded-md"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={handleLogout}
-                  className="w-full px-3 py-2 mt-2 bg-red-500 text-white rounded-md"
+                  onClick={handleLogin}
+                  className="w-full px-3 py-2 mt-2 bg-blue-600 text-white rounded-md"
                 >
-                  Logout
+                  Sign In
                 </button>
-              </>
-            ) : (
-              <button
-                onClick={handleLogin}
-                className="w-full px-3 py-2 mt-2 bg-blue-600 text-white rounded-md"
-              >
-                Sign In
-              </button>
-            )}
-          </li>
+              )}
+            </li>
+          )}
         </ul>
       </div>
 
