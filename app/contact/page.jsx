@@ -26,6 +26,7 @@ export default function ContactForm() {
 
     setStatus({ type: "loading", msg: "Sending message..." });
 
+    // Note: In production, you would use a service like EmailJS or a Next.js API route here
     setTimeout(() => {
       setStatus({
         type: "success",
@@ -41,18 +42,19 @@ export default function ContactForm() {
       <h2 className="text-3xl font-bold text-blue-600 mb-3">Contact Us</h2>
 
       <p className="text-gray-700 mb-4">
-        Have questions, suggestions, or want to collaborate?  
-        Fill out the form and we’ll respond soon.
+        Have questions, suggestions, or want to collaborate? &nbsp;
+        Fill out the form and we&apos;ll respond soon.
       </p>
 
       {/* FORM */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="font-semibold">Name</label>
+          <label className="font-semibold block">Name</label>
           <input
             type="text"
             name="name"
-            className="w-full border rounded-lg p-2 mt-1"
+            placeholder="Enter your name"
+            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.name}
             onChange={handleChange}
             required
@@ -60,11 +62,12 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <label className="font-semibold">Email</label>
+          <label className="font-semibold block">Email</label>
           <input
             type="email"
             name="email"
-            className="w-full border rounded-lg p-2 mt-1"
+            placeholder="yourname@email.com"
+            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.email}
             onChange={handleChange}
             required
@@ -72,11 +75,12 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <label className="font-semibold">Message</label>
+          <label className="font-semibold block">Message</label>
           <textarea
             name="message"
             rows="5"
-            className="w-full border rounded-lg p-2 mt-1"
+            placeholder="How can we help you?"
+            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.message}
             onChange={handleChange}
             required
@@ -86,7 +90,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status?.type === "loading"}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-300"
         >
           {status?.type === "loading" ? "Sending..." : "Send Message"}
         </button>
@@ -106,23 +110,35 @@ export default function ContactForm() {
         </div>
       )}
 
-      <hr className="my-5" />
+      <hr className="my-6" />
 
-      <h4 className="font-semibold text-lg mb-2">Contact Information</h4>
-      <p><strong>Email:</strong> <a href="mailto:chetuchethan87@gmail.com" className="text-blue-600 underline">chetuchethan87@gmail.com</a></p>
-      <p><strong>Location:</strong> Bengaluru, Karnataka, India</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-semibold text-lg mb-2">Direct Contact</h4>
+          <p className="text-sm"><strong>Email:</strong> <a href="mailto:chetuchethan87@gmail.com" className="text-blue-600 underline">chetuchethan87@gmail.com</a></p>
+          <p className="text-sm"><strong>Location:</strong> Bengaluru, Karnataka, India</p>
+        </div>
+        
+        <div>
+          <h4 className="font-semibold text-lg mb-2">Business Hours</h4>
+          <p className="text-sm text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p className="text-sm text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
+        </div>
+      </div>
 
-      <h4 className="font-semibold text-lg mt-4">Follow Me</h4>
-      <a
-        href="https://www.linkedin.com/in/chethan-m-p-15691236a"
-        target="_blank"
-        className="text-blue-600 underline"
-      >
-        LinkedIn
-      </a>
+      <div className="mt-6 pt-4 border-t">
+        <h4 className="font-semibold text-lg mb-2">Social Professional Profile</h4>
+        <a
+          href="https://www.linkedin.com/in/chethan-m-p-15691236a"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center text-blue-600 hover:underline"
+        >
+          Connect with Chethan on LinkedIn
+        </a>
+      </div>
 
-      {/* Animations */}
-      <style>{`
+      <style jsx>{`
         .fade-in-up {
           opacity: 0;
           transform: translateY(20px);
