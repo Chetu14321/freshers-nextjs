@@ -173,12 +173,13 @@ export default function Navbar() {
           </div>
 
           {/* ================= MOBILE MENU ICON ================= */}
-          <button
-            onClick={() => setOpen(true)}
-            className="md:hidden p-2 rounded hover:bg-gray-100"
-          >
-            <Menu size={26} />
-          </button>
+        <button
+              onClick={() => setOpen(true)}
+              className="md:hidden p-2 rounded hover:bg-gray-100 border border-black" // Added border as per your style
+              aria-label="Open Navigation Menu" // <--- This fixes the Accessibility error
+            >
+              <Menu size={26} />
+            </button>
         </div>
       </nav>
 
@@ -198,8 +199,11 @@ export default function Navbar() {
       >
         <div className="p-4 flex items-center justify-between border-b">
           <h3 className="text-lg font-semibold">Menu</h3>
-          <button onClick={() => setOpen(false)}>
-            <X size={24} />
+          <button 
+            onClick={() => setOpen(false)}
+            aria-label="Close Menu"
+          >
+            <X size={26} />
           </button>
         </div>
 
