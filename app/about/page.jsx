@@ -1,151 +1,138 @@
-"use client";
+import React from "react";
+import Link from "next/link"; // Added Link import
+import { ShieldCheck, Target, Globe, Cpu } from "lucide-react";
 
-import Link from "next/link";
-import Head from "next/head";
-import Image from "next/image";
-
-const teamMembers = [
-  {
-    name: "Chethan M P",
-    role: "Founder & Career Strategist",
-    bio: "Founder of FreshersJobs.shop. With a passion for career development, Chethan curates verified opportunities to ensure fresh graduates start their professional journey on the right path.",
-    // Ensure this image exists in your public/images folder
-    img: "/images/chethan.jpg", 
-    linkedin: "https://www.linkedin.com/in/chethan-m-p-15691236a",
-  },
-];
+export const metadata = {
+  title: "About Us | FreshersJobs.shop",
+  description: "Learn about the mission, values, and verification standards of FreshersJobs.shop, India's independent career update platform.",
+};
 
 export default function AboutPage() {
   return (
-    <>
-      <Head>
-        <title>About Us | FreshersJobs.shop - Your Career Hub</title>
-        <meta
-          name="description"
-          content="FreshersJobs.shop is a trusted platform for Indian graduates to find verified jobs, internships, and career guidance. Led by Chethan M P."
-        />
-        <link rel="canonical" href="https://freshersjobs.shop/about" />
-      </Head>
-
-      <div className="max-w-5xl mx-auto p-4 mt-6">
-        <div className="bg-white shadow-lg border p-8 rounded-2xl">
-          
-          <h1 className="font-bold text-4xl text-blue-600 mb-6 border-b pb-4">
-            About FreshersJobs.shop
+    <main className="w-full min-h-screen bg-[#FDFDFD] text-slate-900 font-sans antialiased pb-24">
+      
+      {/* DOCUMENT HEADER */}
+      <header className="max-w-4xl mx-auto pt-20 px-6">
+        <div className="border-l-4 border-blue-600 pl-6">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-blue-600 mb-2">
+            Corporate Profile: REV-2026
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-950">
+            About <span className="text-blue-600">Us</span>
           </h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div className="md:col-span-2">
-              <p className="text-gray-700 text-lg leading-relaxed">
-                <strong>FreshersJobs.shop</strong> is an independent digital career hub created to empower 
-                fresh graduates and early-career professionals in India. We simplify the job hunt 
-                by providing a curated &quot;one-stop shop&quot; for verified job openings, internships, and 
-                essential career tools.
-              </p>
-              
-              <p className="text-gray-700 mt-4 italic border-l-4 border-blue-600 pl-4">
-                &quot;We chose the <strong>.shop</strong> domain to symbolize our goal of being a comprehensive 
-                marketplace for career growth—where every student can &apos;shop&apos; for the best opportunities 
-                to kickstart their future.&quot;
-              </p>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 text-sm">
-              <h4 className="font-bold text-blue-800 mb-2">Quick Facts</h4>
-              <ul className="space-y-1 text-gray-600">
-                <li>📍 Focus: Entry-level Roles</li>
-                <li>✅ Verification: 100% Manual</li>
-                <li>💰 Cost: Always Free</li>
-                <li>🌐 Region: Pan India</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <section>
-              <h2 className="font-semibold text-2xl text-gray-800 mt-2 flex items-center">
-                <span className="mr-2">🎯</span> Our Mission
-              </h2>
-              <p className="text-gray-600 mt-2">
-                To bridge the gap between aspiring professionals and trusted
-                employers by sharing clear, accurate, and fresher-focused job
-                information without the noise of typical job portals.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="font-semibold text-2xl text-gray-800 mt-2 flex items-center">
-                <span className="mr-2">✅</span> What We Offer
-              </h2>
-              <ul className="mt-2 space-y-2 text-gray-700 list-disc ml-5">
-                <li>Daily updates on fresher jobs & internships</li>
-                <li>Direct links to official company career portals</li>
-                <li>Step-by-step application guidance</li>
-                <li>Zero-spam environment</li>
-              </ul>
-            </section>
-          </div>
-
-          <hr className="my-10" />
-
-          <h2 className="font-semibold text-2xl text-center text-gray-800 mb-8">Meet the Visionary</h2>
-
-          <div className="flex justify-center">
-            {teamMembers.map((member) => (
-              <div
-                key={member.name}
-                className="max-w-sm w-full p-6 rounded-2xl text-center border bg-gray-50 shadow-sm hover:shadow-md transition"
-              >
-                <div className="relative w-32 h-32 mx-auto mb-4">
-                  <Image
-                    src={member.img}
-                    alt={member.name}
-                    fill
-                    className="rounded-full border-4 border-white shadow-lg object-cover"
-                  />
-                </div>
-                <h3 className="font-bold text-xl text-gray-900">{member.name}</h3>
-                <p className="text-blue-600 font-medium mb-3">{member.role}</p>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                  {member.bio}
-                </p>
-                <a
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                >
-                  Connect on LinkedIn
-                </a>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-center border-t pt-8">
-            <div>
-              <h2 className="font-semibold text-xl">📩 Get in Touch</h2>
-              <p className="text-gray-600 mt-2">
-                Have questions or need help? Our team is here to support your career journey.  
-                <Link href="/contact" className="text-blue-600 font-bold hover:underline ml-1">
-                  Contact Us Today
-                </Link>
-              </p>
-            </div>
-            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-sm text-gray-700">
-              <strong>Transparency Note:</strong> FreshersJobs.shop <strong>never charges</strong> 
-              candidates for job placements. We provide information for free and encourage 
-              applying through official channels only.
-            </div>
-          </div>
-
-          <div className="mt-8 bg-gray-100 p-4 rounded-lg text-xs text-gray-500 text-center">
-            <strong>Disclaimer:</strong> FreshersJobs.shop is an informational platform. We are not 
-            affiliated with any government body or recruitment firm. All logos are property of 
-            their respective owners.
-          </div>
-
+          <p className="mt-4 text-slate-500 font-medium max-w-2xl leading-relaxed">
+            FreshersJobs.shop is an independent digital platform dedicated to bridging the gap between India's top talent and premier career opportunities.
+          </p>
         </div>
-      </div>
-    </>
+      </header>
+
+      {/* DOCUMENT BODY */}
+      <section className="max-w-4xl mx-auto px-6 mt-16">
+        <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+          
+          {/* INTRODUCTION */}
+          <div className="p-8 md:p-12 border-b border-slate-100">
+            <h2 className="text-xs font-mono font-bold uppercase text-slate-400 mb-6 tracking-widest">
+              01. Executive Summary
+            </h2>
+            <p className="text-slate-700 text-sm md:text-base leading-relaxed font-medium">
+              Formerly operating under the principles of Swatantra Samachaar, our platform has evolved into <span className="font-bold text-slate-950">FreshersJobs.shop</span>. We serve as a centralized hub for reliable IT, private, and government sector job updates. Our mandate is to provide aspirants with structured, easy-to-digest career data sourced directly from official corporate and state portals.
+            </p>
+          </div>
+
+          {/* OPERATIONAL SCOPE GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-slate-100">
+              <h2 className="text-xs font-mono font-bold uppercase text-slate-400 mb-6 tracking-widest text-blue-600">
+                02. What We Do
+              </h2>
+              <ul className="space-y-4">
+                {[
+                  "Software & IT Sector Openings",
+                  "MNC Off-Campus Recruitment",
+                  "State & Central Govt Notifications",
+                  "Internship & Entry-Level Roles",
+                  "Technical Exam Guidance"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                    <Cpu size={14} className="text-blue-500" /> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-8 md:p-12">
+              <h2 className="text-xs font-mono font-bold uppercase text-slate-400 mb-6 tracking-widest text-blue-600">
+                03. Our Mission
+              </h2>
+              <div className="flex items-start gap-4">
+                <Target size={24} className="text-slate-300 mt-1" />
+                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                  To simplify the professional landscape for freshers. We aim to reduce informational friction by delivering verified, timely, and transparent job notifications across all educational backgrounds.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* COMPLIANCE & ACCURACY */}
+          <div className="p-8 md:p-12 bg-slate-50 border-t border-slate-100">
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1">
+                <h2 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">
+                  Accuracy & Transparency Statement
+                </h2>
+                <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                  All job details are aggregated from official company websites, government employment news, and trusted public records. <strong>FreshersJobs.shop does not conduct recruitment, charge application fees, or claim affiliation with any government department.</strong>
+                </p>
+              </div>
+              <div className="px-6 py-4 bg-white border border-slate-200 rounded-xl flex items-center gap-3 shadow-sm">
+                <ShieldCheck className="text-green-600" size={28} />
+                <div>
+                  <p className="text-[10px] font-mono font-bold text-slate-400 uppercase">Verification</p>
+                  <p className="text-xs font-bold text-slate-900">100% Manual Audit</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* WHY TRUST US SECTION */}
+          <div className="p-8 md:p-12 border-t border-slate-100">
+            <h2 className="text-xs font-mono font-bold uppercase text-slate-400 mb-8 tracking-widest text-center">
+              Trust Indicators
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {[
+                { title: "Reliable Sourcing", desc: "Data from official portals only." },
+                { title: "Policy Compliant", desc: "Strict adherence to AdSense guidelines." },
+                { title: "No Misleading Claims", desc: "Honest, fact-based reporting." }
+              ].map((box, i) => (
+                <div key={i} className="text-center">
+                  <h4 className="text-sm font-bold text-slate-900 mb-2">{box.title}</h4>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">{box.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* FOOTER AREA - Updated with internal Link */}
+        <div className="mt-16 text-center space-y-6">
+          <p className="text-sm font-medium text-slate-500">
+            Thank you for choosing FreshersJobs.shop as your career guide.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link 
+              href="/contact" 
+              className="px-8 py-3 bg-slate-950 text-white text-[10px] font-mono font-bold uppercase tracking-widest rounded-lg hover:bg-blue-600 transition-all shadow-sm active:scale-95"
+            >
+              Contact Admin
+            </Link>
+          </div>
+          <p className="text-[10px] font-mono text-slate-300 uppercase tracking-widest">
+            Established 2026 • FJS Media Group
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

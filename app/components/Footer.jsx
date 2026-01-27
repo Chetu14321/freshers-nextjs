@@ -1,119 +1,96 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 
+// Hydration-Safe Helper
+const subscribe = () => () => {};
+function useIsClient() {
+  return useSyncExternalStore(subscribe, () => true, () => false);
+}
+
 export default function Footer() {
+  const isClient = useIsClient();
+
+  // Prevents mismatch during hydration
+  if (!isClient) return <footer className="bg-gray-900 h-20" />;
+
   return (
     <footer className="bg-gray-900 text-white mt-10 fade-up">
-
-      {/* MAIN FOOTER */}
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
 
         {/* Brand Section */}
         <div className="fade-delay" style={{ animationDelay: "0.1s" }}>
-          <h3 className="text-2xl font-bold">
-            <span className="text-blue-500">Freshers</span>Jobs
+          <h3 className="text-2xl font-black tracking-tighter">
+            <span className="text-blue-500">Freshers</span>Jobs<span className="text-sm font-light text-gray-400">.shop</span>
           </h3>
-
-          <p className="text-gray-300 mt-3 leading-relaxed">
-            Discover verified jobs, internships & opportunities that help you
-            build a successful career.
+          <p className="text-gray-400 mt-4 leading-relaxed text-sm">
+            Empowering Indian graduates with manually verified off-campus drives, 
+            internships, and career roadmaps. Your professional journey starts here.
           </p>
-
-          {/* Social Icons */}
-          <div className="flex gap-4 mt-4">
+          <div className="flex gap-4 mt-6">
             <a
               href="https://www.linkedin.com/in/chethan-m-p-15691236a"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="text-white text-2xl hover-icon transition"
+              className="text-gray-400 hover:text-blue-500 text-2xl transition-all hover:scale-110"
             >
               <i className="bi bi-linkedin"></i>
             </a>
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Quick Links - UPDATED PATHS */}
         <div className="fade-delay" style={{ animationDelay: "0.2s" }}>
-          <h4 className="text-xl font-semibold mb-3">Quick Links</h4>
-
-          <ul className="space-y-2 text-gray-300">
-            <li>
-              <Link href="/jobs" className="hover-link">Jobs</Link>
-            </li>
-            <li>
-              <Link href="/internships" className="hover-link">
-                Internships
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="hover-link">About</Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover-link">Contact Us</Link>
-            </li>
-            <li>
-              <Link href="/terms" className="hover-link">Terms & Conditions</Link>
-            </li>
-            <li>
-              <Link href="/privacy" className="hover-link">Privacy Policy</Link>
-            </li>
+          <h4 className="text-lg font-bold mb-4 uppercase tracking-widest text-blue-500">Resources</h4>
+          <ul className="space-y-3 text-gray-300 text-sm">
+            <li><Link href="/jobs" className="hover-link">Latest Job Openings</Link></li>
+            <li><Link href="/internships" className="hover-link">Internship Programs</Link></li>
+            <li><Link href="/about" className="hover-link">Our Verification Process</Link></li>
+            <li><Link href="/contact" className="hover-link">Contact Support</Link></li>
+            <li><Link href="/privacy" className="hover-link">Privacy Policy</Link></li>
+            <li><Link href="/terms" className="hover-link">Terms of Service</Link></li>
           </ul>
         </div>
 
-        {/* Contact */}
+        {/* Contact Section */}
         <div className="fade-delay" style={{ animationDelay: "0.3s" }}>
-          <h4 className="text-xl font-semibold mb-3">Contact</h4>
-
-          <p className="text-gray-300">
-            📧{" "}
-            <a
-              href="mailto:chetuchethan87@gmail.com"
-              className="hover-link"
-            >
-              chetuchethan87@gmail.com
-            </a>
-          </p>
-
-          <p className="text-gray-300 mt-2">📍 Bangalore, India</p>
+          <h4 className="text-lg font-bold mb-4 uppercase tracking-widest text-blue-500">Official Channel</h4>
+          <div className="space-y-4 text-sm text-gray-300">
+            <p className="flex items-center gap-3">
+              <span className="text-xl">📩</span>
+              <a href="mailto:chetuchethan87@gmail.com" className="hover-link">
+                chetuchethan87@gmail.com
+              </a>
+            </p>
+            <p className="flex items-center gap-3">
+              <span className="text-xl">📍</span>
+              Bangalore, Karnataka, India
+            </p>
+            <div className="mt-6 p-4 bg-gray-800 rounded-xl border border-gray-700">
+              <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Safety Note</p>
+              <p className="text-[11px] leading-tight text-gray-300">
+                FreshersJobs.shop never charges candidates for placement services.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* BOTTOM BAR */}
-      <div className="bg-gray-800 text-center py-3 fade-delay" style={{ animationDelay: "0.4s" }}>
-        <p className="text-gray-300 text-sm">
-          © {new Date().getFullYear()} <strong>FreshersJobs</strong>.  
-          All rights reserved.
+      {/* BOTTOM BAR - Hydration Safe Year */}
+      <div className="bg-black/30 border-t border-gray-800 text-center py-6">
+        <p className="text-gray-500 text-xs tracking-widest">
+          © {new Date().getFullYear()} <span className="text-gray-300 font-bold uppercase">FreshersJobs.shop</span> | A CHETHAN M P INITIATIVE
         </p>
       </div>
 
-      {/* ANIMATIONS + HOVER STYLES */}
       <style>{`
-        .fade-up {
-          opacity: 0;
-          transform: translateY(20px);
-          animation: fadeUp 0.7s ease forwards;
-        }
-        .fade-delay {
-          opacity: 0;
-          transform: translateY(20px);
-          animation: fadeUp 0.7s ease forwards;
-        }
-        .hover-link {
-          color: #e5e7eb;
-          transition: 0.3s;
-        }
-        .hover-link:hover {
-          color: #3b82f6;
-          text-decoration: underline;
-        }
-        .hover-icon:hover {
-          color: #3b82f6;
-          transform: scale(1.15);
-          transition: 0.3s;
-        }
+        .fade-up { animation: fadeUp 0.7s ease forwards; }
+        .fade-delay { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+        .hover-link { transition: 0.2s; }
+        .hover-link:hover { color: #3b82f6; }
         @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(15px); }
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>

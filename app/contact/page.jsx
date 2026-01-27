@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -20,67 +19,72 @@ export default function ContactForm() {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
-      setStatus({ type: "error", msg: "Please fill all fields." });
+      setStatus({ type: "error", msg: "Please fill all required fields." });
       return;
     }
 
-    setStatus({ type: "loading", msg: "Sending message..." });
+    setStatus({ type: "loading", msg: "Transmitting message..." });
 
-    // Note: In production, you would use a service like EmailJS or a Next.js API route here
+    // Simulation of API call
     setTimeout(() => {
       setStatus({
         type: "success",
-        msg: "Thank you! We will get back to you shortly.",
+        msg: "Message sent! Our career team will contact you within 24-48 hours.",
       });
       setFormData({ name: "", email: "", message: "" });
     }, 1500);
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 fade-in-up border">
-
-      <h2 className="text-3xl font-bold text-blue-600 mb-3">Contact Us</h2>
-
-      <p className="text-gray-700 mb-4">
-        Have questions, suggestions, or want to collaborate? &nbsp;
-        Fill out the form and we&apos;ll respond soon.
-      </p>
+    <div className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 p-8 md:p-12 border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      <div className="mb-8">
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-3">
+          Send a <span className="text-blue-600">Direct Message</span>
+        </h2>
+        <p className="text-slate-500 text-sm leading-relaxed">
+          Have a specific query regarding a listing or partnership? Our editorial 
+          team reviews every inquiry personally.
+        </p>
+      </div>
 
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="font-semibold block">Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="name@company.com"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
 
         <div>
-          <label className="font-semibold block">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="yourname@email.com"
-            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="font-semibold block">Message</label>
+          <label className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Inquiry Details</label>
           <textarea
             name="message"
-            rows="5"
-            placeholder="How can we help you?"
-            className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
+            rows="4"
+            placeholder="How can our career strategists assist you today?"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all resize-none"
             value={formData.message}
             onChange={handleChange}
             required
@@ -90,64 +94,46 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status?.type === "loading"}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-300"
+          className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-[0.98] disabled:bg-slate-300 shadow-lg shadow-blue-200"
         >
-          {status?.type === "loading" ? "Sending..." : "Send Message"}
+          {status?.type === "loading" ? "Processing..." : "Submit Inquiry"}
         </button>
       </form>
 
+      {/* STATUS ALERTS */}
       {status && (
         <div
-          className={`mt-4 p-3 text-center rounded-lg ${
+          className={`mt-6 p-4 text-sm font-medium text-center rounded-xl animate-in zoom-in-95 duration-300 ${
             status.type === "success"
-              ? "bg-green-100 text-green-700"
+              ? "bg-green-50 text-green-700 border border-green-100"
               : status.type === "error"
-              ? "bg-red-100 text-red-700"
-              : "bg-blue-100 text-blue-700"
+              ? "bg-red-50 text-red-700 border border-red-100"
+              : "bg-blue-50 text-blue-700 border border-blue-100"
           }`}
         >
           {status.msg}
         </div>
       )}
 
-      <hr className="my-6" />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h4 className="font-semibold text-lg mb-2">Direct Contact</h4>
-          <p className="text-sm"><strong>Email:</strong> <a href="mailto:chetuchethan87@gmail.com" className="text-blue-600 underline">chetuchethan87@gmail.com</a></p>
-          <p className="text-sm"><strong>Location:</strong> Bengaluru, Karnataka, India</p>
-        </div>
-        
-        <div>
-          <h4 className="font-semibold text-lg mb-2">Business Hours</h4>
-          <p className="text-sm text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-          <p className="text-sm text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
+      <div className="mt-10 pt-8 border-t border-slate-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-tighter text-slate-900 mb-3 underline decoration-blue-500 decoration-2">Corporate HQ</h4>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              <strong>Email:</strong> <a href="mailto:chetuchethan87@gmail.com" className="text-blue-600 hover:text-slate-900 transition">chetuchethan87@gmail.com</a><br />
+              <strong>Location:</strong> Bengaluru, KA, India
+            </p>
+          </div>
+          
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-tighter text-slate-900 mb-3 underline decoration-blue-500 decoration-2">Response Protocol</h4>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              <strong>Mon - Fri:</strong> 9:00 AM — 6:00 PM IST<br />
+              <strong>Urgent:</strong> Connect via verified LinkedIn profile.
+            </p>
+          </div>
         </div>
       </div>
-
-      <div className="mt-6 pt-4 border-t">
-        <h4 className="font-semibold text-lg mb-2">Social Professional Profile</h4>
-        <a
-          href="https://www.linkedin.com/in/chethan-m-p-15691236a"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center text-blue-600 hover:underline"
-        >
-          Connect with Chethan on LinkedIn
-        </a>
-      </div>
-
-      <style jsx>{`
-        .fade-in-up {
-          opacity: 0;
-          transform: translateY(20px);
-          animation: fadeInUp .7s forwards;
-        }
-        @keyframes fadeInUp {
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
