@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Briefcase, GraduationCap, ShieldCheck, ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
-const JOBS_PER_PAGE = 9; // Grid will be 3x3 per page
+const JOBS_PER_PAGE = 9;
 
 /* -------------------- Debounce Hook -------------------- */
 function useDebounce(value, delay = 300) {
@@ -38,47 +38,54 @@ export default function Home() {
   const debouncedSearch = useDebounce(search, 300);
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  
-  // PAGINATION STATE
   const [currentPage, setCurrentPage] = useState(1);
 
+  /* -------------------- Load Jobs -------------------- */
   const loadJobs = useCallback(async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/jobs`, { cache: "no-store" });
+      const res = await fetch(`${BACKEND_URL}/api/jobs`, {
+        cache: "no-store",
+      });
       const data = await res.json();
-      const raw = Array.isArray(data) ? data : data.jobs || data.data || [];
+      const raw = data.jobs || [];
       setJobs(raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt)));
-    } catch (err) { 
-      console.error("Fetch Error:", err); 
-    } finally { 
-      setLoading(false); 
+    } catch (err) {
+      console.error("Fetch Error:", err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  useEffect(() => { loadJobs(); }, [loadJobs]);
+  useEffect(() => {
+    loadJobs();
+  }, [loadJobs]);
 
+  /* -------------------- Search Logic -------------------- */
   useEffect(() => {
     if (!debouncedSearch || debouncedSearch.trim().length < 2) {
       setShowResults(false);
       return;
     }
-    const filtered = jobs.filter((job) =>
-      job.title?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      job.company?.toLowerCase().includes(debouncedSearch.toLowerCase())
+
+    const filtered = jobs.filter(
+      (job) =>
+        job.title?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        job.company?.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
+
     setResults(filtered.slice(0, 8));
     setShowResults(true);
   }, [debouncedSearch, jobs]);
 
-  // PAGINATION LOGIC
+  /* -------------------- Pagination -------------------- */
   const indexOfLastJob = currentPage * JOBS_PER_PAGE;
   const indexOfFirstJob = indexOfLastJob - JOBS_PER_PAGE;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalPages = Math.ceil(jobs.length / JOBS_PER_PAGE);
 
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const paginate = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const submitSearch = (e) => {
@@ -91,8 +98,7 @@ export default function Home() {
 
   return (
     <main className="bg-white text-slate-900 min-h-screen">
-      
-      {/* SEARCH SECTION */}
+      {/* ================= SEARCH ================= */}
       <div className="max-w-4xl mx-auto pt-10 px-4 relative">
         <form onSubmit={submitSearch}>
           <input
@@ -103,73 +109,100 @@ export default function Home() {
             className="w-full px-6 py-4 border-2 border-black rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm"
           />
         </form>
+
         {showResults && (
           <div className="absolute left-4 right-4 bg-white border-2 border-black rounded-2xl shadow-xl mt-2 z-50 max-h-80 overflow-auto">
-            {results.map((job) => (
-              <Link key={job._id} href={`/jobs/${job._id}`} className="block px-6 py-4 hover:bg-slate-50 border-b border-gray-100 last:border-0 font-bold text-blue-600 text-sm">
-                {job.title} <span className="text-slate-400 font-medium">— {job.company}</span>
-              </Link>
-            ))}
+            {results.map((job) => {
+              const slugOrId = job.slug || job._id;
+              return (
+                <Link
+                  key={slugOrId}
+                  href={`/jobs/${slugOrId}`}
+                  className="block px-6 py-4 hover:bg-slate-50 border-b border-gray-100 last:border-0 font-bold text-blue-600 text-sm"
+                >
+                  {job.title}{" "}
+                  <span className="text-slate-400 font-medium">
+                    — {job.company}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-8">
-        
-        {/* LEFT COLUMN: JOB GRID + PAGINATION */}
+        {/* ================= JOB GRID ================= */}
         <div className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {loading ? (
-              [...Array(6)].map((_, i) => <JobSkeleton key={i} />)
-            ) : (
-              currentJobs.map((job) => (
-                <Link key={job._id} href={`/jobs/${job._id}`} className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
-                  <div className="px-4 py-2 bg-white border-b border-gray-50">
-                    <span className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">Fresher Jobs</span>
-                  </div>
-                  <div className="p-5 flex-1">
-                    <h2 className="text-lg font-bold text-slate-900 leading-tight group-hover:text-blue-700 transition-colors">
-                      {job.title} at {job.company}
-                    </h2>
-                    <p className="text-[11px] text-slate-400 mt-2 font-medium">
-                       Admin / {new Date(job.postedAt || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                    </p>
-                    <p className="text-sm text-slate-500 mt-4 line-clamp-3 leading-relaxed">
-                      Latest hiring for {job.title}. Apply now to {job.company} through their official career portal.
-                    </p>
-                  </div>
-                </Link>
-              ))
-            )}
+            {loading
+              ? [...Array(6)].map((_, i) => <JobSkeleton key={i} />)
+              : currentJobs.map((job) => {
+                  const slugOrId = job.slug || job._id;
+                  return (
+                    <Link
+                      key={slugOrId}
+                      href={`/jobs/${slugOrId}`}
+                      className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                    >
+                      <div className="px-4 py-2 bg-white border-b border-gray-50">
+                        <span className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">
+                          Fresher Jobs
+                        </span>
+                      </div>
+
+                      <div className="p-5 flex-1">
+                        <h2 className="text-lg font-bold text-slate-900 leading-tight group-hover:text-blue-700 transition-colors">
+                          {job.title} at {job.company}
+                        </h2>
+
+                        <p className="text-[11px] text-slate-400 mt-2 font-medium">
+                          Admin /{" "}
+                          {new Date(job.postedAt || Date.now()).toLocaleDateString(
+                            "en-US",
+                            { month: "long", day: "numeric", year: "numeric" }
+                          )}
+                        </p>
+
+                        <p className="text-sm text-slate-500 mt-4 line-clamp-3 leading-relaxed">
+                          Latest hiring for {job.title}. Apply now to{" "}
+                          {job.company} through their official career portal.
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
           </div>
 
-          {/* PAGINATION UI */}
+          {/* ================= PAGINATION ================= */}
           {!loading && totalPages > 1 && (
             <div className="mt-12 flex items-center justify-center gap-2">
-              <button 
+              <button
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 border-2 border-black rounded-lg disabled:opacity-20 disabled:cursor-not-allowed hover:bg-slate-100 transition-all"
+                className="p-2 border-2 border-black rounded-lg disabled:opacity-20"
               >
                 <ChevronLeft size={20} />
               </button>
-              
+
               {[...Array(totalPages)].map((_, i) => (
                 <button
                   key={i}
                   onClick={() => paginate(i + 1)}
-                  className={`w-10 h-10 border-2 border-black rounded-lg font-bold text-sm transition-all ${
-                    currentPage === i + 1 ? "bg-black text-white shadow-[2px_2px_0px_0px_rgba(37,99,235,1)]" : "bg-white hover:bg-slate-100"
+                  className={`w-10 h-10 border-2 border-black rounded-lg font-bold ${
+                    currentPage === i + 1
+                      ? "bg-black text-white"
+                      : "bg-white"
                   }`}
                 >
                   {i + 1}
                 </button>
               ))}
 
-              <button 
+              <button
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 border-2 border-black rounded-lg disabled:opacity-20 disabled:cursor-not-allowed hover:bg-slate-100 transition-all"
+                className="p-2 border-2 border-black rounded-lg disabled:opacity-20"
               >
                 <ChevronRight size={20} />
               </button>
@@ -177,37 +210,32 @@ export default function Home() {
           )}
         </div>
 
-        {/* RIGHT COLUMN: SIDEBAR */}
+        {/* ================= SIDEBAR ================= */}
         <aside className="w-full lg:w-80 space-y-10">
-          <div className="bg-white">
-            <h3 className="text-xl font-bold border-b-2 border-slate-950 pb-2 mb-6">Recent Posts</h3>
+          <div>
+            <h3 className="text-xl font-bold border-b-2 border-black pb-2 mb-6">
+              Recent Posts
+            </h3>
             <div className="space-y-4">
-              {jobs.slice(0, 6).map((job) => (
-                <Link key={job._id} href={`/jobs/${job._id}`} className="block text-sm font-bold text-blue-700 hover:underline leading-snug">
-                  {job.title} Recruitment Guide
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white">
-            <h3 className="text-xl font-bold border-b-2 border-slate-950 pb-2 mb-6">Quick Links</h3>
-            <div className="space-y-3">
-              {['Internships', 'Full Time Jobs', 'Remote Roles'].map((cat, i) => (
-                <Link key={i} href="/jobs" className="flex items-center justify-between group border-b border-gray-100 pb-2">
-                  <span className="text-sm font-bold text-blue-700 group-hover:text-slate-900">{cat}</span>
-                  <ChevronRight size={14} className="text-slate-300" />
-                </Link>
-              ))}
+              {jobs.slice(0, 6).map((job) => {
+                const slugOrId = job.slug || job._id;
+                return (
+                  <Link
+                    key={slugOrId}
+                    href={`/jobs/${slugOrId}`}
+                    className="block text-sm font-bold text-blue-700 hover:underline"
+                  >
+                    {job.title} Recruitment Guide
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </aside>
       </div>
 
-      <footer className="border-t border-gray-100 py-10 px-4 bg-slate-50 mt-10 text-center">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-          FreshersJobs.shop • Your Career Partner • 2026
-        </p>
+      <footer className="border-t py-10 text-center text-[10px] font-bold text-slate-400">
+        FreshersJobs.shop • Your Career Partner • 2026
       </footer>
     </main>
   );

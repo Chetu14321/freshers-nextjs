@@ -1,0 +1,146 @@
+import { notFound } from "next/navigation";
+import "./job-details.css"; // ✅ MAKE SURE CSS IS IMPORTED
+
+export const dynamic = "force-dynamic";
+
+const API_BASE = "https://freshersjobs-shop.onrender.com";
+
+/* -------------------- FETCH INTERNSHIP BY SLUG -------------------- */
+async function getInternship(slug) {
+  const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  const internship = data.job;
+
+  if (!internship) return null;
+
+  return {
+    ...internship,
+    description:
+      typeof internship.description === "string" &&
+      internship.description.trim()
+        ? internship.description
+        : "<p>No internship description available.</p>",
+  };
+}
+
+/* -------------------- PAGE -------------------- */
+export default async function InternshipDetails({ params }) {
+  // ✅ REQUIRED IN NEXT 15+
+  const { slug } = await params;
+
+  const internship = await getInternship(slug);
+
+  if (!internship) notFound();
+
+  return (
+    <main className="document-page">
+      <div className="layout">
+        {/* ================= LEFT ================= */}
+        <article
+          className="document print-area"
+          itemScope
+          itemType="https://schema.org/Article"
+        >
+          {/* ================= HEADER ================= */}
+          <header className="doc-header">
+            <h1 itemProp="headline">{internship.title}</h1>
+            <p className="company">{internship.company}</p>
+            <p className="meta">
+              📍 {internship.location || "India / Remote"}
+            </p>
+          </header>
+
+          {/* ================= EDITORIAL NOTE ================= */}
+          <p className="editor-note">
+            This internship update is shared for informational purposes only to
+            help students understand eligibility, role expectations, and
+            application guidance. Always apply through official company career
+            websites.
+          </p>
+
+          {/* ================= DETAILS TABLE ================= */}
+          <section className="job-table">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Company</th>
+                  <td>{internship.company}</td>
+                </tr>
+
+                <tr>
+                  <th>Internship Role</th>
+                  <td>{internship.role || internship.title}</td>
+                </tr>
+
+                <tr>
+                  <th>Qualification</th>
+                  <td>
+                    {internship.qualification || "Any Graduate / Student"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Stipend</th>
+                  <td>
+                    {internship.stipend ||
+                      internship.salary ||
+                      "Not disclosed"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Location</th>
+                  <td>{internship.location || "India / Remote"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          {/* ================= DESCRIPTION (CKEDITOR SAFE) ================= */}
+          <section className="content">
+            <div
+              itemProp="articleBody"
+              dangerouslySetInnerHTML={{
+                __html: internship.description,
+              }}
+            />
+          </section>
+
+          {/* ================= APPLY ================= */}
+          {internship.applyUrl && (
+            <div className="apply">
+              <a
+                href={internship.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Apply on Official Company Website →
+              </a>
+
+              <p className="apply-disclaimer">
+                Disclaimer: FreshersJobs.shop does not charge any fees for
+                internship applications. Candidates are advised to apply only
+                through official company career portals.
+              </p>
+            </div>
+          )}
+        </article>
+
+        {/* ================= RIGHT SIDEBAR ================= */}
+        <aside className="latest-jobs screen-only">
+          <h3>Latest Internships</h3>
+          <ul>
+            <li className="lj-title">
+              Browse more verified internships from our listings page.
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+  );
+}

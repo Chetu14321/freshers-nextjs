@@ -1,0 +1,170 @@
+/* ================= LAYOUT ================= */
+.document-page {
+  background: #f7f8fa;
+  padding: 20px;
+}
+
+.layout {
+  max-width: 1400px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .latest-jobs {
+    display: none;
+  }
+}
+
+/* ================= DOCUMENT ================= */
+.document {
+  background: #fff;
+  padding: 28px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.doc-header h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.doc-header .company {
+  font-weight: 600;
+  color: #374151;
+}
+
+.doc-header .location {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ================= TABLE ================= */
+.job-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+
+.job-table th,
+.job-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.job-table th {
+  background: #f3f4f6;
+  width: 35%;
+}
+
+/* ================= CKEDITOR CONTENT ================= */
+.ck-content h1 {
+  font-size: 26px;
+  margin: 24px 0 12px;
+}
+
+.ck-content h2 {
+  font-size: 22px;
+  margin: 22px 0 10px;
+}
+
+.ck-content h3 {
+  font-size: 18px;
+  margin: 18px 0 8px;
+}
+
+.ck-content p {
+  margin: 10px 0;
+  line-height: 1.75;
+}
+
+.ck-content ul {
+  margin: 12px 0 12px 24px;
+}
+
+.ck-content li {
+  list-style: disc;
+  margin: 6px 0;
+}
+
+.ck-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+}
+
+.ck-content th,
+.ck-content td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+/* ================= APPLY ================= */
+.apply {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.apply a {
+  display: inline-block;
+  background: #040505;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.apply-disclaimer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ================= LATEST JOBS ================= */
+.latest-jobs {
+  background: #fff;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  position: sticky;
+  top: 20px;
+}
+
+.latest-jobs h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.latest-jobs ul {
+  list-style: none;
+  padding: 0;
+}
+
+.latest-jobs li {
+  cursor: pointer;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.lj-title {
+  font-weight: 600;
+}
+
+.lj-company {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ================= UTIL ================= */
+.center-text {
+  text-align: center;
+  padding: 40px;
+}
