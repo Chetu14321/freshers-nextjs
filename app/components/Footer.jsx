@@ -50,6 +50,7 @@ export default function Footer() {
             <li><Link href="/contact" className="hover-link">Contact Support</Link></li>
             <li><Link href="/privacy" className="hover-link">Privacy Policy</Link></li>
             <li><Link href="/terms" className="hover-link">Terms of Service</Link></li>
+            <li><Link href="/disclaimer" className="hover-link">Disclaimer</Link></li>
           </ul>
         </div>
 
