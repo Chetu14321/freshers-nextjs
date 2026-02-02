@@ -22,7 +22,7 @@ const aboutLinks = [
   { href: "/contact", label: "Contact" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy Policy" },
-  { href: "disclaimer", label: "Disclaimer"}
+  { href: "/disclaimer", label: "Disclaimer"}
 ];
 
 export default function Navbar() {
