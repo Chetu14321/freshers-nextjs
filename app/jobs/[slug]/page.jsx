@@ -9,8 +9,6 @@ const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 export default function JobDetails() {
   const params = useParams();
   const router = useRouter();
-
-  // slug OR id support
   const slug = params?.slug;
 
   const [job, setJob] = useState(null);
@@ -34,7 +32,6 @@ export default function JobDetails() {
 
         const jobData = await jobRes.json();
         const jobsData = await jobsRes.json();
-
         const currentJob = jobData.job || jobData;
 
         setJob({
@@ -47,9 +44,7 @@ export default function JobDetails() {
         });
 
         setLatestJobs(
-          (jobsData.jobs || []).filter(
-            (j) => j.slug !== currentJob.slug
-          )
+          (jobsData.jobs || []).filter((j) => j.slug !== currentJob.slug)
         );
       } catch (err) {
         console.error("Error loading job:", err);
@@ -65,11 +60,11 @@ export default function JobDetails() {
   if (!job) return <p className="center-text">Job not found</p>;
 
   return (
-    <main className="document-page">
-      <div className="layout">
+    <main className="job-page">
+      <div className="job-layout">
 
-        {/* ================= LEFT: JOB DOCUMENT ================= */}
-        <article className="document print-area">
+        {/* ================= MAIN ARTICLE ================= */}
+        <article className="job-article">
           {/* HEADER */}
           <header className="doc-header">
             <h1>{job.title}</h1>
@@ -77,16 +72,16 @@ export default function JobDetails() {
             <p className="location">📍 {job.location || "India"}</p>
           </header>
 
-          {/* ================= JOB DETAILS TABLE ================= */}
+          {/* JOB INFO TABLE */}
           <section className="job-table">
             <table>
               <tbody>
                 <tr>
-                  <th>Company Name</th>
+                  <th>Company</th>
                   <td>{job.company}</td>
                 </tr>
                 <tr>
-                  <th>Job Role</th>
+                  <th>Role</th>
                   <td>{job.role || job.title}</td>
                 </tr>
                 <tr>
@@ -109,36 +104,34 @@ export default function JobDetails() {
             </table>
           </section>
 
-          {/* ================= CKEDITOR CONTENT ================= */}
-          <section className="content ck-content">
-            <div
-              dangerouslySetInnerHTML={{ __html: job.description }}
-            />
+          {/* JOB CONTENT */}
+          <section className="ck-content">
+            <div dangerouslySetInnerHTML={{ __html: job.description }} />
           </section>
 
-          {/* ================= APPLY ================= */}
+          {/* APPLY */}
           {job.applyUrl && (
-            <div className="apply">
+            <section className="apply">
               <a
                 href={job.applyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Apply on Official Company Website →
+                View Official Job Posting →
               </a>
 
               <p className="apply-disclaimer">
-                Disclaimer: FreshersJobs.shop does not charge candidates for job
-                applications. Always apply only through official company career
-                portals.
+                Disclaimer: FreshersJobs.shop is not a recruitment agency. We do
+                not charge candidates. Always apply through official company
+                career websites.
               </p>
-            </div>
+            </section>
           )}
         </article>
 
-        {/* ================= RIGHT: LATEST JOBS ================= */}
+        {/* ================= SIDEBAR ================= */}
         <aside className="latest-jobs screen-only">
-          <h3>Latest Job Openings</h3>
+          <h3>Latest Job Guides</h3>
           <ul>
             {latestJobs.map((j) => (
               <li

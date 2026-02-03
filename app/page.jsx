@@ -6,7 +6,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
-const JOBS_PER_PAGE = 9;
+const JOBS_PER_PAGE = 6;
 
 /* -------------------- Debounce Hook -------------------- */
 function useDebounce(value, delay = 300) {
@@ -131,8 +131,45 @@ export default function Home() {
         )}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-8">
-        {/* ================= JOB GRID ================= */}
+      {/* ================= ORIGINAL CAREER CONTENT ================= */}
+      <section className="max-w-4xl mx-auto px-4 mt-14 mb-16">
+        <h1 className="text-3xl font-black text-slate-900 mb-6">
+          Career Guidance & Verified Job Updates for Freshers (2026)
+        </h1>
+
+        <div className="space-y-5 text-slate-600 text-sm leading-relaxed">
+          <p>
+            FreshersJobs.shop is an independent career guidance platform designed
+            to help fresh graduates and entry-level professionals understand real
+            hiring requirements, skill expectations, and preparation strategies
+            across IT, analytics, software, and non-technical roles.
+          </p>
+
+          <p>
+            We do not conduct recruitment or collect applications. All job updates
+            shared on this platform are manually verified and redirected only to
+            official company career portals. This helps candidates avoid fake job
+            scams and misleading third-party recruitment sources.
+          </p>
+
+          <p>
+            Our focus is on clarity and preparation. Along with job updates, we
+            explain role responsibilities, required skills, interview patterns,
+            and realistic career paths so candidates can prepare confidently
+            before applying through official channels.
+          </p>
+
+          <p>
+            FreshersJobs.shop aims to support informed career decisions by
+            presenting structured, easy-to-understand information. We encourage
+            all users to cross-check details directly on company websites before
+            proceeding with any application.
+          </p>
+        </div>
+      </section>
+
+      {/* ================= JOB GRID ================= */}
+      <div className="max-w-7xl mx-auto px-4 pb-16 flex flex-col lg:flex-row gap-8">
         <div className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {loading
@@ -165,8 +202,8 @@ export default function Home() {
                         </p>
 
                         <p className="text-sm text-slate-500 mt-4 line-clamp-3 leading-relaxed">
-                          Latest hiring for {job.title}. Apply now to{" "}
-                          {job.company} through their official career portal.
+                          Verified hiring details for {job.title}. View official
+                          career information on {job.company}’s website.
                         </p>
                       </div>
                     </Link>
@@ -174,7 +211,6 @@ export default function Home() {
                 })}
           </div>
 
-          {/* ================= PAGINATION ================= */}
           {!loading && totalPages > 1 && (
             <div className="mt-12 flex items-center justify-center gap-2">
               <button
@@ -214,7 +250,7 @@ export default function Home() {
         <aside className="w-full lg:w-80 space-y-10">
           <div>
             <h3 className="text-xl font-bold border-b-2 border-black pb-2 mb-6">
-              Recent Posts
+              Recent Job Guides
             </h3>
             <div className="space-y-4">
               {jobs.slice(0, 6).map((job) => {
@@ -225,7 +261,7 @@ export default function Home() {
                     href={`/jobs/${slugOrId}`}
                     className="block text-sm font-bold text-blue-700 hover:underline"
                   >
-                    {job.title} Recruitment Guide
+                    {job.title} Preparation Guide
                   </Link>
                 );
               })}
@@ -235,7 +271,7 @@ export default function Home() {
       </div>
 
       <footer className="border-t py-10 text-center text-[10px] font-bold text-slate-400">
-        FreshersJobs.shop • Your Career Partner • 2026
+        FreshersJobs.shop • Career Guidance Platform • 2026
       </footer>
     </main>
   );
