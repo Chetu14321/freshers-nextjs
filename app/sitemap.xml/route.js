@@ -12,7 +12,7 @@ export async function GET() {
     "/about",
     "/contact",
     "/terms",
-    "/privacy",
+    "/privacy-policy",
     "/disclaimer",
   ];
 
