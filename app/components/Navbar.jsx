@@ -21,7 +21,7 @@ const aboutLinks = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/terms", label: "Terms" },
-  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/disclaimer", label: "Disclaimer"}
 ];
 
