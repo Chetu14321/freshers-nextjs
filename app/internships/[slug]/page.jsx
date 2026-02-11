@@ -5,8 +5,12 @@ export const dynamic = "force-dynamic";
 
 const API_BASE = "https://freshersjobs-shop.onrender.com";
 
-/* -------------------- FETCH INTERNSHIP BY SLUG -------------------- */
+/* ================= FETCH INTERNSHIP BY SLUG ================= */
 async function getInternship(slug) {
+
+  // 🚨 IMPORTANT: prevent undefined API call
+  if (!slug) return null;
+
   const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
     cache: "no-store",
   });
@@ -28,13 +32,18 @@ async function getInternship(slug) {
   };
 }
 
-/* -------------------- METADATA (ADSENSE SAFE) -------------------- */
+/* ================= METADATA ================= */
 export async function generateMetadata({ params }) {
+
+  // ✅ DO NOT USE await params
   const { slug } = params;
+
   const internship = await getInternship(slug);
 
   if (!internship) {
-    return { title: "Internship Not Found | FreshersJobs.shop" };
+    return {
+      title: "Internship Not Found | FreshersJobs.shop",
+    };
   }
 
   return {
@@ -46,23 +55,28 @@ export async function generateMetadata({ params }) {
   };
 }
 
-/* -------------------- PAGE -------------------- */
+/* ================= PAGE ================= */
 export default async function InternshipDetails({ params }) {
+
+  // ✅ CRITICAL FIX — NEVER await params
   const { slug } = params;
 
   const internship = await getInternship(slug);
+
   if (!internship) notFound();
 
   return (
     <main className="document-page">
       <div className="layout">
+
         {/* ================= LEFT ================= */}
         <article
           className="document print-area"
           itemScope
           itemType="https://schema.org/Article"
         >
-          {/* ================= SEO META (ADSENSE TRUST) ================= */}
+
+          {/* ================= AUTHOR META ================= */}
           <meta name="author" content="FreshersJobs Team (Chethan M P)" />
           <meta
             name="publisher"
@@ -81,7 +95,9 @@ export default async function InternshipDetails({ params }) {
                 hiringOrganization: {
                   "@type": "Organization",
                   name: internship.company,
-                  sameAs: internship.applyUrl || "https://www.freshersjobs.shop",
+                  sameAs:
+                    internship.applyUrl ||
+                    "https://www.freshersjobs.shop",
                 },
                 jobLocation: {
                   "@type": "Place",
@@ -93,8 +109,11 @@ export default async function InternshipDetails({ params }) {
                   },
                 },
                 employmentType: "INTERN",
-                datePosted: internship.postedAt || new Date().toISOString(),
-                validThrough: internship.lastDate || undefined,
+                datePosted:
+                  internship.postedAt ||
+                  new Date().toISOString(),
+                validThrough:
+                  internship.lastDate || undefined,
                 applicantLocationRequirements: {
                   "@type": "Country",
                   name: "India",
@@ -137,7 +156,8 @@ export default async function InternshipDetails({ params }) {
                 <tr>
                   <th>Qualification</th>
                   <td>
-                    {internship.qualification || "Any Graduate / Student"}
+                    {internship.qualification ||
+                      "Any Graduate / Student"}
                   </td>
                 </tr>
 
@@ -152,7 +172,9 @@ export default async function InternshipDetails({ params }) {
 
                 <tr>
                   <th>Location</th>
-                  <td>{internship.location || "India / Remote"}</td>
+                  <td>
+                    {internship.location || "India / Remote"}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -197,6 +219,7 @@ export default async function InternshipDetails({ params }) {
             </li>
           </ul>
         </aside>
+
       </div>
     </main>
   );
