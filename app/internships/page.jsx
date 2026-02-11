@@ -1,166 +1,156 @@
-import Link from "next/link";
+import { notFound } from "next/navigation";
+import "./job-details.css"; // keep your CSS
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Internship Opportunities for Freshers | FreshersJobs.shop",
-  description:
-    "Browse verified internship opportunities for students and freshers across India.",
-  alternates: {
-    canonical: "https://freshersjobs.shop/internships",
-  },
-};
-
 const API_BASE = "https://freshersjobs-shop.onrender.com";
 
-/* -------------------- Fetch Internships -------------------- */
-async function loadInternships(page) {
-  const res = await fetch(
-    `${API_BASE}/api/jobs?page=${page}&limit=9&type=internship`,
-    { cache: "no-store" }
-  );
+/* ================= FETCH INTERNSHIP BY SLUG ================= */
+async function getInternship(slug) {
+  if (!slug) return null;
+
+  const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) return null;
-  return res.json();
+
+  const data = await res.json();
+  const internship = data.job;
+
+  if (!internship) return null;
+
+  return {
+    ...internship,
+    description:
+      typeof internship.description === "string" &&
+      internship.description.trim()
+        ? internship.description
+        : "<p>No internship description available.</p>",
+  };
 }
 
-/* -------------------- Page -------------------- */
-export default async function InternshipsPage({ searchParams }) {
-  const params = await searchParams;
+/* ================= PAGE ================= */
+export default async function InternshipDetails({ params }) {
 
-  const page =
-    Number(params?.page) && Number(params.page) > 0
-      ? Number(params.page)
-      : 1;
+  /* ⭐ IMPORTANT FIX — DO NOT USE await */
+  const { slug } = params;
 
-  const data = await loadInternships(page);
+  const internship = await getInternship(slug);
 
-  if (!data?.jobs?.length) {
-    return (
-      <p className="text-center text-gray-500 mt-24 text-lg">
-        No internship opportunities available right now.
-      </p>
-    );
-  }
-
-  const { jobs, totalPages } = data;
-
-  // ✅ ONLY INTERNSHIPS WITH SLUG (VERY IMPORTANT)
-  const safeJobs = jobs.filter((j) => j.slug);
-
-  const latestInternships = safeJobs.slice(0, 6);
+  if (!internship) notFound();
 
   return (
-    <main className="min-h-screen bg-gray-50 text-black">
-      <h1 className="text-4xl font-bold text-center py-10">
-        Internship Opportunities for Freshers
-      </h1>
+    <main className="document-page">
+      <div className="layout">
 
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* ================= LEFT ================= */}
+        <article
+          className="document print-area"
+          itemScope
+          itemType="https://schema.org/Article"
+        >
 
-          {/* LEFT */}
-          <section className="lg:col-span-9">
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {safeJobs.map((internship) => (
-                <Link
-                  key={internship.slug}
-                  href={`/internships/${internship.slug}`}
-                  className="block bg-white border rounded-xl p-6 hover:shadow-lg transition"
-                >
-                  <span className="inline-block text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full mb-3">
-                    Internship
-                  </span>
+          {/* ================= HEADER ================= */}
+          <header className="doc-header">
+            <h1 itemProp="headline">{internship.title}</h1>
 
-                  <h3 className="font-bold text-lg mb-1">
-                    {internship.title}
-                  </h3>
+            <p className="company">
+              {internship.company}
+            </p>
 
-                  <p className="text-sm text-gray-600">
-                    {internship.company}
-                  </p>
+            <p className="meta">
+              📍 {internship.location || "India / Remote"}
+            </p>
+          </header>
 
-                  <p className="text-sm text-gray-500 mt-1">
-                    📍 {internship.location || "India / Remote"}
-                  </p>
+          {/* ================= EDITORIAL NOTE ================= */}
+          <p className="editor-note">
+            This internship update is shared for informational purposes only to
+            help students understand eligibility, role expectations, and
+            application guidance. Always apply through official company career
+            websites.
+          </p>
 
-                  {internship.stipend && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      💰 {internship.stipend}
-                    </p>
-                  )}
-                </Link>
-              ))}
-            </div>
+          {/* ================= DETAILS TABLE ================= */}
+          <section className="job-table">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Company</th>
+                  <td>{internship.company}</td>
+                </tr>
 
-            {/* PAGINATION */}
-            <div className="flex justify-center gap-3 mt-12">
-              {page > 1 && (
-                <Link
-                  href={`/internships?page=${page - 1}`}
-                  className="px-4 py-2 border rounded"
-                >
-                  ← Previous
-                </Link>
-              )}
+                <tr>
+                  <th>Internship Role</th>
+                  <td>{internship.role || internship.title}</td>
+                </tr>
 
-              {[...Array(totalPages)].map((_, i) => {
-                const p = i + 1;
-                return (
-                  <Link
-                    key={p}
-                    href={`/internships?page=${p}`}
-                    className={`px-4 py-2 border rounded ${
-                      p === page ? "bg-black text-white" : ""
-                    }`}
-                  >
-                    {p}
-                  </Link>
-                );
-              })}
+                <tr>
+                  <th>Qualification</th>
+                  <td>
+                    {internship.qualification || "Any Graduate / Student"}
+                  </td>
+                </tr>
 
-              {page < totalPages && (
-                <Link
-                  href={`/internships?page=${page + 1}`}
-                  className="px-4 py-2 border rounded"
-                >
-                  Next →
-                </Link>
-              )}
-            </div>
+                <tr>
+                  <th>Stipend</th>
+                  <td>
+                    {internship.stipend ||
+                      internship.salary ||
+                      "Not disclosed"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Location</th>
+                  <td>{internship.location || "India / Remote"}</td>
+                </tr>
+              </tbody>
+            </table>
           </section>
 
-          {/* RIGHT SIDEBAR */}
-          <aside className="lg:col-span-3">
-            <div className="bg-white border rounded-xl p-5 sticky top-24">
-              <h3 className="font-bold mb-4">
-                Latest Internship Updates
-              </h3>
+          {/* ================= DESCRIPTION ================= */}
+          <section className="content">
+            <div
+              itemProp="articleBody"
+              dangerouslySetInnerHTML={{
+                __html: internship.description,
+              }}
+            />
+          </section>
 
-              <ul className="space-y-3 text-sm">
-                {latestInternships.map((post) => (
-                  <li key={post.slug}>
-                    <Link
-                      href={`/internships/${post.slug}`}
-                      className="text-blue-600 hover:underline font-semibold"
-                    >
-                      {post.title}
-                    </Link>
-                    <p className="text-xs text-gray-500">
-                      {post.company}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+          {/* ================= APPLY BUTTON ================= */}
+          {internship.applyUrl && (
+            <div className="apply">
+              <a
+                href={internship.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Apply on Official Company Website →
+              </a>
 
-              <p className="text-xs text-gray-400 mt-6">
-                Internship updates are shared for informational purposes only.
-                Apply via official company websites.
+              <p className="apply-disclaimer">
+                Disclaimer: FreshersJobs.shop does not charge any fees for
+                internship applications. Candidates are advised to apply only
+                through official company career portals.
               </p>
             </div>
-          </aside>
+          )}
 
-        </div>
+        </article>
+
+        {/* ================= RIGHT SIDEBAR ================= */}
+        <aside className="latest-jobs screen-only">
+          <h3>Latest Internships</h3>
+          <ul>
+            <li className="lj-title">
+              Browse more verified internships from our listings page.
+            </li>
+          </ul>
+        </aside>
+
       </div>
     </main>
   );
