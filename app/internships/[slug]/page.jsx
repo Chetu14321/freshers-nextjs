@@ -5,10 +5,9 @@ export const dynamic = "force-dynamic";
 
 const API_BASE = "https://freshersjobs-shop.onrender.com";
 
-/* ================= FETCH INTERNSHIP BY SLUG ================= */
+/* ================= FETCH INTERNSHIP ================= */
 async function getInternship(slug) {
 
-  // 🚨 prevent undefined slug
   if (!slug) return null;
 
   const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
@@ -18,7 +17,7 @@ async function getInternship(slug) {
   if (!res.ok) return null;
 
   const data = await res.json();
-  const internship = data.job;
+  const internship = data?.job;
 
   if (!internship) return null;
 
@@ -35,16 +34,11 @@ async function getInternship(slug) {
 /* ================= METADATA ================= */
 export async function generateMetadata({ params }) {
 
-  // ✅ FIX: normalize slug (array-safe)
-  const rawSlug = params?.slug;
-  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
-
+  const slug = params?.slug;
   const internship = await getInternship(slug);
 
   if (!internship) {
-    return {
-      title: "Internship Not Found | FreshersJobs.shop",
-    };
+    return { title: "Internship Not Found | FreshersJobs.shop" };
   }
 
   return {
@@ -59,9 +53,7 @@ export async function generateMetadata({ params }) {
 /* ================= PAGE ================= */
 export default async function InternshipDetails({ params }) {
 
-  // ✅ FIX: normalize slug
-  const rawSlug = params?.slug;
-  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
+  const slug = params?.slug;
 
   const internship = await getInternship(slug);
 
@@ -78,53 +70,6 @@ export default async function InternshipDetails({ params }) {
           itemType="https://schema.org/Article"
         >
 
-          {/* ================= AUTHOR META ================= */}
-          <meta name="author" content="FreshersJobs Team (Chethan M P)" />
-          <meta
-            name="publisher"
-            content="FreshersJobs.shop – Career Guidance Platform"
-          />
-
-          {/* ================= JOBPOSTING SCHEMA ================= */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "JobPosting",
-                title: internship.title,
-                description: internship.description.replace(/<[^>]+>/g, ""),
-                hiringOrganization: {
-                  "@type": "Organization",
-                  name: internship.company,
-                  sameAs:
-                    internship.applyUrl ||
-                    "https://www.freshersjobs.shop",
-                },
-                jobLocation: {
-                  "@type": "Place",
-                  address: {
-                    "@type": "PostalAddress",
-                    addressCountry: "IN",
-                    addressLocality:
-                      internship.location || "India / Remote",
-                  },
-                },
-                employmentType: "INTERN",
-                datePosted:
-                  internship.postedAt ||
-                  new Date().toISOString(),
-                validThrough:
-                  internship.lastDate || undefined,
-                applicantLocationRequirements: {
-                  "@type": "Country",
-                  name: "India",
-                },
-              }),
-            }}
-          />
-
-          {/* ================= HEADER ================= */}
           <header className="doc-header">
             <h1 itemProp="headline">{internship.title}</h1>
             <p className="company">{internship.company}</p>
@@ -133,7 +78,6 @@ export default async function InternshipDetails({ params }) {
             </p>
           </header>
 
-          {/* ================= EDITORIAL NOTE ================= */}
           <p className="editor-note">
             This internship update is shared for informational purposes only to
             help students understand eligibility, role expectations, and
@@ -141,7 +85,6 @@ export default async function InternshipDetails({ params }) {
             websites.
           </p>
 
-          {/* ================= DETAILS TABLE ================= */}
           <section className="job-table">
             <table>
               <tbody>
@@ -158,8 +101,7 @@ export default async function InternshipDetails({ params }) {
                 <tr>
                   <th>Qualification</th>
                   <td>
-                    {internship.qualification ||
-                      "Any Graduate / Student"}
+                    {internship.qualification || "Any Graduate / Student"}
                   </td>
                 </tr>
 
@@ -174,25 +116,21 @@ export default async function InternshipDetails({ params }) {
 
                 <tr>
                   <th>Location</th>
-                  <td>
-                    {internship.location || "India / Remote"}
-                  </td>
+                  <td>{internship.location || "India / Remote"}</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
-          {/* ================= DESCRIPTION ================= */}
+          {/* ⭐ FIXED CONTENT RENDER */}
           <section className="content">
             <div
-              itemProp="articleBody"
               dangerouslySetInnerHTML={{
                 __html: internship.description,
               }}
             />
           </section>
 
-          {/* ================= APPLY ================= */}
           {internship.applyUrl && (
             <div className="apply">
               <a
@@ -212,7 +150,7 @@ export default async function InternshipDetails({ params }) {
           )}
         </article>
 
-        {/* ================= RIGHT SIDEBAR ================= */}
+        {/* ================= RIGHT ================= */}
         <aside className="latest-jobs screen-only">
           <h3>Latest Internships</h3>
           <ul>
