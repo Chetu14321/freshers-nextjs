@@ -28,20 +28,18 @@ async function getInternship(slug) {
   };
 }
 
-/* -------------------- METADATA (VERY IMPORTANT FOR INDEXING) -------------------- */
+/* -------------------- METADATA (ADSENSE SAFE) -------------------- */
 export async function generateMetadata({ params }) {
   const { slug } = params;
   const internship = await getInternship(slug);
 
   if (!internship) {
-    return {
-      title: "Internship Not Found | FreshersJobs.shop",
-    };
+    return { title: "Internship Not Found | FreshersJobs.shop" };
   }
 
   return {
-    title: `${internship.title} | Internship Opportunity`,
-    description: `${internship.title} internship at ${internship.company}. Check eligibility, role details, and official application link.`,
+    title: `${internship.title} Internship | ${internship.company}`,
+    description: `Apply for ${internship.title} internship at ${internship.company}. Check eligibility, stipend, location, and official application details.`,
     alternates: {
       canonical: `https://www.freshersjobs.shop/internships/${internship.slug}`,
     },
@@ -53,7 +51,6 @@ export default async function InternshipDetails({ params }) {
   const { slug } = params;
 
   const internship = await getInternship(slug);
-
   if (!internship) notFound();
 
   return (
@@ -65,6 +62,47 @@ export default async function InternshipDetails({ params }) {
           itemScope
           itemType="https://schema.org/Article"
         >
+          {/* ================= SEO META (ADSENSE TRUST) ================= */}
+          <meta name="author" content="FreshersJobs Team (Chethan M P)" />
+          <meta
+            name="publisher"
+            content="FreshersJobs.shop – Career Guidance Platform"
+          />
+
+          {/* ================= JOBPOSTING SCHEMA ================= */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "JobPosting",
+                title: internship.title,
+                description: internship.description.replace(/<[^>]+>/g, ""),
+                hiringOrganization: {
+                  "@type": "Organization",
+                  name: internship.company,
+                  sameAs: internship.applyUrl || "https://www.freshersjobs.shop",
+                },
+                jobLocation: {
+                  "@type": "Place",
+                  address: {
+                    "@type": "PostalAddress",
+                    addressCountry: "IN",
+                    addressLocality:
+                      internship.location || "India / Remote",
+                  },
+                },
+                employmentType: "INTERN",
+                datePosted: internship.postedAt || new Date().toISOString(),
+                validThrough: internship.lastDate || undefined,
+                applicantLocationRequirements: {
+                  "@type": "Country",
+                  name: "India",
+                },
+              }),
+            }}
+          />
+
           {/* ================= HEADER ================= */}
           <header className="doc-header">
             <h1 itemProp="headline">{internship.title}</h1>
