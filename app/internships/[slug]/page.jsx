@@ -12,67 +12,64 @@ export default function InternshipDetails() {
   const router = useRouter();
   const slug = params?.slug;
 
-  const [internship, setInternship] = useState(null);
-  const [latestInternships, setLatestInternships] = useState([]);
+  const [job, setJob] = useState(null); // ✅ SAME NAME AS JOB PAGE
+  const [latestJobs, setLatestJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     if (!slug) return;
 
     const loadData = async () => {
       try {
 
-        // ✅ SAME API — just filter type
+        // ⭐ EXACT SAME STRUCTURE AS JOB DETAILS
         const [jobRes, jobsRes] = await Promise.all([
           fetch(`${BACKEND_URL}/api/jobs/${slug}`, { cache: "no-store" }),
+
+          // ✅ ONLY DIFFERENCE — filter internships
           fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`, {
             cache: "no-store",
           }),
         ]);
 
         if (!jobRes.ok) {
-          setInternship(null);
+          setJob(null);
           return;
         }
 
         const jobData = await jobRes.json();
         const jobsData = await jobsRes.json();
+        const currentJob = jobData.job || jobData;
 
-        const currentInternship = jobData.job;
-
-        // ✅ FIX scrambled / empty description
-        setInternship({
-          ...currentInternship,
+        // ✅ FIX EMPTY DESCRIPTION
+        setJob({
+          ...currentJob,
           description:
-            typeof currentInternship.description === "string" &&
-            currentInternship.description.trim()
-              ? currentInternship.description
+            typeof currentJob.description === "string" &&
+            currentJob.description.trim()
+              ? currentJob.description
               : "<p>No description available.</p>",
         });
 
-        // ✅ RIGHT SIDEBAR — RECENT POSTS
-        setLatestInternships(
-          (jobsData.jobs || []).filter(
-            (j) => j.slug !== currentInternship.slug
-          )
+        // ⭐ RIGHT SIDEBAR SAME AS JOB PAGE
+        setLatestJobs(
+          (jobsData.jobs || []).filter((j) => j.slug !== currentJob.slug)
         );
 
       } catch (err) {
-        console.error("Internship load error:", err);
+        console.error("Error loading internship:", err);
       } finally {
         setLoading(false);
       }
     };
 
     loadData();
-
   }, [slug]);
 
   /* ================= STATES ================= */
 
   if (loading) return <p className="center-text">Loading internship…</p>;
-  if (!internship) return <p className="center-text">Internship not found</p>;
+  if (!job) return <p className="center-text">Internship not found</p>;
 
   /* ================= UI ================= */
 
@@ -84,63 +81,62 @@ export default function InternshipDetails() {
         <article className="job-article">
 
           <header className="doc-header">
-            <h1>{internship.title}</h1>
-            <p className="company">{internship.company}</p>
+            <h1>{job.title}</h1>
+            <p className="company">{job.company}</p>
             <p className="location">
-              📍 {internship.location || "India / Remote"}
+              📍 {job.location || "India / Remote"}
             </p>
           </header>
 
-          {/* TABLE */}
+          {/* TABLE — SAME AS JOB DETAILS */}
           <section className="job-table">
             <table>
               <tbody>
                 <tr>
                   <th>Company</th>
-                  <td>{internship.company}</td>
+                  <td>{job.company}</td>
                 </tr>
 
                 <tr>
                   <th>Role</th>
-                  <td>{internship.role || internship.title}</td>
+                  <td>{job.role || job.title}</td>
                 </tr>
 
                 <tr>
                   <th>Qualification</th>
-                  <td>{internship.qualification || "Any Graduate"}</td>
+                  <td>{job.qualification || "Any Graduate"}</td>
                 </tr>
 
                 <tr>
-                  <th>Stipend</th>
+                  <th>Experience</th>
+                  <td>{job.experience || "Freshers Eligible"}</td>
+                </tr>
+
+                <tr>
+                  <th>Salary / Stipend</th>
                   <td>
-                    {internship.salary ||
-                      internship.stipend ||
-                      "Not disclosed"}
+                    {job.salary || job.stipend || "Not disclosed"}
                   </td>
                 </tr>
 
                 <tr>
                   <th>Location</th>
-                  <td>{internship.location || "India / Remote"}</td>
+                  <td>{job.location || "India / Remote"}</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
-          {/* ⭐ CONTENT — EXACT SAME AS JOB DETAILS */}
+          {/* CONTENT — EXACT SAME */}
           <section className="ck-content">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: internship.description,
-              }}
-            />
+            <div dangerouslySetInnerHTML={{ __html: job.description }} />
           </section>
 
-          {/* APPLY BUTTON */}
-          {internship.applyUrl && (
+          {/* APPLY BUTTON — SAME */}
+          {job.applyUrl && (
             <section className="apply">
               <a
-                href={internship.applyUrl}
+                href={job.applyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -149,24 +145,24 @@ export default function InternshipDetails() {
 
               <p className="apply-disclaimer">
                 Disclaimer: FreshersJobs.shop is not a recruitment agency.
-                Always apply via official company career portals.
+                Always apply through official company career portals.
               </p>
             </section>
           )}
         </article>
 
-        {/* ================= RIGHT SIDEBAR ================= */}
+        {/* ================= SIDEBAR ================= */}
         <aside className="latest-jobs screen-only">
           <h3>Recent Internship Updates</h3>
 
           <ul>
-            {latestInternships.map((item) => (
+            {latestJobs.map((j) => (
               <li
-                key={item.slug}
-                onClick={() => router.push(`/internships/${item.slug}`)}
+                key={j.slug}
+                onClick={() => router.push(`/internships/${j.slug}`)}
               >
-                <p className="lj-title">{item.title}</p>
-                <p className="lj-company">{item.company}</p>
+                <p className="lj-title">{j.title}</p>
+                <p className="lj-company">{j.company}</p>
               </li>
             ))}
           </ul>
