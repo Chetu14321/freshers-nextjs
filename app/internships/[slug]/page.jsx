@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import "./job-details.css"; // ✅ MAKE SURE CSS IS IMPORTED
+import "./job-details.css";
 
 export const dynamic = "force-dynamic";
 
@@ -28,10 +28,29 @@ async function getInternship(slug) {
   };
 }
 
+/* -------------------- METADATA (VERY IMPORTANT FOR INDEXING) -------------------- */
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const internship = await getInternship(slug);
+
+  if (!internship) {
+    return {
+      title: "Internship Not Found | FreshersJobs.shop",
+    };
+  }
+
+  return {
+    title: `${internship.title} | Internship Opportunity`,
+    description: `${internship.title} internship at ${internship.company}. Check eligibility, role details, and official application link.`,
+    alternates: {
+      canonical: `https://www.freshersjobs.shop/internships/${internship.slug}`,
+    },
+  };
+}
+
 /* -------------------- PAGE -------------------- */
 export default async function InternshipDetails({ params }) {
-  // ✅ REQUIRED IN NEXT 15+
-  const { slug } = await params;
+  const { slug } = params;
 
   const internship = await getInternship(slug);
 
@@ -101,7 +120,7 @@ export default async function InternshipDetails({ params }) {
             </table>
           </section>
 
-          {/* ================= DESCRIPTION (CKEDITOR SAFE) ================= */}
+          {/* ================= DESCRIPTION ================= */}
           <section className="content">
             <div
               itemProp="articleBody"
