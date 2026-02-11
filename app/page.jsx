@@ -113,11 +113,11 @@ export default function Home() {
         {showResults && (
           <div className="absolute left-4 right-4 bg-white border-2 border-black rounded-2xl shadow-xl mt-2 z-50 max-h-80 overflow-auto">
             {results.map((job) => {
-              const slugOrId = job.slug || job._id;
+              if (!job.slug) return null; // ✅ prevent undefined
               return (
                 <Link
-                  key={slugOrId}
-                  href={`/jobs/${slugOrId}`}
+                  key={job.slug}
+                  href={`/jobs/${job.slug}`}
                   className="block px-6 py-4 hover:bg-slate-50 border-b border-gray-100 last:border-0 font-bold text-blue-600 text-sm"
                 >
                   {job.title}{" "}
@@ -175,11 +175,11 @@ export default function Home() {
             {loading
               ? [...Array(6)].map((_, i) => <JobSkeleton key={i} />)
               : currentJobs.map((job) => {
-                  const slugOrId = job.slug || job._id;
+                  if (!job.slug) return null; // ✅ prevent undefined
                   return (
                     <Link
-                      key={slugOrId}
-                      href={`/jobs/${slugOrId}`}
+                      key={job.slug}
+                      href={`/jobs/${job.slug}`}
                       className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
                     >
                       <div className="px-4 py-2 bg-white border-b border-gray-50">
@@ -254,11 +254,11 @@ export default function Home() {
             </h3>
             <div className="space-y-4">
               {jobs.slice(0, 6).map((job) => {
-                const slugOrId = job.slug || job._id;
+                if (!job.slug) return null;
                 return (
                   <Link
-                    key={slugOrId}
-                    href={`/jobs/${slugOrId}`}
+                    key={job.slug}
+                    href={`/jobs/${job.slug}`}
                     className="block text-sm font-bold text-blue-700 hover:underline"
                   >
                     {job.title} Preparation Guide
