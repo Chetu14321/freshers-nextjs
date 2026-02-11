@@ -152,6 +152,35 @@
   padding-top: 24px;
   border-top: 1px solid #e5e7eb;
 }
+.ck-content {
+  margin-top: 32px;
+  line-height: 1.75;
+  font-size: 15px;
+}
+
+.ck-content h2 {
+  font-size: 20px;
+  margin: 24px 0 10px;
+}
+
+.ck-content h3 {
+  font-size: 17px;
+  margin: 20px 0 8px;
+}
+
+.ck-content p {
+  margin-bottom: 14px;
+  color: #374151;
+}
+
+.ck-content ul {
+  padding-left: 22px;
+}
+
+.ck-content p:empty {
+  display: none;
+}
+
 
 .apply a {
   display: inline-block;

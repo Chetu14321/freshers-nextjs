@@ -7,57 +7,58 @@ import "./job-details.css";
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
 export default function InternshipDetails() {
-
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug;
 
-  const [job, setJob] = useState(null); // ✅ SAME NAME AS JOB PAGE
-  const [latestJobs, setLatestJobs] = useState([]);
+  const [internship, setInternship] = useState(null);
+  const [latestInternships, setLatestInternships] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  /* ================= LOAD DATA ================= */
   useEffect(() => {
     if (!slug) return;
 
     const loadData = async () => {
       try {
-
-        // ⭐ EXACT SAME STRUCTURE AS JOB DETAILS
         const [jobRes, jobsRes] = await Promise.all([
-          fetch(`${BACKEND_URL}/api/jobs/${slug}`, { cache: "no-store" }),
-
-          // ✅ ONLY DIFFERENCE — filter internships
+          fetch(`${BACKEND_URL}/api/jobs/${slug}`, {
+            cache: "no-store",
+          }),
           fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`, {
             cache: "no-store",
           }),
         ]);
 
         if (!jobRes.ok) {
-          setJob(null);
+          setInternship(null);
           return;
         }
 
         const jobData = await jobRes.json();
         const jobsData = await jobsRes.json();
-        const currentJob = jobData.job || jobData;
 
-        // ✅ FIX EMPTY DESCRIPTION
-        setJob({
-          ...currentJob,
+        const currentInternship = jobData.job;
+
+        /* ✅ CKEDITOR SAFE DESCRIPTION */
+        setInternship({
+          ...currentInternship,
           description:
-            typeof currentJob.description === "string" &&
-            currentJob.description.trim()
-              ? currentJob.description
+            typeof currentInternship.description === "string"
+              ? currentInternship.description
+                  .replace(/&nbsp;/g, "")
+                  .trim()
               : "<p>No description available.</p>",
         });
 
-        // ⭐ RIGHT SIDEBAR SAME AS JOB PAGE
-        setLatestJobs(
-          (jobsData.jobs || []).filter((j) => j.slug !== currentJob.slug)
+        /* ✅ RIGHT SIDEBAR RECENT POSTS */
+        setLatestInternships(
+          (jobsData.jobs || []).filter(
+            (j) => j.slug !== currentInternship.slug
+          )
         );
-
       } catch (err) {
-        console.error("Error loading internship:", err);
+        console.error("Internship load error:", err);
       } finally {
         setLoading(false);
       }
@@ -67,12 +68,10 @@ export default function InternshipDetails() {
   }, [slug]);
 
   /* ================= STATES ================= */
-
   if (loading) return <p className="center-text">Loading internship…</p>;
-  if (!job) return <p className="center-text">Internship not found</p>;
+  if (!internship) return <p className="center-text">Internship not found</p>;
 
   /* ================= UI ================= */
-
   return (
     <main className="job-page">
       <div className="job-layout">
@@ -81,62 +80,63 @@ export default function InternshipDetails() {
         <article className="job-article">
 
           <header className="doc-header">
-            <h1>{job.title}</h1>
-            <p className="company">{job.company}</p>
+            <h1>{internship.title}</h1>
+            <p className="company">{internship.company}</p>
             <p className="location">
-              📍 {job.location || "India / Remote"}
+              📍 {internship.location || "India / Remote"}
             </p>
           </header>
 
-          {/* TABLE — SAME AS JOB DETAILS */}
+          {/* TABLE */}
           <section className="job-table">
             <table>
               <tbody>
                 <tr>
                   <th>Company</th>
-                  <td>{job.company}</td>
+                  <td>{internship.company}</td>
                 </tr>
 
                 <tr>
                   <th>Role</th>
-                  <td>{job.role || job.title}</td>
+                  <td>{internship.role || internship.title}</td>
                 </tr>
 
                 <tr>
                   <th>Qualification</th>
-                  <td>{job.qualification || "Any Graduate"}</td>
+                  <td>{internship.qualification || "Any Graduate"}</td>
                 </tr>
 
                 <tr>
-                  <th>Experience</th>
-                  <td>{job.experience || "Freshers Eligible"}</td>
-                </tr>
-
-                <tr>
-                  <th>Salary / Stipend</th>
+                  <th>Stipend</th>
                   <td>
-                    {job.salary || job.stipend || "Not disclosed"}
+                    {internship.salary ||
+                      internship.stipend ||
+                      "Not disclosed"}
                   </td>
                 </tr>
 
                 <tr>
                   <th>Location</th>
-                  <td>{job.location || "India / Remote"}</td>
+                  <td>{internship.location || "India / Remote"}</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
-          {/* CONTENT — EXACT SAME */}
+          {/* ⭐ CKEDITOR CONTENT — SAME AS JOB DETAILS */}
           <section className="ck-content">
-            <div dangerouslySetInnerHTML={{ __html: job.description }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: internship.description,
+              }}
+            />
           </section>
 
-          {/* APPLY BUTTON — SAME */}
-          {job.applyUrl && (
+          {/* APPLY BUTTON */}
+          {internship.applyUrl && (
             <section className="apply">
               <a
-                href={job.applyUrl}
+                href={internship.applyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -145,24 +145,24 @@ export default function InternshipDetails() {
 
               <p className="apply-disclaimer">
                 Disclaimer: FreshersJobs.shop is not a recruitment agency.
-                Always apply through official company career portals.
+                Always apply via official company career portals.
               </p>
             </section>
           )}
         </article>
 
-        {/* ================= SIDEBAR ================= */}
+        {/* ================= RIGHT SIDEBAR ================= */}
         <aside className="latest-jobs screen-only">
           <h3>Recent Internship Updates</h3>
 
           <ul>
-            {latestJobs.map((j) => (
+            {latestInternships.map((item) => (
               <li
-                key={j.slug}
-                onClick={() => router.push(`/internships/${j.slug}`)}
+                key={item.slug}
+                onClick={() => router.push(`/internships/${item.slug}`)}
               >
-                <p className="lj-title">{j.title}</p>
-                <p className="lj-company">{j.company}</p>
+                <p className="lj-title">{item.title}</p>
+                <p className="lj-company">{item.company}</p>
               </li>
             ))}
           </ul>
