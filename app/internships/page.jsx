@@ -44,7 +44,11 @@ export default async function InternshipsPage({ searchParams }) {
   }
 
   const { jobs, totalPages } = data;
-  const latestInternships = jobs.slice(0, 6);
+
+  // ✅ only internships with slug (SEO safe)
+  const safeJobs = jobs.filter((j) => j.slug);
+
+  const latestInternships = safeJobs.slice(0, 6);
 
   return (
     <main className="min-h-screen bg-gray-50 text-black">
@@ -58,39 +62,35 @@ export default async function InternshipsPage({ searchParams }) {
           {/* LEFT */}
           <section className="lg:col-span-9">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {jobs.map((internship) => {
-                const slugOrId = internship.slug || internship._id;
+              {safeJobs.map((internship) => (
+                <Link
+                  key={internship.slug}
+                  href={`/internships/${internship.slug}`}
+                  className="block bg-white border rounded-xl p-6 hover:shadow-lg transition"
+                >
+                  <span className="inline-block text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full mb-3">
+                    Internship
+                  </span>
 
-                return (
-                  <Link
-                    key={slugOrId}
-                    href={`/internships/${slugOrId}`}
-                    className="block bg-white border rounded-xl p-6 hover:shadow-lg transition"
-                  >
-                    <span className="inline-block text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full mb-3">
-                      Internship
-                    </span>
+                  <h3 className="font-bold text-lg mb-1">
+                    {internship.title}
+                  </h3>
 
-                    <h3 className="font-bold text-lg mb-1">
-                      {internship.title}
-                    </h3>
+                  <p className="text-sm text-gray-600">
+                    {internship.company}
+                  </p>
 
-                    <p className="text-sm text-gray-600">
-                      {internship.company}
+                  <p className="text-sm text-gray-500 mt-1">
+                    📍 {internship.location || "India / Remote"}
+                  </p>
+
+                  {internship.stipend && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      💰 {internship.stipend}
                     </p>
-
-                    <p className="text-sm text-gray-500 mt-1">
-                      📍 {internship.location || "India / Remote"}
-                    </p>
-
-                    {internship.stipend && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        💰 {internship.stipend}
-                      </p>
-                    )}
-                  </Link>
-                );
-              })}
+                  )}
+                </Link>
+              ))}
             </div>
 
             {/* PAGINATION */}
@@ -138,23 +138,19 @@ export default async function InternshipsPage({ searchParams }) {
               </h3>
 
               <ul className="space-y-3 text-sm">
-                {latestInternships.map((post) => {
-                  const slugOrId = post.slug || post._id;
-
-                  return (
-                    <li key={slugOrId}>
-                      <Link
-                        href={`/internships/${slugOrId}`}
-                        className="text-blue-600 hover:underline font-semibold"
-                      >
-                        {post.title}
-                      </Link>
-                      <p className="text-xs text-gray-500">
-                        {post.company}
-                      </p>
-                    </li>
-                  );
-                })}
+                {latestInternships.map((post) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={`/internships/${post.slug}`}
+                      className="text-blue-600 hover:underline font-semibold"
+                    >
+                      {post.title}
+                    </Link>
+                    <p className="text-xs text-gray-500">
+                      {post.company}
+                    </p>
+                  </li>
+                ))}
               </ul>
 
               <p className="text-xs text-gray-400 mt-6">
