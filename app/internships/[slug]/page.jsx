@@ -8,7 +8,7 @@ const API_BASE = "https://freshersjobs-shop.onrender.com";
 /* ================= FETCH INTERNSHIP BY SLUG ================= */
 async function getInternship(slug) {
 
-  // 🚨 IMPORTANT: prevent undefined API call
+  // 🚨 prevent undefined slug
   if (!slug) return null;
 
   const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
@@ -35,8 +35,9 @@ async function getInternship(slug) {
 /* ================= METADATA ================= */
 export async function generateMetadata({ params }) {
 
-  // ✅ DO NOT USE await params
-  const { slug } = params;
+  // ✅ FIX: normalize slug (array-safe)
+  const rawSlug = params?.slug;
+  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
 
   const internship = await getInternship(slug);
 
@@ -58,8 +59,9 @@ export async function generateMetadata({ params }) {
 /* ================= PAGE ================= */
 export default async function InternshipDetails({ params }) {
 
-  // ✅ CRITICAL FIX — NEVER await params
-  const { slug } = params;
+  // ✅ FIX: normalize slug
+  const rawSlug = params?.slug;
+  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
 
   const internship = await getInternship(slug);
 
