@@ -1,84 +1,83 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import "./job-details.css";
 
-export const dynamic = "force-dynamic";
+const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 
-const API_BASE = "https://freshersjobs-shop.onrender.com";
+export default function InternshipDetails() {
 
-/* ================= FETCH ================= */
-async function getInternship(slug) {
+  const params = useParams();
+  const router = useRouter();
+  const slug = params?.slug;
 
-  if (!slug) return null;
+  const [internship, setInternship] = useState(null);
+  const [latestInternships, setLatestInternships] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const res = await fetch(`${API_BASE}/api/jobs/${slug}`, {
-    cache: "no-store",
-  });
+  useEffect(() => {
 
-  if (!res.ok) return null;
+    if (!slug) return;
 
-  const data = await res.json();
-  const internship = data.job;
+    const loadData = async () => {
+      try {
+        const [jobRes, jobsRes] = await Promise.all([
+          fetch(`${BACKEND_URL}/api/jobs/${slug}`),
+          fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`),
+        ]);
 
-  if (!internship) return null;
+        if (!jobRes.ok) {
+          setInternship(null);
+          return;
+        }
 
-  return {
-    ...internship,
-    description:
-      typeof internship.description === "string" &&
-      internship.description.trim()
-        ? internship.description
-        : "<p>No internship description available.</p>",
-  };
-}
+        const jobData = await jobRes.json();
+        const jobsData = await jobsRes.json();
 
-/* ================= METADATA ================= */
-export async function generateMetadata({ params }) {
+        const current = jobData.job;
 
-  // ✅ IMPORTANT FIX
-  const slug = params.slug;
+        setInternship({
+          ...current,
+          description:
+            typeof current.description === "string" &&
+            current.description.trim()
+              ? current.description
+              : "<p>No internship description available.</p>",
+        });
 
-  const internship = await getInternship(slug);
+        setLatestInternships(
+          (jobsData.jobs || []).filter((j) => j.slug !== current.slug)
+        );
 
-  if (!internship) {
-    return { title: "Internship Not Found | FreshersJobs.shop" };
-  }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return {
-    title: `${internship.title} Internship | ${internship.company}`,
-    description: `Apply for ${internship.title} internship at ${internship.company}. Check eligibility, stipend, location, and official application details.`,
-    alternates: {
-      canonical: `https://www.freshersjobs.shop/internships/${internship.slug}`,
-    },
-  };
-}
+    loadData();
 
-/* ================= PAGE ================= */
-export default async function InternshipDetails({ params }) {
+  }, [slug]);
 
-  // ✅ CRITICAL FIX HERE
-  const slug = params.slug;
-
-  const internship = await getInternship(slug);
-
-  if (!internship) notFound();
+  if (loading) return <p className="center-text">Loading internship…</p>;
+  if (!internship) return <p className="center-text">Internship not found</p>;
 
   return (
-    <main className="document-page">
-      <div className="layout">
+    <main className="job-page">
+      <div className="job-layout">
 
-        <article className="document print-area">
+        {/* MAIN */}
+        <article className="job-article">
 
           <header className="doc-header">
             <h1>{internship.title}</h1>
             <p className="company">{internship.company}</p>
-            <p className="meta">
+            <p className="location">
               📍 {internship.location || "India / Remote"}
             </p>
           </header>
-
-          <p className="editor-note">
-            This internship update is shared for informational purposes only.
-          </p>
 
           <section className="job-table">
             <table>
@@ -89,20 +88,20 @@ export default async function InternshipDetails({ params }) {
                 </tr>
 
                 <tr>
-                  <th>Internship Role</th>
+                  <th>Role</th>
                   <td>{internship.role || internship.title}</td>
                 </tr>
 
                 <tr>
                   <th>Qualification</th>
-                  <td>{internship.qualification || "Any Graduate / Student"}</td>
+                  <td>{internship.qualification || "Any Graduate"}</td>
                 </tr>
 
                 <tr>
                   <th>Stipend</th>
                   <td>
-                    {internship.stipend ||
-                      internship.salary ||
+                    {internship.salary ||
+                      internship.stipend ||
                       "Not disclosed"}
                   </td>
                 </tr>
@@ -115,7 +114,7 @@ export default async function InternshipDetails({ params }) {
             </table>
           </section>
 
-          <section className="content">
+          <section className="ck-content">
             <div
               dangerouslySetInnerHTML={{
                 __html: internship.description,
@@ -124,20 +123,32 @@ export default async function InternshipDetails({ params }) {
           </section>
 
           {internship.applyUrl && (
-            <div className="apply">
+            <section className="apply">
               <a
                 href={internship.applyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Apply on Official Company Website →
+                View Official Internship →
               </a>
-            </div>
+            </section>
           )}
         </article>
 
+        {/* SIDEBAR */}
         <aside className="latest-jobs screen-only">
           <h3>Latest Internships</h3>
+          <ul>
+            {latestInternships.map((j) => (
+              <li
+                key={j.slug}
+                onClick={() => router.push(`/internships/${j.slug}`)}
+              >
+                <p className="lj-title">{j.title}</p>
+                <p className="lj-company">{j.company}</p>
+              </li>
+            ))}
+          </ul>
         </aside>
 
       </div>
