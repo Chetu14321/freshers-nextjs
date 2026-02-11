@@ -22,9 +22,13 @@ export default function InternshipDetails() {
 
     const loadData = async () => {
       try {
+
+        // ✅ SAME API — just filter type
         const [jobRes, jobsRes] = await Promise.all([
-          fetch(`${BACKEND_URL}/api/jobs/${slug}`),
-          fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`),
+          fetch(`${BACKEND_URL}/api/jobs/${slug}`, { cache: "no-store" }),
+          fetch(`${BACKEND_URL}/api/jobs?limit=6&type=internship`, {
+            cache: "no-store",
+          }),
         ]);
 
         if (!jobRes.ok) {
@@ -35,23 +39,27 @@ export default function InternshipDetails() {
         const jobData = await jobRes.json();
         const jobsData = await jobsRes.json();
 
-        const current = jobData.job;
+        const currentInternship = jobData.job;
 
+        // ✅ FIX scrambled / empty description
         setInternship({
-          ...current,
+          ...currentInternship,
           description:
-            typeof current.description === "string" &&
-            current.description.trim()
-              ? current.description
-              : "<p>No internship description available.</p>",
+            typeof currentInternship.description === "string" &&
+            currentInternship.description.trim()
+              ? currentInternship.description
+              : "<p>No description available.</p>",
         });
 
+        // ✅ RIGHT SIDEBAR — RECENT POSTS
         setLatestInternships(
-          (jobsData.jobs || []).filter((j) => j.slug !== current.slug)
+          (jobsData.jobs || []).filter(
+            (j) => j.slug !== currentInternship.slug
+          )
         );
 
       } catch (err) {
-        console.error(err);
+        console.error("Internship load error:", err);
       } finally {
         setLoading(false);
       }
@@ -61,14 +69,18 @@ export default function InternshipDetails() {
 
   }, [slug]);
 
+  /* ================= STATES ================= */
+
   if (loading) return <p className="center-text">Loading internship…</p>;
   if (!internship) return <p className="center-text">Internship not found</p>;
+
+  /* ================= UI ================= */
 
   return (
     <main className="job-page">
       <div className="job-layout">
 
-        {/* MAIN */}
+        {/* ================= MAIN ARTICLE ================= */}
         <article className="job-article">
 
           <header className="doc-header">
@@ -79,6 +91,7 @@ export default function InternshipDetails() {
             </p>
           </header>
 
+          {/* TABLE */}
           <section className="job-table">
             <table>
               <tbody>
@@ -114,6 +127,7 @@ export default function InternshipDetails() {
             </table>
           </section>
 
+          {/* ⭐ CONTENT — EXACT SAME AS JOB DETAILS */}
           <section className="ck-content">
             <div
               dangerouslySetInnerHTML={{
@@ -122,6 +136,7 @@ export default function InternshipDetails() {
             />
           </section>
 
+          {/* APPLY BUTTON */}
           {internship.applyUrl && (
             <section className="apply">
               <a
@@ -129,23 +144,29 @@ export default function InternshipDetails() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View Official Internship →
+                View Official Internship Posting →
               </a>
+
+              <p className="apply-disclaimer">
+                Disclaimer: FreshersJobs.shop is not a recruitment agency.
+                Always apply via official company career portals.
+              </p>
             </section>
           )}
         </article>
 
-        {/* SIDEBAR */}
+        {/* ================= RIGHT SIDEBAR ================= */}
         <aside className="latest-jobs screen-only">
-          <h3>Latest Internships</h3>
+          <h3>Recent Internship Updates</h3>
+
           <ul>
-            {latestInternships.map((j) => (
+            {latestInternships.map((item) => (
               <li
-                key={j.slug}
-                onClick={() => router.push(`/internships/${j.slug}`)}
+                key={item.slug}
+                onClick={() => router.push(`/internships/${item.slug}`)}
               >
-                <p className="lj-title">{j.title}</p>
-                <p className="lj-company">{j.company}</p>
+                <p className="lj-title">{item.title}</p>
+                <p className="lj-company">{item.company}</p>
               </li>
             ))}
           </ul>
