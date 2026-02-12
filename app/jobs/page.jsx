@@ -40,14 +40,11 @@ export default async function JobsPage({ searchParams }) {
     <main className="min-h-screen bg-gray-50 text-black">
       {/* ================= HEADER ================= */}
       <div className="max-w-4xl mx-auto text-center py-12 px-4">
-        <h1 className="text-4xl font-bold mb-4">
-          Latest Job Openings For Freshers
-        </h1>
+      
 
         <p className="text-gray-600 leading-relaxed">
-          Discover the latest fresher job openings across India. Each listing
-          includes eligibility details, hiring insights, and application
-          guidance to help candidates apply with confidence and avoid scams.
+          Explore fresher opportunities with eligibility details, hiring
+          insights, and application guidance curated for fresh graduates.
         </p>
       </div>
 
@@ -73,10 +70,13 @@ export default async function JobsPage({ searchParams }) {
                     {job.company} • 📍 {job.location || "India"}
                   </p>
 
-                  {/* BLOG STYLE PREVIEW */}
+                  {/* BLOG STYLE PREVIEW FROM DESCRIPTION */}
                   <p className="text-sm text-gray-700 mt-3 line-clamp-3">
-                    {job.shortDescription ||
-                      "Explore this latest fresher opportunity with hiring insights, eligibility details, and application guidance curated for fresh graduates."}
+                    {job.description
+                      ? job.description
+                          .replace(/<[^>]+>/g, "")
+                          .slice(0, 160) + "..."
+                      : "Explore this latest fresher opportunity with hiring insights and application guidance."}
                   </p>
 
                   {/* META INFO */}
