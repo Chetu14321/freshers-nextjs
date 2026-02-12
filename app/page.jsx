@@ -187,6 +187,36 @@ export default function Home() {
             candidates apply with confidence and avoid common mistakes.
           </p>
         </section>
+        {/* ================= ORIGINAL CAREER EDITORIAL BLOCK ================= */}
+<section className="mt-10 bg-white border rounded-xl p-8">
+  <h2 className="text-xl font-bold mb-4">
+    How Freshers Can Apply Smartly Without Falling for Job Scams
+  </h2>
+
+  <p className="text-sm text-gray-700 leading-relaxed mb-4">
+    Many fresh graduates apply to dozens of roles without understanding the
+    hiring expectations of each company. A smarter approach is to carefully
+    read job responsibilities, identify required skills, and align personal
+    projects or academic experience with the role. Recruiters often look for
+    clarity of thought and learning attitude rather than perfect resumes.
+  </p>
+
+  <p className="text-sm text-gray-700 leading-relaxed mb-4">
+    Candidates should avoid platforms that request payments or promise
+    guaranteed placement opportunities. Authentic hiring processes usually
+    happen through official company career portals, structured assessments,
+    and transparent communication. Preparing consistently and applying
+    strategically increases long-term success more than applying randomly.
+  </p>
+
+  <p className="text-sm text-gray-700 leading-relaxed">
+    FreshersJobs.shop focuses on sharing informational guidance to help users
+    understand hiring patterns, interview preparation strategies, and safe
+    application practices. Always verify details directly from employer
+    websites before proceeding with any application step.
+  </p>
+</section>
+
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
