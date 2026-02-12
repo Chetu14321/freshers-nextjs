@@ -77,7 +77,6 @@ export default function Home() {
     setShowResults(true);
   }, [debouncedSearch, jobs]);
 
-  /* -------------------- Pagination -------------------- */
   const indexOfLastJob = currentPage * JOBS_PER_PAGE;
   const indexOfFirstJob = indexOfLastJob - JOBS_PER_PAGE;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -128,7 +127,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* ================= ARTICLE STYLE JOB GRID ================= */}
+      {/* ================= JOB ARTICLE GRID ================= */}
       <div className="max-w-7xl mx-auto px-4 pb-16 mt-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {loading
@@ -140,9 +139,7 @@ export default function Home() {
                     href={`/jobs/${job.slug}`}
                     className="block bg-white border rounded-xl p-6 hover:shadow-xl transition duration-200"
                   >
-                    <h3 className="font-bold text-lg mb-2">
-                      {job.title}
-                    </h3>
+                    <h3 className="font-bold text-lg mb-2">{job.title}</h3>
 
                     <p className="text-sm text-gray-600">
                       {job.company} • 📍 {job.location || "India"}
@@ -165,6 +162,32 @@ export default function Home() {
               )}
         </div>
 
+        {/* ================= EDITORIAL BLOCK 1 ================= */}
+        <section className="mt-16 bg-white border rounded-xl p-8">
+          <h2 className="text-xl font-bold mb-4">
+            Hiring Trends for Freshers in 2026
+          </h2>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            Recruiters today prioritize strong fundamentals, communication
+            ability, and real project experience over academic marks alone.
+            Candidates who understand role expectations and prepare
+            strategically often stand out during fresher hiring cycles.
+          </p>
+        </section>
+
+        {/* ================= EDITORIAL BLOCK 2 ================= */}
+        <section className="mt-10 bg-white border rounded-xl p-8">
+          <h2 className="text-xl font-bold mb-4">
+            Resume & Interview Preparation Advice
+          </h2>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            Fresh graduates should focus on building structured resumes that
+            highlight projects, internships, and problem-solving skills.
+            Understanding interview patterns and company expectations helps
+            candidates apply with confidence and avoid common mistakes.
+          </p>
+        </section>
+
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
           <div className="flex justify-center gap-3 mt-12 flex-wrap">
@@ -181,7 +204,9 @@ export default function Home() {
                 key={i}
                 onClick={() => paginate(i + 1)}
                 className={`px-4 py-2 border rounded-lg ${
-                  currentPage === i + 1 ? "bg-black text-white" : "bg-white"
+                  currentPage === i + 1
+                    ? "bg-black text-white"
+                    : "bg-white"
                 }`}
               >
                 {i + 1}
