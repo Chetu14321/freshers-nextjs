@@ -99,22 +99,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50 text-black">
 
-      {/* ================= NAVBAR ================= */}
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="font-black text-lg">
-            FreshersJobs.shop
-          </Link>
-
-          <nav className="flex items-center gap-6 text-sm font-semibold">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
-            <Link href="/jobs" className="hover:text-blue-600">Jobs</Link>
-            <Link href="/internships" className="hover:text-blue-600">Internships</Link>
-            <Link href="/ats-checker" className="hover:text-blue-600">ATS Checker</Link>
-          </nav>
-        </div>
-      </header>
-
       {/* ================= SEARCH ================= */}
       <div className="max-w-4xl mx-auto pt-10 px-4 relative">
         <form onSubmit={submitSearch}>
