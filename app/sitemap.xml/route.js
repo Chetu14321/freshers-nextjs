@@ -5,25 +5,25 @@ export async function GET() {
      STATIC PAGES
   =============================== */
   const staticPages = [
-    "",
-    "/jobs",
-    "/internships",
-    "/resume-checker",
-    "/about",
-    "/contact",
-    "/terms",
-    "/privacy-policy",
-    "/disclaimer",
+    { path: "/",               changefreq: "daily",   priority: "1.0" },
+    { path: "/jobs",           changefreq: "daily",   priority: "0.9" },
+    { path: "/internships",    changefreq: "daily",   priority: "0.9" },
+    { path: "/resume-checker", changefreq: "weekly",  priority: "0.7" },
+    { path: "/about",          changefreq: "monthly", priority: "0.4" },
+    { path: "/contact",        changefreq: "monthly", priority: "0.4" },
+    { path: "/terms",          changefreq: "monthly", priority: "0.3" },
+    { path: "/privacy-policy", changefreq: "monthly", priority: "0.3" },
+    { path: "/disclaimer",     changefreq: "monthly", priority: "0.3" },
   ];
 
   const staticUrls = staticPages
     .map(
-      (path) => `
-      <url>
-        <loc>${baseUrl}${path}</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-      </url>`
+      ({ path, changefreq, priority }) => `
+  <url>
+    <loc>${baseUrl}${path}</loc>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`
     )
     .join("");
 
@@ -33,18 +33,15 @@ export async function GET() {
   let jobUrls = "";
 
   try {
-    // First request to know totalPages
     const firstRes = await fetch(
       "https://freshersjobs-shop.onrender.com/api/jobs?page=1&limit=50",
       { cache: "no-store" }
     );
 
     const firstData = await firstRes.json();
-
     const totalPages = firstData.totalPages || 1;
     let allJobs = [...(firstData.jobs || [])];
 
-    // Fetch remaining pages
     for (let page = 2; page <= totalPages; page++) {
       const res = await fetch(
         `https://freshersjobs-shop.onrender.com/api/jobs?page=${page}&limit=50`,
@@ -54,19 +51,30 @@ export async function GET() {
       allJobs.push(...(data.jobs || []));
     }
 
-    // Generate job URLs
     jobUrls = allJobs
-      .filter(job => job.slug)
-      .map(
-        (job) => `
-        <url>
-          <loc>${baseUrl}/jobs/${job.slug}</loc>
-          <changefreq>daily</changefreq>
-          <priority>0.9</priority>
-        </url>`
-      )
-      .join("");
+      .filter((job) => {
+        // Must have a slug
+        if (!job.slug) return false;
 
+        // Remove jobs where lastDate is set and has passed
+        if (job.lastDate && new Date(job.lastDate) < new Date()) return false;
+
+        return true;
+      })
+      .map((job) => {
+        const lastmod = job.postedAt
+          ? new Date(job.postedAt).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0];
+
+        return `
+  <url>
+    <loc>${baseUrl}/jobs/${job.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      })
+      .join("");
   } catch (error) {
     console.error("❌ Sitemap job fetch failed:", error);
   }
@@ -83,6 +91,7 @@ ${jobUrls}
     {
       headers: {
         "Content-Type": "application/xml",
+        "Cache-Control": "public, max-age=3600",
       },
     }
   );
