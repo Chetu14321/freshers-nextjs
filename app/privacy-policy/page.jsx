@@ -51,13 +51,15 @@ export default function PrivacyPolicy() {
             <h2 className="text-xl font-bold mb-3">Cookies & Google AdSense</h2>
             <p className="text-slate-600">
               FreshersJobs.shop uses Google AdSense, a third-party advertising
-              service. Google may use cookies, including the DoubleClick cookie,
-              to display ads based on a user’s visit to this and other websites.
+              service. Google, as a third-party vendor, uses cookies to serve ads on our site. Google use of the <strong>DART cookie</strong> enables it to serve ads to our users based on their visit to <em>freshersjobs.shop</em> and other sites on the Internet.
             </p>
             <p className="text-slate-600 mt-3">
-              Google’s advertising cookies allow it and its partners to serve
-              relevant ads to users. Users can opt out of personalized
-              advertising through Google Ads Settings.
+              Google advertising cookies allow it and its partners to serve
+              relevant ads to users. Users can choose to opt out of personalized
+              advertising or the use of the DART cookie by visiting the 
+              <a href="https://policies.google.com/technologies/ads" className="text-blue-600 hover:underline ml-1" target="_blank" rel="noopener noreferrer">
+                Google Ads Settings
+              </a>.
             </p>
           </div>
 
@@ -66,7 +68,7 @@ export default function PrivacyPolicy() {
             <p className="text-slate-600">
               FreshersJobs.shop’s Privacy Policy does not apply to other
               advertisers or external websites. We advise users to review the
-              respective privacy policies of third-party services.
+              respective privacy policies of third-party services for more detailed information.
             </p>
           </div>
 
