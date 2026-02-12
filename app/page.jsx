@@ -148,8 +148,8 @@ export default function Home() {
           and safe application practices instead of simply listing openings.
         </p>
          <p className="text-xs text-gray-400 mt-2">
-FreshersJobs.shop Editorial Desk • Career Guidance Platform
-</p>
+          FreshersJobs.shop Editorial Desk • Career Guidance Platform
+        </p>
       </section>
      
 
