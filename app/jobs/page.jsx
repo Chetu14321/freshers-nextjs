@@ -38,11 +38,20 @@ export default async function JobsPage({ searchParams }) {
 
   return (
     <main className="min-h-screen bg-gray-50 text-black">
-      <h1 className="text-4xl font-bold text-center py-10">
-        Latest Job Openings For Freshers
-      </h1>
+      {/* ================= HEADER ================= */}
+      <div className="max-w-4xl mx-auto text-center py-12 px-4">
+        <h1 className="text-4xl font-bold mb-4">
+          Latest Job Openings For Freshers
+        </h1>
 
-      <div className="max-w-7xl mx-auto px-4">
+        <p className="text-gray-600 leading-relaxed">
+          Discover the latest fresher job openings across India. Each listing
+          includes eligibility details, hiring insights, and application
+          guidance to help candidates apply with confidence and avoid scams.
+        </p>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* ================= LEFT: JOB LIST ================= */}
@@ -52,23 +61,46 @@ export default async function JobsPage({ searchParams }) {
                 <Link
                   key={job.slug}
                   href={`/jobs/${job.slug}`}
-                  className="block bg-white border rounded-xl p-6 hover:shadow-lg transition"
+                  className="block bg-white border rounded-xl p-6 hover:shadow-xl transition duration-200"
                 >
-                  <h3 className="font-bold text-lg">{job.title}</h3>
-                  <p className="text-sm text-gray-600">{job.company}</p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    📍 {job.location || "India"}
+                  {/* TITLE */}
+                  <h3 className="font-bold text-lg mb-2 leading-snug">
+                    {job.title}
+                  </h3>
+
+                  {/* COMPANY + LOCATION */}
+                  <p className="text-sm text-gray-600">
+                    {job.company} • 📍 {job.location || "India"}
                   </p>
+
+                  {/* BLOG STYLE PREVIEW */}
+                  <p className="text-sm text-gray-700 mt-3 line-clamp-3">
+                    {job.shortDescription ||
+                      "Explore this latest fresher opportunity with hiring insights, eligibility details, and application guidance curated for fresh graduates."}
+                  </p>
+
+                  {/* META INFO */}
+                  <div className="flex justify-between items-center mt-5 text-xs text-gray-500">
+                    <span>
+                      🗓{" "}
+                      {job.createdAt
+                        ? job.createdAt.slice(0, 10)
+                        : "Latest Update"}
+                    </span>
+                    <span className="text-black font-semibold">
+                      Read Article →
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
 
             {/* ================= PAGINATION ================= */}
-            <div className="flex justify-center gap-3 mt-10">
+            <div className="flex justify-center gap-3 mt-12 flex-wrap">
               {page > 1 && (
                 <Link
                   href={`/jobs?page=${page - 1}`}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100"
                 >
                   ← Prev
                 </Link>
@@ -78,8 +110,10 @@ export default async function JobsPage({ searchParams }) {
                 <Link
                   key={i}
                   href={`/jobs?page=${i + 1}`}
-                  className={`px-4 py-2 border rounded ${
-                    page === i + 1 ? "bg-black text-white" : ""
+                  className={`px-4 py-2 border rounded-lg ${
+                    page === i + 1
+                      ? "bg-black text-white"
+                      : "bg-white hover:bg-gray-100"
                   }`}
                 >
                   {i + 1}
@@ -89,7 +123,7 @@ export default async function JobsPage({ searchParams }) {
               {page < totalPages && (
                 <Link
                   href={`/jobs?page=${page + 1}`}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100"
                 >
                   Next →
                 </Link>
@@ -100,7 +134,7 @@ export default async function JobsPage({ searchParams }) {
           {/* ================= RIGHT: BLOG SIDEBAR ================= */}
           <aside className="lg:col-span-4 space-y-6">
             
-            {/* BLOG CARD */}
+            {/* CAREER GUIDE CARD */}
             <div className="bg-white border rounded-xl p-6">
               <h2 className="text-xl font-bold mb-4">
                 📘 Career Guidance for Freshers
@@ -114,9 +148,9 @@ export default async function JobsPage({ searchParams }) {
                 </p>
 
                 <p>
-                  Most entry-level roles focus on <strong>concept clarity</strong>,
-                  willingness to learn, and communication skills rather than
-                  advanced technical expertise.
+                  Most entry-level roles focus on{" "}
+                  <strong>concept clarity</strong>, willingness to learn, and
+                  communication skills rather than advanced technical expertise.
                 </p>
 
                 <p>
@@ -130,7 +164,7 @@ export default async function JobsPage({ searchParams }) {
             {/* MINI BLOG LINKS */}
             <div className="bg-white border rounded-xl p-6">
               <h3 className="font-bold mb-3">Helpful Reads</h3>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-sm text-gray-700">
                 <li>• How to prepare for fresher interviews</li>
                 <li>• Resume mistakes freshers should avoid</li>
                 <li>• Difference between mass hiring and lateral hiring</li>
@@ -140,13 +174,13 @@ export default async function JobsPage({ searchParams }) {
             </div>
 
             {/* TRUST NOTE */}
-            <div className="bg-gray-100 border rounded-xl p-5 text-xs text-gray-600">
+            <div className="bg-gray-100 border rounded-xl p-5 text-xs text-gray-600 leading-relaxed">
               <strong>Safety Note:</strong> FreshersJobs.shop never asks for
               registration fees or payments. Always verify job updates from
-              official employer websites.
+              official employer websites before applying.
             </div>
-
           </aside>
+
         </div>
       </div>
     </main>
