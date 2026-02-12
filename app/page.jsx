@@ -142,14 +142,15 @@ export default function Home() {
         <h2 className="text-xl font-bold mb-3">
           Latest Fresher Hiring Updates Across India
         </h2>
+          <p className="text-xs text-gray-400 mt-2">
+          FreshersJobs.shop Editorial Desk • Career Guidance Platform
+        </p>
         <p className="text-sm text-gray-600 leading-relaxed">
           These opportunities are presented with editorial context to help
           candidates understand real hiring expectations, required skills,
           and safe application practices instead of simply listing openings.
         </p>
-         <p className="text-xs text-gray-400 mt-2">
-          FreshersJobs.shop Editorial Desk • Career Guidance Platform
-        </p>
+       
       </section>
      
 
