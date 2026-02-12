@@ -30,6 +30,15 @@ function JobSkeleton() {
   );
 }
 
+/* ⭐ ORIGINAL FALLBACK TEXTS (Human Variation) */
+const previews = [
+  "Understand eligibility details, hiring insights, and fresher application guidance explained clearly.",
+  "Explore role expectations, required skills, and interview preparation tips for fresh graduates.",
+  "Learn about company hiring patterns and safe application steps through editorial insights.",
+  "Discover fresher opportunities explained with practical preparation advice and role clarity.",
+  "Read simplified hiring guidance designed to help candidates apply confidently."
+];
+
 export default function Home() {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
@@ -77,6 +86,7 @@ export default function Home() {
     setShowResults(true);
   }, [debouncedSearch, jobs]);
 
+  /* -------------------- Pagination -------------------- */
   const indexOfLastJob = currentPage * JOBS_PER_PAGE;
   const indexOfFirstJob = indexOfLastJob - JOBS_PER_PAGE;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -127,13 +137,30 @@ export default function Home() {
         )}
       </div>
 
-      {/* ================= JOB ARTICLE GRID ================= */}
-      <div className="max-w-7xl mx-auto px-4 pb-16 mt-14">
+      {/* ================= HUMAN EDITORIAL INTRO ================= */}
+      <section className="max-w-4xl mx-auto px-4 mt-14 mb-10">
+        <h2 className="text-xl font-bold mb-3">
+          Latest Fresher Hiring Updates Across India
+        </h2>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          These opportunities are presented with editorial context to help
+          candidates understand real hiring expectations, required skills,
+          and safe application practices instead of simply listing openings.
+        </p>
+      </section>
+
+      {/* ================= ARTICLE STYLE JOB GRID ================= */}
+      <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {loading
             ? [...Array(6)].map((_, i) => <JobSkeleton key={i} />)
-            : currentJobs.map((job) =>
-                job.slug ? (
+            : currentJobs.map((job) => {
+                if (!job.slug) return null;
+
+                const randomPreview =
+                  previews[Math.floor(Math.random() * previews.length)];
+
+                return (
                   <Link
                     key={job.slug}
                     href={`/jobs/${job.slug}`}
@@ -147,76 +174,25 @@ export default function Home() {
 
                     <p className="text-sm text-gray-700 mt-3 line-clamp-3">
                       {job.description
-                        ? job.description.replace(/<[^>]+>/g, "").slice(0,160)+"..."
-                        : "Explore fresher hiring insights and application guidance."}
+                        ? job.description
+                            .replace(/<[^>]+>/g, "")
+                            .slice(0, 160) + "..."
+                        : randomPreview}
                     </p>
 
                     <div className="flex justify-between items-center mt-5 text-xs text-gray-500">
                       <span>
-                        🗓 {job.createdAt ? job.createdAt.slice(0,10) : "Latest Update"}
+                        🗓{" "}
+                        {job.createdAt
+                          ? job.createdAt.slice(0, 10)
+                          : "Latest Update"}
                       </span>
                       <span className="font-semibold">Read Article →</span>
                     </div>
                   </Link>
-                ) : null
-              )}
+                );
+              })}
         </div>
-
-        {/* ================= EDITORIAL BLOCK 1 ================= */}
-        <section className="mt-16 bg-white border rounded-xl p-8">
-          <h2 className="text-xl font-bold mb-4">
-            Hiring Trends for Freshers in 2026
-          </h2>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            Recruiters today prioritize strong fundamentals, communication
-            ability, and real project experience over academic marks alone.
-            Candidates who understand role expectations and prepare
-            strategically often stand out during fresher hiring cycles.
-          </p>
-        </section>
-
-        {/* ================= EDITORIAL BLOCK 2 ================= */}
-        <section className="mt-10 bg-white border rounded-xl p-8">
-          <h2 className="text-xl font-bold mb-4">
-            Resume & Interview Preparation Advice
-          </h2>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            Fresh graduates should focus on building structured resumes that
-            highlight projects, internships, and problem-solving skills.
-            Understanding interview patterns and company expectations helps
-            candidates apply with confidence and avoid common mistakes.
-          </p>
-        </section>
-        {/* ================= ORIGINAL CAREER EDITORIAL BLOCK ================= */}
-<section className="mt-10 bg-white border rounded-xl p-8">
-  <h2 className="text-xl font-bold mb-4">
-    How Freshers Can Apply Smartly Without Falling for Job Scams
-  </h2>
-
-  <p className="text-sm text-gray-700 leading-relaxed mb-4">
-    Many fresh graduates apply to dozens of roles without understanding the
-    hiring expectations of each company. A smarter approach is to carefully
-    read job responsibilities, identify required skills, and align personal
-    projects or academic experience with the role. Recruiters often look for
-    clarity of thought and learning attitude rather than perfect resumes.
-  </p>
-
-  <p className="text-sm text-gray-700 leading-relaxed mb-4">
-    Candidates should avoid platforms that request payments or promise
-    guaranteed placement opportunities. Authentic hiring processes usually
-    happen through official company career portals, structured assessments,
-    and transparent communication. Preparing consistently and applying
-    strategically increases long-term success more than applying randomly.
-  </p>
-
-  <p className="text-sm text-gray-700 leading-relaxed">
-    FreshersJobs.shop focuses on sharing informational guidance to help users
-    understand hiring patterns, interview preparation strategies, and safe
-    application practices. Always verify details directly from employer
-    websites before proceeding with any application step.
-  </p>
-</section>
-
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
