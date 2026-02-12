@@ -53,37 +53,42 @@ export default async function InternshipsPage({ searchParams }) {
 
   return (
     <main className="min-h-screen bg-gray-50 text-black">
-      <h1 className="text-4xl font-bold text-center py-10">
-        Internship Opportunities for Freshers
-      </h1>
+      {/* ================= HEADER ================= */}
+      <div className="max-w-4xl mx-auto text-center py-12 px-4">
+        <h1 className="text-4xl font-bold mb-4">
+          Internship Opportunities for Freshers
+        </h1>
 
-      <div className="max-w-6xl mx-auto px-4">
+        <p className="text-gray-600 leading-relaxed">
+          Explore latest internships with eligibility insights, role details,
+          and application guidance curated for students and fresh graduates.
+        </p>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* ================= LEFT: INTERNSHIP CARDS ================= */}
-          <section className="lg:col-span-9">
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <section className="lg:col-span-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
               {jobs.map((internship) => (
                 <Link
                   key={internship.slug}
                   href={`/internships/${internship.slug}`}
-                  className="block bg-white border rounded-xl p-6 hover:shadow-lg transition"
+                  className="block bg-white border rounded-xl p-6 hover:shadow-xl transition duration-200"
                 >
                   <span className="inline-block text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full mb-3">
                     Internship
                   </span>
 
-                  <h3 className="font-bold text-lg mb-1">
+                  <h3 className="font-bold text-lg mb-2">
                     {internship.title}
                   </h3>
 
                   <p className="text-sm text-gray-600">
-                    {internship.company}
-                  </p>
-
-                  <p className="text-sm text-gray-500 mt-1">
-                    📍 {internship.location || "India / Remote"}
+                    {internship.company} • 📍{" "}
+                    {internship.location || "India / Remote"}
                   </p>
 
                   {(internship.salary || internship.stipend) && (
@@ -91,18 +96,40 @@ export default async function InternshipsPage({ searchParams }) {
                       💰 {internship.salary || internship.stipend}
                     </p>
                   )}
+
+                  {/* BLOG STYLE PREVIEW FROM DESCRIPTION */}
+                  <p className="text-sm text-gray-700 mt-3 line-clamp-3">
+                    {internship.description
+                      ? internship.description
+                          .replace(/<[^>]+>/g, "")
+                          .slice(0, 160) + "..."
+                      : "Explore internship responsibilities, skills required, and application guidance curated for freshers."}
+                  </p>
+
+                  {/* META */}
+                  <div className="flex justify-between items-center mt-5 text-xs text-gray-500">
+                    <span>
+                      🗓{" "}
+                      {internship.createdAt
+                        ? internship.createdAt.slice(0, 10)
+                        : "Latest Update"}
+                    </span>
+                    <span className="text-black font-semibold">
+                      Read Article →
+                    </span>
+                  </div>
                 </Link>
               ))}
 
             </div>
 
             {/* ================= PAGINATION ================= */}
-            <div className="flex justify-center gap-3 mt-12">
+            <div className="flex justify-center gap-3 mt-12 flex-wrap">
 
               {page > 1 && (
                 <Link
                   href={`/internships?page=${page - 1}`}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100"
                 >
                   ← Previous
                 </Link>
@@ -114,8 +141,10 @@ export default async function InternshipsPage({ searchParams }) {
                   <Link
                     key={p}
                     href={`/internships?page=${p}`}
-                    className={`px-4 py-2 border rounded ${
-                      p === page ? "bg-black text-white" : ""
+                    className={`px-4 py-2 border rounded-lg ${
+                      p === page
+                        ? "bg-black text-white"
+                        : "bg-white hover:bg-gray-100"
                     }`}
                   >
                     {p}
@@ -126,7 +155,7 @@ export default async function InternshipsPage({ searchParams }) {
               {page < totalPages && (
                 <Link
                   href={`/internships?page=${page + 1}`}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100"
                 >
                   Next →
                 </Link>
@@ -135,8 +164,8 @@ export default async function InternshipsPage({ searchParams }) {
             </div>
           </section>
 
-          {/* ================= RIGHT SIDEBAR BLOG (ADSENSE SAFE) ================= */}
-          <aside className="lg:col-span-3">
+          {/* ================= RIGHT SIDEBAR BLOG ================= */}
+          <aside className="lg:col-span-4">
             <div className="bg-white border rounded-xl p-6 space-y-5 sticky top-24">
 
               <p className="text-xs text-gray-400">
@@ -151,42 +180,28 @@ export default async function InternshipsPage({ searchParams }) {
 
                 <p>
                   Internships help students transition from academic learning
-                  to real-world industry experience. At FreshersJobs.shop, we
-                  observe that candidates who focus on strong fundamentals,
-                  problem-solving skills, and communication often perform
-                  better during internship interviews.
+                  to real-world industry experience. Candidates who focus on
+                  strong fundamentals and project clarity often perform better.
                 </p>
 
                 <p>
-                  Instead of applying randomly, freshers should evaluate role
-                  responsibilities, learning opportunities, and company growth
-                  potential. Understanding what you will learn is often more
-                  important than the stipend amount.
+                  Instead of applying randomly, evaluate learning opportunities
+                  and role responsibilities carefully before submitting
+                  applications.
                 </p>
 
                 <p>
-                  Recruiters typically expect candidates to demonstrate basic
-                  technical clarity, willingness to learn, and the ability to
-                  explain projects confidently. Even small personal projects
-                  can make a strong impression when explained clearly.
-                </p>
-
-                <p>
-                  FreshersJobs.shop recommends avoiding platforms that promise
-                  guaranteed jobs or request payments. Always verify internship
-                  updates through official employer career portals before
-                  applying.
+                  Always verify internship updates through official employer
+                  portals and avoid platforms requesting payments.
                 </p>
 
                 <p className="text-xs text-gray-500">
-                  Editorial Note: FreshersJobs.shop is an independent career
-                  guidance platform sharing internship information for
-                  educational purposes only.
+                  Editorial Note: FreshersJobs.shop shares internship
+                  information for educational purposes only.
                 </p>
 
               </article>
 
-              {/* MINI BLOG LINKS */}
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-2 text-sm">
                   Popular Internship Tips
