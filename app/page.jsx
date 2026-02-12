@@ -148,6 +148,10 @@ export default function Home() {
           and safe application practices instead of simply listing openings.
         </p>
       </section>
+      <p className="text-xs text-gray-400 mt-2">
+FreshersJobs.shop Editorial Desk • Career Guidance Platform
+</p>
+
 
       {/* ================= ARTICLE STYLE JOB GRID ================= */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
