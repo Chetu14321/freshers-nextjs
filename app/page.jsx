@@ -106,64 +106,42 @@ export default function Home() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search job titles or company names..."
-            className="w-full px-6 py-4 border-2 border-black rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm"
+            className="w-full px-6 py-4 border-2 border-black rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] outline-none focus:ring-2 focus:ring-blue-600 text-sm"
           />
         </form>
 
         {showResults && (
           <div className="absolute left-4 right-4 bg-white border-2 border-black rounded-2xl shadow-xl mt-2 z-50 max-h-80 overflow-auto">
-            {results.map((job) => {
-              if (!job.slug) return null; // ✅ prevent undefined
-              return (
+            {results.map((job) =>
+              job.slug ? (
                 <Link
                   key={job.slug}
                   href={`/jobs/${job.slug}`}
-                  className="block px-6 py-4 hover:bg-slate-50 border-b border-gray-100 last:border-0 font-bold text-blue-600 text-sm"
+                  className="block px-6 py-4 hover:bg-slate-50 border-b text-blue-600 font-bold text-sm"
                 >
-                  {job.title}{" "}
+                  {job.title}
                   <span className="text-slate-400 font-medium">
+                    {" "}
                     — {job.company}
                   </span>
                 </Link>
-              );
-            })}
+              ) : null
+            )}
           </div>
         )}
       </div>
 
-      {/* ================= ORIGINAL CAREER CONTENT ================= */}
+      {/* ================= EDITORIAL CONTENT ================= */}
       <section className="max-w-4xl mx-auto px-4 mt-14 mb-16">
-        <h1 className="text-3xl font-black text-slate-900 mb-6">
+        <h1 className="text-3xl font-black mb-6">
           Career Guidance & Verified Job Updates for Freshers (2026)
         </h1>
 
         <div className="space-y-5 text-slate-600 text-sm leading-relaxed">
           <p>
-            FreshersJobs.shop is an independent career guidance platform designed
-            to help fresh graduates and entry-level professionals understand real
-            hiring requirements, skill expectations, and preparation strategies
-            across IT, analytics, software, and non-technical roles.
-          </p>
-
-          <p>
-            We do not conduct recruitment or collect applications. All job updates
-            shared on this platform are manually verified and redirected only to
-            official company career portals. This helps candidates avoid fake job
-            scams and misleading third-party recruitment sources.
-          </p>
-
-          <p>
-            Our focus is on clarity and preparation. Along with job updates, we
-            explain role responsibilities, required skills, interview patterns,
-            and realistic career paths so candidates can prepare confidently
-            before applying through official channels.
-          </p>
-
-          <p>
-            FreshersJobs.shop aims to support informed career decisions by
-            presenting structured, easy-to-understand information. We encourage
-            all users to cross-check details directly on company websites before
-            proceeding with any application.
+            FreshersJobs.shop is an independent career guidance platform helping
+            graduates understand hiring expectations, interview preparation, and
+            verified fresher opportunities.
           </p>
         </div>
       </section>
@@ -174,22 +152,21 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {loading
               ? [...Array(6)].map((_, i) => <JobSkeleton key={i} />)
-              : currentJobs.map((job) => {
-                  if (!job.slug) return null; // ✅ prevent undefined
-                  return (
+              : currentJobs.map((job) =>
+                  job.slug ? (
                     <Link
                       key={job.slug}
                       href={`/jobs/${job.slug}`}
-                      className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                      className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md flex flex-col"
                     >
-                      <div className="px-4 py-2 bg-white border-b border-gray-50">
-                        <span className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">
+                      <div className="px-4 py-2 border-b">
+                        <span className="text-blue-600 text-[10px] font-bold uppercase">
                           Fresher Jobs
                         </span>
                       </div>
 
                       <div className="p-5 flex-1">
-                        <h2 className="text-lg font-bold text-slate-900 leading-tight group-hover:text-blue-700 transition-colors">
+                        <h2 className="text-lg font-bold leading-tight group-hover:text-blue-700">
                           {job.title} at {job.company}
                         </h2>
 
@@ -201,14 +178,18 @@ export default function Home() {
                           )}
                         </p>
 
+                        {/* ⭐ DYNAMIC DESCRIPTION PREVIEW */}
                         <p className="text-sm text-slate-500 mt-4 line-clamp-3 leading-relaxed">
-                          Verified hiring details for {job.title}. View official
-                          career information on {job.company}’s website.
+                          {job.description
+                            ? job.description
+                                .replace(/<[^>]+>/g, "")
+                                .slice(0, 160) + "..."
+                            : "Explore verified fresher hiring insights and official application guidance."}
                         </p>
                       </div>
                     </Link>
-                  );
-                })}
+                  ) : null
+                )}
           </div>
 
           {!loading && totalPages > 1 && (
@@ -253,9 +234,8 @@ export default function Home() {
               Recent Job Guides
             </h3>
             <div className="space-y-4">
-              {jobs.slice(0, 6).map((job) => {
-                if (!job.slug) return null;
-                return (
+              {jobs.slice(0, 6).map((job) =>
+                job.slug ? (
                   <Link
                     key={job.slug}
                     href={`/jobs/${job.slug}`}
@@ -263,8 +243,8 @@ export default function Home() {
                   >
                     {job.title} Preparation Guide
                   </Link>
-                );
-              })}
+                ) : null
+              )}
             </div>
           </div>
         </aside>
