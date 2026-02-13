@@ -13,12 +13,14 @@ const HIDE_AUTH_FOR_ADSENSE = true;
 /* ----------- LINK GROUPS ----------- */
 const mainLinks = [
   { href: "/jobs", label: "Jobs" },
+  { href: "/blog", label: "Blog" },
   { href: "/internships", label: "Internships" },
   { href: "/resume-checker", label: "ATS Checker" },
 ];
 
 const aboutLinks = [
   { href: "/about", label: "About" },
+  // { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy-policy", label: "Privacy Policy" },

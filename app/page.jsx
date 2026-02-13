@@ -38,6 +38,29 @@ const previews = [
   "Discover fresher opportunities explained with practical preparation advice and role clarity.",
   "Read simplified hiring guidance designed to help candidates apply confidently."
 ];
+/* ================= BLOG PREVIEW SECTION ================= */
+const blogPosts = [
+  {
+    title: "How to Get Your First IT Job as a Fresher",
+    slug: "how-to-get-first-job",
+    desc: "Step-by-step strategy to land your first tech job faster.",
+  },
+  {
+    title: "ATS Resume Tips for Freshers",
+    slug: "ats-resume-tips",
+    desc: "Create ATS-friendly resumes that recruiters actually read.",
+  },
+  {
+    title: "LinkedIn Profile Tips for Freshers",
+    slug: "linkedin-profile-tips-freshers",
+    desc: "Optimize your LinkedIn profile to attract recruiters.",
+  },
+  {
+    title: "Top Fresher Interview Questions",
+    slug: "fresher-interview-questions",
+    desc: "Most asked interview questions with preparation tips.",
+  },
+];
 
 export default function Home() {
   const router = useRouter();
@@ -199,6 +222,35 @@ export default function Home() {
                 );
               })}
         </div>
+        {/* ================= BLOG ARTICLES (AdSense Content Boost) ================= */}
+<section className="max-w-7xl mx-auto px-4 mt-16">
+  <h2 className="text-xl font-bold mb-4">
+    Career Guides & Preparation Blogs
+  </h2>
+
+  <p className="text-sm text-gray-600 mb-6">
+    Explore editorial career guidance designed to help freshers prepare
+    better before applying for roles.
+  </p>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    {blogPosts.map((blog, index) => (
+      <Link
+        key={index}
+        href={`/blog/${blog.slug}`}
+        className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
+      >
+        <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
+
+        <p className="text-sm text-gray-700">{blog.desc}</p>
+
+        <div className="mt-4 text-xs text-gray-500 font-semibold">
+          Read Blog →
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (

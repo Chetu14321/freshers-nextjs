@@ -5,7 +5,7 @@ import { ShieldCheck, Target, Cpu } from "lucide-react";
 export const metadata = {
   title: "About Us | FreshersJobs.shop",
   description:
-    "FreshersJobs.shop is an independent career information platform providing verified job updates for freshers in India.",
+    "FreshersJobs.shop is an independent career information platform providing verified job updates and editorial career blogs for freshers in India.",
   alternates: {
     canonical: "https://www.freshersjobs.shop/about-us",
   },
@@ -27,7 +27,7 @@ export default function AboutPage() {
           <p className="mt-4 text-slate-500 font-medium max-w-2xl leading-relaxed">
             FreshersJobs.shop is an independent digital platform dedicated to
             helping students and fresh graduates discover reliable career
-            opportunities across India.
+            opportunities and editorial career guidance across India.
           </p>
         </div>
       </header>
@@ -46,7 +46,8 @@ export default function AboutPage() {
               platform. We aggregate publicly available job notifications and
               recruitment updates from official company websites, government
               portals, and trusted sources to help freshers make informed career
-              decisions.
+              decisions. Along with job updates, we publish editorial career
+              blogs designed to simplify hiring information for beginners.
             </p>
           </div>
 
@@ -62,7 +63,7 @@ export default function AboutPage() {
                   "MNC Off-Campus Recruitment Information",
                   "State & Central Government Notifications",
                   "Internships and Entry-Level Opportunities",
-                  "Exam Alerts & Basic Preparation Guidance",
+                  "Career Blogs & Preparation Guidance",
                 ].map((item, i) => (
                   <li
                     key={i}
@@ -84,10 +85,39 @@ export default function AboutPage() {
                 <p className="text-sm text-slate-600 leading-relaxed font-medium">
                   Our mission is to reduce misinformation and simplify career
                   discovery for freshers by publishing verified, clear, and
-                  easy-to-understand job-related content.
+                  easy-to-understand job-related and editorial content.
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* ⭐ BLOG EDITORIAL DETAILS (NEW SECTION) */}
+          <div className="p-8 md:p-12 border-t border-slate-100">
+            <h2 className="text-xs font-mono font-bold uppercase text-blue-600 mb-6 tracking-widest">
+              04. Blog & Editorial Content
+            </h2>
+
+            <p className="text-sm text-slate-600 leading-relaxed font-medium mb-6">
+              FreshersJobs.shop publishes educational career blogs designed to
+              help freshers understand hiring trends, interview preparation,
+              resume strategies, and internship guidance. These articles are
+              written with editorial research and simplified explanations so
+              candidates can prepare confidently.
+            </p>
+
+            <ul className="space-y-3 text-sm text-slate-600 font-medium">
+              <li>• Career Guides and Fresher Preparation Strategies</li>
+              <li>• ATS Resume Writing Tips and LinkedIn Optimization</li>
+              <li>• Interview Questions and Hiring Insights</li>
+              <li>• Internship Preparation and Skill Development Advice</li>
+            </ul>
+
+            <p className="mt-6 text-sm text-slate-500">
+              Explore our editorial content in the{" "}
+              <Link href="/blog" className="text-blue-600 font-semibold">
+                FreshersJobs Blog Section
+              </Link>.
+            </p>
           </div>
 
           {/* TRANSPARENCY & DISCLAIMER */}

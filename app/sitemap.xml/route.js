@@ -8,6 +8,7 @@ export async function GET() {
     { path: "/",               changefreq: "daily",   priority: "1.0" },
     { path: "/jobs",           changefreq: "daily",   priority: "0.9" },
     { path: "/internships",    changefreq: "daily",   priority: "0.9" },
+    { path: "/blog",           changefreq: "weekly",  priority: "0.8" }, // ⭐ BLOG PAGE
     { path: "/resume-checker", changefreq: "weekly",  priority: "0.7" },
     { path: "/about",          changefreq: "monthly", priority: "0.4" },
     { path: "/contact",        changefreq: "monthly", priority: "0.4" },
@@ -23,6 +24,28 @@ export async function GET() {
     <loc>${baseUrl}${path}</loc>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
+  </url>`
+    )
+    .join("");
+
+  /* ===============================
+     ⭐ STATIC BLOG POSTS
+  =============================== */
+  const blogPosts = [
+    "how-to-get-first-job",
+    "ats-resume-tips",
+    "internship-guide-2026",
+    "linkedin-profile-tips-freshers",
+    "fresher-interview-questions",
+  ];
+
+  const blogUrls = blogPosts
+    .map(
+      (slug) => `
+  <url>
+    <loc>${baseUrl}/blog/${slug}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>`
     )
     .join("");
@@ -53,12 +76,8 @@ export async function GET() {
 
     jobUrls = allJobs
       .filter((job) => {
-        // Must have a slug
         if (!job.slug) return false;
-
-        // Remove jobs where lastDate is set and has passed
         if (job.lastDate && new Date(job.lastDate) < new Date()) return false;
-
         return true;
       })
       .map((job) => {
@@ -86,6 +105,7 @@ export async function GET() {
     `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticUrls}
+${blogUrls}
 ${jobUrls}
 </urlset>`,
     {

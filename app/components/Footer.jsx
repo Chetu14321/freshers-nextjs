@@ -46,6 +46,7 @@ export default function Footer() {
           <ul className="space-y-3 text-gray-300 text-sm">
             <li><Link href="/jobs" className="hover-link">Latest Job Openings</Link></li>
             <li><Link href="/internships" className="hover-link">Internship Programs</Link></li>
+            <li><Link href="/blog" className="hover-link">Blogs</Link></li>
             <li><Link href="/about" className="hover-link">Our Verification Process</Link></li>
             <li><Link href="/contact" className="hover-link">Contact Support</Link></li>
             <li><Link href="/privacy-policy" className="hover-link">Privacy Policy</Link></li>
