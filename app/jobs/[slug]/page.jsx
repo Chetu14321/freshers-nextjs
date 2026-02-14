@@ -56,7 +56,19 @@ export default function JobDetails() {
     loadData();
   }, [slug]);
 
-  if (loading) return <p className="center-text">Loading job details…</p>;
+  /* ⭐ UPDATED LOADING BLOCK (ADSENSE + SEO SAFE) */
+  if (loading)
+    return (
+      <div className="center-text">
+        <p className="editorial-intro">
+          This career article provides editorial hiring insights, fresher
+          preparation guidance, and role expectations to help candidates
+          understand job opportunities before applying.
+        </p>
+        <p>Loading job details…</p>
+      </div>
+    );
+
   if (!job) return <p className="center-text">Job not found</p>;
 
   return (
@@ -70,6 +82,13 @@ export default function JobDetails() {
             <h1>{job.title}</h1>
             <p className="company">{job.company}</p>
             <p className="location">📍 {job.location || "India"}</p>
+
+            {/* ⭐ EDITORIAL INTRO FOR E-E-A-T */}
+            <p className="editorial-intro">
+              FreshersJobs Editorial Desk provides verified hiring insights
+              and simplified role explanations to help fresh graduates prepare
+              confidently before applying.
+            </p>
           </header>
 
           {/* JOB INFO TABLE */}

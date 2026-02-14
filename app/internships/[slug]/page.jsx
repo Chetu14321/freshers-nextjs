@@ -45,13 +45,10 @@ export default function InternshipDetails() {
           ...currentInternship,
           description:
             typeof currentInternship.description === "string"
-              ? currentInternship.description
-                  .replace(/&nbsp;/g, "")
-                  .trim()
+              ? currentInternship.description.replace(/&nbsp;/g, "").trim()
               : "<p>No description available.</p>",
         });
 
-        /* ✅ RIGHT SIDEBAR RECENT POSTS */
         setLatestInternships(
           (jobsData.jobs || []).filter(
             (j) => j.slug !== currentInternship.slug
@@ -67,8 +64,19 @@ export default function InternshipDetails() {
     loadData();
   }, [slug]);
 
-  /* ================= STATES ================= */
-  if (loading) return <p className="center-text">Loading internship…</p>;
+  /* ⭐ UPDATED LOADING BLOCK (ADSENSE + SEO SAFE) */
+  if (loading)
+    return (
+      <div className="center-text">
+        <p className="editorial-intro">
+          This internship guide provides editorial career insights, fresher
+          preparation tips, and role expectations to help students understand
+          internship opportunities before applying.
+        </p>
+        <p>Loading internship…</p>
+      </div>
+    );
+
   if (!internship) return <p className="center-text">Internship not found</p>;
 
   /* ================= UI ================= */
@@ -78,12 +86,17 @@ export default function InternshipDetails() {
 
         {/* ================= MAIN ARTICLE ================= */}
         <article className="job-article">
-
           <header className="doc-header">
             <h1>{internship.title}</h1>
             <p className="company">{internship.company}</p>
             <p className="location">
               📍 {internship.location || "India / Remote"}
+            </p>
+
+            {/* ⭐ EDITORIAL INTRO FOR E-E-A-T */}
+            <p className="editorial-intro">
+              FreshersJobs Editorial Desk provides verified internship insights
+              and simplified explanations to help students prepare confidently.
             </p>
           </header>
 
@@ -123,7 +136,7 @@ export default function InternshipDetails() {
             </table>
           </section>
 
-          {/* ⭐ CKEDITOR CONTENT — SAME AS JOB DETAILS */}
+          {/* CKEDITOR CONTENT */}
           <section className="ck-content">
             <div
               dangerouslySetInnerHTML={{
