@@ -32,6 +32,16 @@ const blogs = [
     slug: "fresher-interview-questions",
     desc: "Most asked interview questions for freshers with preparation tips.",
   },
+  {
+    title: "How to Write a Fresher Resume With No Experience",
+    slug: "fresher-resume-no-experience",
+    desc: "Build a powerful fresher resume from scratch using projects, skills, and education — even with zero work experience.",
+  },
+  { title: "Remote Jobs for Freshers in India (2026 Guide)", slug: "remote-jobs-freshers-india", desc: "How to find genuine work-from-home entry-level jobs and what skills you need." },
+{ title: "How to Use Naukri.com Effectively as a Fresher", slug: "naukri-tips-freshers", desc: "Step-by-step guide to set up your Naukri profile and get recruiter attention." },
+{ title: "What to Do If You Are Not Getting Interview Calls", slug: "not-getting-interview-calls", desc: "Practical steps to fix your resume, applications and job search when nothing is working." },
+{ title: "Top 10 High-Paying Careers for Freshers in 2026", slug: "high-paying-careers-freshers-2026", desc: "Explore the best-paying entry-level career paths for fresh graduates in India." },
+{ title: "How to Negotiate Your First Salary as a Fresher", slug: "salary-negotiation-freshers", desc: "Simple and confident strategies to negotiate a better offer without risking the job." },
 ];
 
 export default function BlogPage() {

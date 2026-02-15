@@ -37,6 +37,12 @@ export async function GET() {
     "internship-guide-2026",
     "linkedin-profile-tips-freshers",
     "fresher-interview-questions",
+    "remote-jobs-freshers-india",
+    "naukri-tips-freshers",
+    "not-getting-interview-calls",
+    "high-paying-careers-freshers-2026",
+    "salary-negotiation-freshers",
+    "fresher-resume-no-experience",
   ];
 
   const blogUrls = blogPosts
