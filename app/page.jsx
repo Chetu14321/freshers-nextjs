@@ -2,20 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
 const JOBS_PER_PAGE = 6;
-
-/* -------------------- Debounce Hook -------------------- */
-function useDebounce(value, delay = 300) {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-  return debounced;
-}
 
 /* -------------------- Skeleton Loader -------------------- */
 function JobSkeleton() {
@@ -29,14 +18,15 @@ function JobSkeleton() {
   );
 }
 
-/* ⭐ ORIGINAL FALLBACK TEXTS (Human Variation) */
+/* ⭐ ORIGINAL FALLBACK TEXTS */
 const previews = [
   "Understand eligibility details, hiring insights, and fresher application guidance explained clearly.",
   "Explore role expectations, required skills, and interview preparation tips for fresh graduates.",
   "Learn about company hiring patterns and safe application steps through editorial insights.",
   "Discover fresher opportunities explained with practical preparation advice and role clarity.",
-  "Read simplified hiring guidance designed to help candidates apply confidently."
+  "Read simplified hiring guidance designed to help candidates apply confidently.",
 ];
+
 /* ================= BLOG PREVIEW SECTION ================= */
 const blogPosts = [
   {
@@ -62,54 +52,35 @@ const blogPosts = [
 ];
 
 export default function Home() {
-  const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 300);
-  // const [results, setResults] = useState([]);
-  // const [showResults, setShowResults] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   /* -------------------- Load Jobs -------------------- */
-const loadJobs = useCallback(async () => {
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/jobs`, {
-      cache: "force-cache", // ⭐ PERFORMANCE FIX
-    });
+  const loadJobs = useCallback(async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/jobs`, {
+        cache: "force-cache",
+      });
 
-    const data = await res.json();
-    const raw = data.jobs || [];
+      const data = await res.json();
+      const raw = data.jobs || [];
 
-    setJobs(raw.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt)));
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-}, []);
+      const sorted = [...raw].sort(
+        (a, b) => new Date(b.postedAt) - new Date(a.postedAt)
+      );
 
+      setJobs(sorted);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadJobs();
   }, [loadJobs]);
-
-  /* -------------------- Search Logic -------------------- */
-  useEffect(() => {
-    if (!debouncedSearch || debouncedSearch.trim().length < 2) {
-      setShowResults(false);
-      return;
-    }
-
-    const filtered = jobs.filter(
-      (job) =>
-        job.title?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        job.company?.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
-
-    setResults(filtered.slice(0, 8));
-    setShowResults(true);
-  }, [debouncedSearch, jobs]);
 
   /* -------------------- Pagination -------------------- */
   const indexOfLastJob = currentPage * JOBS_PER_PAGE;
@@ -122,84 +93,41 @@ const loadJobs = useCallback(async () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // const submitSearch = (e) => {
-  //   e.preventDefault();
-  //   if (search.trim()) {
-  //     router.push(`/jobs?q=${search}`);
-  //     setShowResults(false);
-  //   }
-  // };
-
   return (
     <main className="min-h-screen bg-gray-50 text-black">
-
-      {/* ================= SEARCH ================= */}
-      {/* <div className="max-w-4xl mx-auto pt-10 px-4 relative">
-        <form onSubmit={submitSearch}>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search job titles or company names..."
-            className="w-full px-6 py-4 border-2 border-black rounded-full"
-          />
-        </form>
-
-        {showResults && (
-          <div className="absolute left-4 right-4 bg-white border-2 border-black rounded-2xl shadow-xl mt-2 z-50 max-h-80 overflow-auto">
-            {results.map((job) =>
-              job.slug ? (
-                <Link
-                  key={job.slug}
-                  href={`/jobs/${job.slug}`}
-                  className="block px-6 py-4 hover:bg-slate-50 border-b font-bold text-blue-600 text-sm"
-                >
-                  {job.title} — {job.company}
-                </Link>
-              ) : null
-            )}
-          </div>
-        )}
-      </div> */}
-
       {/* ================= HUMAN EDITORIAL INTRO ================= */}
       <section className="max-w-4xl mx-auto px-4 mt-14 mb-10">
-  <h2 className="text-xl font-bold mb-3">
-    Latest Fresher Hiring Updates Across India
-  </h2>
+        <h2 className="text-xl font-bold mb-3">
+          Latest Fresher Hiring Updates Across India
+        </h2>
 
-  <p className="text-xs text-gray-600 mt-2">
-    FreshersJobs.shop Editorial Desk • Career Guidance Platform
-  </p>
+        <p className="text-xs text-gray-600 mt-2">
+          FreshersJobs.shop Editorial Desk • Career Guidance Platform
+        </p>
 
-  <p className="text-sm text-gray-600 leading-relaxed mt-3">
-    At FreshersJobs.shop, we try to make the early stage of a career search
-    less confusing for fresh graduates and students stepping into the job
-    market for the first time. Instead of presenting long lists of openings
-    without context, our small editorial team focuses on explaining what each
-    opportunity actually means — from expected skills and eligibility details
-    to the type of preparation that usually helps candidates stand out.
-  </p>
+        <p className="text-sm text-gray-600 leading-relaxed mt-3">
+          At FreshersJobs.shop, we try to make the early stage of a career
+          search less confusing for fresh graduates and students stepping into
+          the job market for the first time. Instead of presenting long lists
+          of openings without context, our editorial team focuses on explaining
+          what each opportunity actually means — from expected skills and
+          eligibility details to the type of preparation that usually helps
+          candidates stand out.
+        </p>
 
-  <p className="text-sm text-gray-600 leading-relaxed mt-3">
-    Many freshers feel unsure about where to begin, which companies are actively
-    hiring, or how to prepare for entry-level roles. Through simple explanations
-    and curated updates, we aim to create a space that feels more like guidance
-    than just another job board. Every update is written with the intention of
-    helping candidates understand hiring trends, avoid common mistakes, and move
-    forward with more clarity and confidence.
-  </p>
+        <p className="text-sm text-gray-600 leading-relaxed mt-3">
+          Many freshers feel unsure about where to begin, which companies are
+          actively hiring, or how to prepare for entry-level roles. Through
+          simple explanations and curated updates, we aim to create a space
+          that feels more like guidance than just another job board.
+        </p>
 
-  <p className="text-sm text-gray-600 leading-relaxed mt-3">
-    Whether you are exploring internships, graduate programs, or your first full-time
-    opportunity, this section is designed to give you a clear starting point.
-    Our goal is not only to share openings but also to support freshers with
-    practical insights that make the application journey feel a little easier.
-  </p>
-</section>
-
-     
-
+        <p className="text-sm text-gray-600 leading-relaxed mt-3">
+          Whether you are exploring internships, graduate programs, or your
+          first full-time opportunity, this section is designed to give you a
+          clear starting point with practical insights.
+        </p>
+      </section>
 
       {/* ================= ARTICLE STYLE JOB GRID ================= */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
@@ -245,44 +173,42 @@ const loadJobs = useCallback(async () => {
                 );
               })}
         </div>
-        {/* ================= BLOG ARTICLES (AdSense Content Boost) ================= */}
-<section className="max-w-7xl mx-auto px-4 mt-16">
-  <h2 className="text-xl font-bold mb-4">
-    Career Guides & Preparation Blogs
-  </h2>
 
-  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-  Along with job updates, we also publish simple career guides written for
-  beginners entering the industry. These blogs focus on real preparation —
-  improving resumes, understanding interviews, and building confidence during
-  the early stages of a career journey. Each article is written to feel clear,
-  practical, and genuinely helpful rather than overly technical.
-</p>
+        {/* ================= BLOG ARTICLES ================= */}
+        <section className="max-w-7xl mx-auto px-4 mt-16">
+          <h2 className="text-xl font-bold mb-4">
+            Career Guides & Preparation Blogs
+          </h2>
 
+          <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+            Along with job updates, we also publish simple career guides
+            written for beginners entering the industry. These blogs focus on
+            real preparation — improving resumes, understanding interviews,
+            and building confidence during the early stages of a career journey.
+          </p>
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-    {blogPosts.map((blog, index) => (
-      <Link
-        key={index}
-        href={`/blog/${blog.slug}`}
-        className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
-      >
-        <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {blogPosts.map((blog, index) => (
+              <Link
+                key={index}
+                href={`/blog/${blog.slug}`}
+                className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
+              >
+                <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
 
-        <p className="text-sm text-gray-700 leading-relaxed">
-  {blog.desc} This guide shares practical tips gathered from common fresher
-  experiences, helping you understand what actually works when preparing for
-  your first professional opportunities.
-</p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {blog.desc} This guide shares practical tips gathered from
+                  common fresher experiences, helping you understand what
+                  actually works when preparing for your first opportunities.
+                </p>
 
-
-        <div className="mt-4 text-xs text-gray-500 font-semibold">
-          Read Blog →
-        </div>
-      </Link>
-    ))}
-  </div>
-</section>
+                <div className="mt-4 text-xs text-gray-500 font-semibold">
+                  Read Blog →
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
