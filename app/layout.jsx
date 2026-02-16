@@ -17,12 +17,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* ⭐ Google AdSense Auto Ads Script */}
-        <Script
+        {/* <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3736460456527304"
           crossOrigin="anonymous"
           strategy="afterInteractive"
-        />
+        /> */}
       </head>
 
       <body className="bg-gray-50 text-gray-800">
