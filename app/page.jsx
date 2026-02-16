@@ -164,23 +164,40 @@ const loadJobs = useCallback(async () => {
 
       {/* ================= HUMAN EDITORIAL INTRO ================= */}
       <section className="max-w-4xl mx-auto px-4 mt-14 mb-10">
-        <h2 className="text-xl font-bold mb-3">
-          Latest Fresher Hiring Updates Across India
-        </h2>
-          <p className="text-xs text-gray-600 mt-2">
-          FreshersJobs.shop Editorial Desk • Career Guidance Platform
-        </p>
-        <p className="text-sm text-gray-600 leading-relaxed">
-  At FreshersJobs.shop, we try to simplify the job search process for fresh
-  graduates by highlighting real hiring updates along with practical context.
-  Instead of overwhelming you with raw listings, our editorial team explains
-  what each opportunity means, what companies usually expect from freshers,
-  and how you can prepare before applying. The goal is to help candidates feel
-  more confident, informed, and safe while starting their careers.
-</p>
+  <h2 className="text-xl font-bold mb-3">
+    Latest Fresher Hiring Updates Across India
+  </h2>
 
-       
-      </section>
+  <p className="text-xs text-gray-600 mt-2">
+    FreshersJobs.shop Editorial Desk • Career Guidance Platform
+  </p>
+
+  <p className="text-sm text-gray-600 leading-relaxed mt-3">
+    At FreshersJobs.shop, we try to make the early stage of a career search
+    less confusing for fresh graduates and students stepping into the job
+    market for the first time. Instead of presenting long lists of openings
+    without context, our small editorial team focuses on explaining what each
+    opportunity actually means — from expected skills and eligibility details
+    to the type of preparation that usually helps candidates stand out.
+  </p>
+
+  <p className="text-sm text-gray-600 leading-relaxed mt-3">
+    Many freshers feel unsure about where to begin, which companies are actively
+    hiring, or how to prepare for entry-level roles. Through simple explanations
+    and curated updates, we aim to create a space that feels more like guidance
+    than just another job board. Every update is written with the intention of
+    helping candidates understand hiring trends, avoid common mistakes, and move
+    forward with more clarity and confidence.
+  </p>
+
+  <p className="text-sm text-gray-600 leading-relaxed mt-3">
+    Whether you are exploring internships, graduate programs, or your first full-time
+    opportunity, this section is designed to give you a clear starting point.
+    Our goal is not only to share openings but also to support freshers with
+    practical insights that make the application journey feel a little easier.
+  </p>
+</section>
+
      
 
 
