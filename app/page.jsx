@@ -65,10 +65,10 @@ export default function Home() {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
-  const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  // const [results, setResults] = useState([]);
+  // const [showResults, setShowResults] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   /* -------------------- Load Jobs -------------------- */
@@ -122,19 +122,19 @@ const loadJobs = useCallback(async () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const submitSearch = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      router.push(`/jobs?q=${search}`);
-      setShowResults(false);
-    }
-  };
+  // const submitSearch = (e) => {
+  //   e.preventDefault();
+  //   if (search.trim()) {
+  //     router.push(`/jobs?q=${search}`);
+  //     setShowResults(false);
+  //   }
+  // };
 
   return (
     <main className="min-h-screen bg-gray-50 text-black">
 
       {/* ================= SEARCH ================= */}
-      <div className="max-w-4xl mx-auto pt-10 px-4 relative">
+      {/* <div className="max-w-4xl mx-auto pt-10 px-4 relative">
         <form onSubmit={submitSearch}>
           <input
             type="text"
@@ -160,7 +160,7 @@ const loadJobs = useCallback(async () => {
             )}
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* ================= HUMAN EDITORIAL INTRO ================= */}
       <section className="max-w-4xl mx-auto px-4 mt-14 mb-10">
