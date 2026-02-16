@@ -167,7 +167,7 @@ const loadJobs = useCallback(async () => {
         <h2 className="text-xl font-bold mb-3">
           Latest Fresher Hiring Updates Across India
         </h2>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray-600 mt-2">
           FreshersJobs.shop Editorial Desk • Career Guidance Platform
         </p>
         <p className="text-sm text-gray-600 leading-relaxed">
