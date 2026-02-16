@@ -171,10 +171,14 @@ const loadJobs = useCallback(async () => {
           FreshersJobs.shop Editorial Desk • Career Guidance Platform
         </p>
         <p className="text-sm text-gray-600 leading-relaxed">
-          These opportunities are presented with editorial context to help
-          candidates understand real hiring expectations, required skills,
-          and safe application practices instead of simply listing openings.
-        </p>
+  At FreshersJobs.shop, we try to simplify the job search process for fresh
+  graduates by highlighting real hiring updates along with practical context.
+  Instead of overwhelming you with raw listings, our editorial team explains
+  what each opportunity means, what companies usually expect from freshers,
+  and how you can prepare before applying. The goal is to help candidates feel
+  more confident, informed, and safe while starting their careers.
+</p>
+
        
       </section>
      
@@ -225,53 +229,43 @@ const loadJobs = useCallback(async () => {
               })}
         </div>
         {/* ================= BLOG ARTICLES (AdSense Content Boost) ================= */}
-{/* ================= BLOG ARTICLES (AdSense Content Boost) ================= */}
 <section className="max-w-7xl mx-auto px-4 mt-16">
   <h2 className="text-xl font-bold mb-4">
     Career Guides & Preparation Blogs
   </h2>
 
-  {/* ⭐ HUMAN WRITTEN INTRO (makes section look full) */}
   <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-    Our editorial team publishes human-written career guidance focused on
-    fresher preparation, interview awareness, resume building strategies,
-    and safe job application practices. These articles are created to help
-    candidates understand real hiring expectations instead of simply browsing
-    listings.
-  </p>
+  Along with job updates, we also publish simple career guides written for
+  beginners entering the industry. These blogs focus on real preparation —
+  improving resumes, understanding interviews, and building confidence during
+  the early stages of a career journey. Each article is written to feel clear,
+  practical, and genuinely helpful rather than overly technical.
+</p>
+
 
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
     {blogPosts.map((blog, index) => (
       <Link
         key={index}
         href={`/blog/${blog.slug}`}
-        className="block bg-white border rounded-xl p-6 hover:shadow-xl transition duration-200"
+        className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
       >
-        {/* ⭐ ARTICLE LABEL (adds human editorial feel) */}
-        <p className="text-xs text-gray-400 mb-2">
-          Editorial Career Guide • Fresher Preparation
-        </p>
+        <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
 
-        <h3 className="font-bold text-lg mb-3">
-          {blog.title}
-        </h3>
-
-        {/* ⭐ LONGER HUMAN DESCRIPTION */}
         <p className="text-sm text-gray-700 leading-relaxed">
-          {blog.desc} This article explains practical steps, real-world
-          preparation insights, and beginner-friendly strategies designed
-          specifically for fresh graduates starting their career journey.
-        </p>
+  {blog.desc} This guide shares practical tips gathered from common fresher
+  experiences, helping you understand what actually works when preparing for
+  your first professional opportunities.
+</p>
 
-        <div className="flex justify-between items-center mt-5 text-xs text-gray-500">
-          <span>Updated for Freshers</span>
-          <span className="font-semibold">Read Blog →</span>
+
+        <div className="mt-4 text-xs text-gray-500 font-semibold">
+          Read Blog →
         </div>
       </Link>
     ))}
   </div>
 </section>
-
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
