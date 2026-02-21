@@ -58,16 +58,35 @@ export default function JobDetails() {
 
   /* ⭐ UPDATED LOADING BLOCK (ADSENSE + SEO SAFE) */
   if (loading)
-    return (
-      <div className="center-text">
-        <p className="editorial-intro">
-          This career article provides editorial hiring insights, fresher
-          preparation guidance, and role expectations to help candidates
-          understand job opportunities before applying.
-        </p>
-        <p>Loading job details…</p>
-      </div>
-    );
+  return (
+    <main className="job-page">
+      <article className="job-article">
+        <header className="doc-header">
+          <h1>Fresher Hiring Career Guide</h1>
+
+          <p className="editorial-intro">
+            FreshersJobs Editorial Desk publishes simplified hiring insights,
+            eligibility explanations, and fresher preparation guidance to help
+            candidates understand opportunities before applying.
+          </p>
+        </header>
+
+        <section className="ck-content">
+          <p>
+            This career article explains role expectations, selection process,
+            required skills, and preparation strategies for fresh graduates.
+            Our editorial team focuses on providing clear hiring insights so
+            candidates can confidently prepare for entry-level opportunities.
+          </p>
+
+          <p>
+            Detailed company information, eligibility criteria, and step-by-step
+            preparation tips will appear shortly as the article loads.
+          </p>
+        </section>
+      </article>
+    </main>
+  );
 
   if (!job) return <p className="center-text">Job not found</p>;
 
