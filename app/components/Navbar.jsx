@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, User } from "lucide-react";
 
-const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
+const BACKEND_URL = "https://freshersjobs-shop-pq8u.onrender.com";
 
 /* 🔒 HIDE AUTH DURING ADSENSE REVIEW */
 const HIDE_AUTH_FOR_ADSENSE = true;

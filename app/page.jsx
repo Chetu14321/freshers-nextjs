@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 
-const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
+const BACKEND_URL = "https://freshersjobs-shop-pq8u.onrender.com";
 const JOBS_PER_PAGE = 6;
 
 /* -------------------- Skeleton Loader -------------------- */

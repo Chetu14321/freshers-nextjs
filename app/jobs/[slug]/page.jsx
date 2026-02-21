@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import "./job-details.css";
 
-const BACKEND_URL = "https://freshersjobs-shop.onrender.com";
+const BACKEND_URL = "https://freshersjobs-shop-pq8u.onrender.com";
 
 export default function JobDetails() {
   const params = useParams();

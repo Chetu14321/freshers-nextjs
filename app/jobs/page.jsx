@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = "https://freshersjobs-shop.onrender.com";
+const API_BASE = "https://freshersjobs-shop-pq8u.onrender.com";
 
 /* -------------------- Fetch Jobs -------------------- */
 async function loadJobs(page) {

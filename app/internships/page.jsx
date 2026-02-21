@@ -11,7 +11,7 @@ export const metadata = {
   },
 };
 
-const API_BASE = "https://freshersjobs-shop.onrender.com";
+const API_BASE = "https://freshersjobs-shop-pq8u.onrender.com";
 
 /* ================= FETCH INTERNSHIPS ================= */
 async function loadInternships(page) {
