@@ -9,11 +9,12 @@ const JOBS_PER_PAGE = 6;
 /* -------------------- Skeleton Loader -------------------- */
 function JobSkeleton() {
   return (
-    <div className="bg-white border rounded-xl p-6 animate-pulse h-64">
+    <div className="bg-white border rounded-xl p-6 animate-pulse h-72">
       <div className="h-5 bg-gray-200 rounded w-3/4 mb-4" />
       <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
       <div className="h-4 bg-gray-100 rounded w-full mb-2" />
-      <div className="h-4 bg-gray-100 rounded w-full" />
+      <div className="h-4 bg-gray-100 rounded w-full mb-2" />
+      <div className="h-4 bg-gray-100 rounded w-3/4" />
     </div>
   );
 }
@@ -107,25 +108,18 @@ export default function Home() {
 
         <p className="text-sm text-gray-600 leading-relaxed mt-3">
           At FreshersJobs.shop, we try to make the early stage of a career
-          search less confusing for fresh graduates and students stepping into
-          the job market for the first time. Instead of presenting long lists
-          of openings without context, our editorial team focuses on explaining
-          what each opportunity actually means — from expected skills and
-          eligibility details to the type of preparation that usually helps
+          search less confusing for fresh graduates. Instead of presenting long
+          lists of openings without context, our editorial team focuses on
+          explaining what each opportunity actually means — from expected
+          skills and eligibility details to the type of preparation that helps
           candidates stand out.
         </p>
 
         <p className="text-sm text-gray-600 leading-relaxed mt-3">
-          Many freshers feel unsure about where to begin, which companies are
-          actively hiring, or how to prepare for entry-level roles. Through
-          simple explanations and curated updates, we aim to create a space
-          that feels more like guidance than just another job board.
-        </p>
-
-        <p className="text-sm text-gray-600 leading-relaxed mt-3">
-          Whether you are exploring internships, graduate programs, or your
-          first full-time opportunity, this section is designed to give you a
-          clear starting point with practical insights.
+          Many freshers feel unsure about where to begin or which companies are
+          actively hiring. Through simple explanations and curated updates, we
+          aim to create a space that feels more like guidance than just another
+          job board.
         </p>
       </section>
 
@@ -137,29 +131,56 @@ export default function Home() {
             : currentJobs.map((job) => {
                 if (!job.slug) return null;
 
-                const randomPreview =
-                  previews[Math.floor(Math.random() * previews.length)];
-
                 return (
                   <Link
                     key={job.slug}
                     href={`/jobs/${job.slug}`}
                     className="block bg-white border rounded-xl p-6 hover:shadow-xl transition duration-200"
                   >
-                    <h3 className="font-bold text-lg mb-2">{job.title}</h3>
+                    {/* ⭐ ARTICLE LABEL */}
+                    <p className="text-[11px] text-blue-600 font-semibold mb-2">
+                      FreshersJobs Editorial Guide
+                    </p>
 
-                    <p className="text-sm text-gray-600">
+                    {/* TITLE */}
+                    <h3 className="font-bold text-lg leading-snug">
+                      {job.title}
+                    </h3>
+
+                    {/* META */}
+                    <p className="text-sm text-gray-600 mt-1">
                       {job.company} • 📍 {job.location || "India"}
                     </p>
 
-                    <p className="text-sm text-gray-700 mt-3 line-clamp-3">
+                    {/* BLOG STYLE INTRO */}
+                    <p className="text-sm text-gray-700 mt-3 font-medium">
+                      {job.company} is currently hiring fresh graduates for
+                      entry-level roles. This article explains eligibility,
+                      preparation strategy, and hiring insights in a simplified
+                      way for beginners.
+                    </p>
+
+                    {/* LONG ARTICLE SNIPPET */}
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-5">
                       {job.description
                         ? job.description
                             .replace(/<[^>]+>/g, "")
-                            .slice(0, 160) + "..."
-                        : randomPreview}
+                            .slice(0, 280) + "..."
+                        : previews[
+                            Math.floor(Math.random() * previews.length)
+                          ]}
                     </p>
 
+                    {/* EXTRA DETAILS */}
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-500 mt-3">
+                      {job.experience && <span>🎓 {job.experience}</span>}
+                      {job.salary && <span>💰 {job.salary}</span>}
+                      {job.qualification && (
+                        <span>📘 {job.qualification}</span>
+                      )}
+                    </div>
+
+                    {/* FOOTER */}
                     <div className="flex justify-between items-center mt-5 text-xs text-gray-500">
                       <span>
                         🗓{" "}
@@ -167,7 +188,9 @@ export default function Home() {
                           ? job.createdAt.slice(0, 10)
                           : "Latest Update"}
                       </span>
-                      <span className="font-semibold">Read Article →</span>
+                      <span className="font-semibold">
+                        Read Full Article →
+                      </span>
                     </div>
                   </Link>
                 );
@@ -175,40 +198,69 @@ export default function Home() {
         </div>
 
         {/* ================= BLOG ARTICLES ================= */}
-        <section className="max-w-7xl mx-auto px-4 mt-16">
-          <h2 className="text-xl font-bold mb-4">
-            Career Guides & Preparation Blogs
-          </h2>
+        {/* ================= LONG BLOG ARTICLES ================= */}
+<section className="max-w-7xl mx-auto px-4 mt-16">
+  <h2 className="text-xl font-bold mb-4">
+    Career Guides & Preparation Blogs
+  </h2>
 
-          <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-            Along with job updates, we also publish simple career guides
-            written for beginners entering the industry. These blogs focus on
-            real preparation — improving resumes, understanding interviews,
-            and building confidence during the early stages of a career journey.
-          </p>
+  {/* ⭐ LONGER INTRO TEXT */}
+  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+    Along with daily hiring updates, FreshersJobs.shop publishes detailed
+    career guidance articles written specifically for students and fresh
+    graduates entering the job market. These editorial guides focus on
+    real-world preparation — from building resumes and improving interview
+    performance to understanding how companies evaluate entry-level
+    candidates during recruitment.
+  </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {blogPosts.map((blog, index) => (
-              <Link
-                key={index}
-                href={`/blog/${blog.slug}`}
-                className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
-              >
-                <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
+  <p className="text-sm text-gray-600 mb-8 leading-relaxed">
+    Instead of generic advice, our blog content explains practical steps
+    based on common fresher experiences, helping readers understand what
+    actually matters during early career growth. Whether you are preparing
+    for your first interview or trying to improve your profile visibility,
+    these articles are designed to simplify complex hiring processes.
+  </p>
 
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {blog.desc} This guide shares practical tips gathered from
-                  common fresher experiences, helping you understand what
-                  actually works when preparing for your first opportunities.
-                </p>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    {blogPosts.map((blog, index) => (
+      <Link
+        key={index}
+        href={`/blog/${blog.slug}`}
+        className="block bg-white border rounded-xl p-6 hover:shadow-xl transition"
+      >
+        {/* ⭐ BLOG LABEL */}
+        <p className="text-[11px] text-blue-600 font-semibold mb-2">
+          Career Preparation Guide
+        </p>
 
-                <div className="mt-4 text-xs text-gray-500 font-semibold">
-                  Read Blog →
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {/* TITLE */}
+        <h3 className="font-bold text-lg mb-2">{blog.title}</h3>
+
+        {/* ⭐ LONG BLOG PREVIEW */}
+        <p className="text-sm text-gray-700 leading-relaxed">
+          {blog.desc} This editorial article explains practical strategies
+          fresh graduates can follow to improve their chances during early
+          hiring stages. Each guide is written with simplified examples so
+          beginners can clearly understand real expectations from recruiters.
+        </p>
+
+        {/* ⭐ EXTRA PARAGRAPH (MORE CONTENT FOR GOOGLE) */}
+        <p className="text-sm text-gray-600 leading-relaxed mt-3 line-clamp-4">
+          Many candidates struggle with preparation because advice online
+          often feels too technical or confusing. These blogs break down
+          complex career steps into easy explanations — covering resume
+          structure, interview mindset, profile building, and long-term
+          growth planning for entry-level roles.
+        </p>
+
+        <div className="mt-4 text-xs text-gray-500 font-semibold">
+          Read Full Blog →
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
 
         {/* ================= PAGINATION ================= */}
         {!loading && totalPages > 1 && (
