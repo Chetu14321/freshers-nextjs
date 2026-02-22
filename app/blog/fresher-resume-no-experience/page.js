@@ -447,7 +447,7 @@ export default function FresherResumeNoExperience() {
           }}>FJ</div>
           <div>
             <div style={{ fontFamily: "system-ui, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: c.ink }}>
-              FreshersJobs Editorial Team
+              FreshersJobs Editorial Team(Chethan M P)
             </div>
             <div style={{ fontFamily: "system-ui, sans-serif", fontSize: "0.78rem", color: c.muted, marginBottom: "0.4rem" }}>
               Career Guidance · freshersjobs.shop

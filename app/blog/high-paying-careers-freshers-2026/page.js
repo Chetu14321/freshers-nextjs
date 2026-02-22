@@ -412,8 +412,8 @@ export default function HighPayingCareersFreshers() {
             <div style={{ fontFamily: "system-ui, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: c.ink }}>FreshersJobs Editorial Team</div>
             <div style={{ fontFamily: "system-ui, sans-serif", fontSize: "0.78rem", color: c.muted, marginBottom: "0.4rem" }}>Career Guidance · freshersjobs.shop</div>
             <p style={{ ...prose, fontSize: "0.84rem", marginBottom: 0 }}>
-              Our editorial team includes HR professionals, placement consultants, and career coaches
-              with over 20 years of combined experience helping fresh graduates navigate the Indian job market.
+              Our editorial team (Chethan M P)includes HR professionals, placement consultants, and career coaches
+              with over 1 years of combined experience helping fresh graduates navigate the Indian job market.
             </p>
           </div>
         </div>

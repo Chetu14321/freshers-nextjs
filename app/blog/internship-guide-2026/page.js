@@ -479,8 +479,8 @@ export default function InternshipGuide() {
               Career Guidance · freshersjobs.shop
             </div>
             <p style={{ ...prose, fontSize: "0.84rem", marginBottom: 0 }}>
-              Our editorial team includes HR professionals, placement consultants,
-              and career coaches with over 20 years of combined experience helping
+              Our editorial team (Chethan M P)includes HR professionals, placement consultants,
+              and career coaches with over 1 years of combined experience helping
               fresh graduates navigate the Indian job market.
             </p>
           </div>
