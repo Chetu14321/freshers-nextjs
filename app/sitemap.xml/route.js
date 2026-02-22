@@ -135,7 +135,7 @@ export async function GET() {
 
   try {
     const firstRes = await fetch(
-      "https://freshersjobs-shop.onrender.com/api/jobs?page=1&limit=50",
+      "https://freshersjobs-shop-pq8u.onrender.com/api/jobs?page=1&limit=50",
       { cache: "no-store" }
     );
 
@@ -145,7 +145,7 @@ export async function GET() {
 
     for (let page = 2; page <= totalPages; page++) {
       const res = await fetch(
-        `https://freshersjobs-shop.onrender.com/api/jobs?page=${page}&limit=50`,
+        `https://freshersjobs-shop-pq8u.onrender.com/api/jobs?page=${page}&limit=50`,
         { cache: "no-store" }
       );
       const data = await res.json();
