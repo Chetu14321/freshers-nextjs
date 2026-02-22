@@ -29,29 +29,101 @@ export async function GET() {
     .join("");
 
   /* ===============================
-     ⭐ STATIC BLOG POSTS
+     ⭐ STATIC BLOG POSTS (16 TOTAL)
   =============================== */
   const blogPosts = [
-    "how-to-get-first-job",
-    "ats-resume-tips",
-    "internship-guide-2026",
-    "linkedin-profile-tips-freshers",
-    "fresher-interview-questions",
-    "remote-jobs-freshers-india",
-    "naukri-tips-freshers",
-    "not-getting-interview-calls",
-    "high-paying-careers-freshers-2026",
-    "salary-negotiation-freshers",
-    "fresher-resume-no-experience",
+    // AI & Skills (5 NEW High-Value Posts - 3000+ words each)
+    {
+      slug: "ai-tools-freshers-2026",
+      priority: "0.9",
+      changefreq: "weekly",
+    },
+    {
+      slug: "python-freshers-guide-2026",
+      priority: "0.9",
+      changefreq: "weekly",
+    },
+    {
+      slug: "data-science-freshers-roadmap",
+      priority: "0.9",
+      changefreq: "weekly",
+    },
+    {
+      slug: "web-development-freshers-2026",
+      priority: "0.9",
+      changefreq: "weekly",
+    },
+    {
+      slug: "github-portfolio-freshers-2026",
+      priority: "0.9",
+      changefreq: "weekly",
+    },
+
+    // Job Search & Career (11 Original Posts)
+    {
+      slug: "how-to-get-first-job",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "ats-resume-tips",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "internship-guide-2026",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "linkedin-profile-tips-freshers",
+      priority: "0.7",
+      changefreq: "monthly",
+    },
+    {
+      slug: "fresher-interview-questions",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "remote-jobs-freshers-india",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "naukri-tips-freshers",
+      priority: "0.7",
+      changefreq: "monthly",
+    },
+    {
+      slug: "not-getting-interview-calls",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "high-paying-careers-freshers-2026",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "salary-negotiation-freshers",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
+    {
+      slug: "fresher-resume-no-experience",
+      priority: "0.8",
+      changefreq: "monthly",
+    },
   ];
 
   const blogUrls = blogPosts
     .map(
-      (slug) => `
+      ({ slug, priority, changefreq }) => `
   <url>
     <loc>${baseUrl}/blog/${slug}</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
   </url>`
     )
     .join("");
