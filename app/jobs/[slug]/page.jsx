@@ -1,92 +1,48 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import "./job-details.css";
+
+export const dynamic = "force-dynamic";
 
 const BACKEND_URL = "https://freshersjobs-shop-pq8u.onrender.com";
 
-export default function JobDetails() {
-  const params = useParams();
-  const router = useRouter();
-  const slug = params?.slug;
+/* ---------------- FETCH DATA ---------------- */
+async function loadJob(slug) {
+  const res = await fetch(`${BACKEND_URL}/api/jobs/${slug}`, {
+    cache: "no-store",
+  });
 
-  const [job, setJob] = useState(null);
-  const [latestJobs, setLatestJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  if (!res.ok) return null;
 
-  useEffect(() => {
-    if (!slug) return;
+  const data = await res.json();
+  const currentJob = data.job || data;
 
-    const loadData = async () => {
-      try {
-        const [jobRes, jobsRes] = await Promise.all([
-          fetch(`${BACKEND_URL}/api/jobs/${slug}`, { cache: "no-store" }),
-          fetch(`${BACKEND_URL}/api/jobs?limit=6`, { cache: "no-store" }),
-        ]);
+  return {
+    ...currentJob,
+    description:
+      typeof currentJob.description === "string" &&
+      currentJob.description.trim()
+        ? currentJob.description
+        : "<p>No description available.</p>",
+  };
+}
 
-        if (!jobRes.ok) {
-          setJob(null);
-          return;
-        }
+async function loadLatestJobs(slug) {
+  const res = await fetch(`${BACKEND_URL}/api/jobs?limit=6`, {
+    cache: "no-store",
+  });
 
-        const jobData = await jobRes.json();
-        const jobsData = await jobsRes.json();
-        const currentJob = jobData.job || jobData;
+  if (!res.ok) return [];
 
-        setJob({
-          ...currentJob,
-          description:
-            typeof currentJob.description === "string" &&
-            currentJob.description.trim()
-              ? currentJob.description
-              : "<p>No description available.</p>",
-        });
+  const data = await res.json();
+  return (data.jobs || []).filter((j) => j.slug !== slug);
+}
 
-        setLatestJobs(
-          (jobsData.jobs || []).filter((j) => j.slug !== currentJob.slug)
-        );
-      } catch (err) {
-        console.error("Error loading job:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+/* ---------------- PAGE ---------------- */
+export default async function JobDetails({ params }) {
+  const { slug } = await params;
 
-    loadData();
-  }, [slug]);
-
-  /* ⭐ UPDATED LOADING BLOCK (ADSENSE + SEO SAFE) */
-  if (loading)
-  return (
-    <main className="job-page">
-      <article className="job-article">
-        <header className="doc-header">
-          <h1>Fresher Hiring Career Guide</h1>
-
-          <p className="editorial-intro">
-            FreshersJobs Editorial Desk publishes simplified hiring insights,
-            eligibility explanations, and fresher preparation guidance to help
-            candidates understand opportunities before applying.
-          </p>
-        </header>
-
-        <section className="ck-content">
-          <p>
-            This career article explains role expectations, selection process,
-            required skills, and preparation strategies for fresh graduates.
-            Our editorial team focuses on providing clear hiring insights so
-            candidates can confidently prepare for entry-level opportunities.
-          </p>
-
-          <p>
-            Detailed company information, eligibility criteria, and step-by-step
-            preparation tips will appear shortly as the article loads.
-          </p>
-        </section>
-      </article>
-    </main>
-  );
+  const job = await loadJob(slug);
+  const latestJobs = await loadLatestJobs(slug);
 
   if (!job) return <p className="center-text">Job not found</p>;
 
@@ -96,13 +52,11 @@ export default function JobDetails() {
 
         {/* ================= MAIN ARTICLE ================= */}
         <article className="job-article">
-          {/* HEADER */}
           <header className="doc-header">
             <h1>{job.title}</h1>
             <p className="company">{job.company}</p>
             <p className="location">📍 {job.location || "India"}</p>
 
-            {/* ⭐ EDITORIAL INTRO FOR E-E-A-T */}
             <p className="editorial-intro">
               FreshersJobs Editorial Desk provides verified hiring insights
               and simplified role explanations to help fresh graduates prepare
@@ -169,19 +123,22 @@ export default function JobDetails() {
 
         {/* ================= SIDEBAR ================= */}
         <aside className="latest-jobs screen-only">
-          <h3>Latest Job Guides</h3>
-          <ul>
-            {latestJobs.map((j) => (
-              <li
-                key={j.slug}
-                onClick={() => router.push(`/jobs/${j.slug}`)}
-              >
-                <p className="lj-title">{j.title}</p>
-                <p className="lj-company">{j.company}</p>
-              </li>
-            ))}
-          </ul>
-        </aside>
+  <h3>Latest Job Guides</h3>
+
+  <ul>
+    {latestJobs.map((j) => (
+      <li key={j.slug}>
+        <Link
+          href={`/jobs/${j.slug}`}
+          className="latest-job-card"
+        >
+          <p className="lj-title">{j.title}</p>
+          <p className="lj-company">{j.company}</p>
+        </Link>
+      </li>
+    ))}
+  </ul>
+</aside>
 
       </div>
     </main>

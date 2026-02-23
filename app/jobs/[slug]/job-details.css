@@ -155,6 +155,34 @@
   text-align: center;
   padding: 40px;
 }
+.latest-jobs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.latest-job-card {
+  display: block;
+  padding: 12px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.latest-job-card:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.lj-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.lj-company {
+  font-size: 13px;
+  color: #666;
+}
 
 /* ================= PRINT ================= */
 @media print {
